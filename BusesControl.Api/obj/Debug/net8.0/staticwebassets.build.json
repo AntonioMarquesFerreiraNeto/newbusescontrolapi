@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "046zjGkDqFYiTvVsOO+nwHKP9Z7zcSC80nFI2l4mMME=",
+  "Source": "BusesControl.Api",
+  "BasePath": "_content/BusesControl.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

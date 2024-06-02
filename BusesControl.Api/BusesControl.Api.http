@@ -1,0 +1,6 @@
+@BusesControl.Api_HostAddress = http://localhost:5265
+
+GET {{BusesControl.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

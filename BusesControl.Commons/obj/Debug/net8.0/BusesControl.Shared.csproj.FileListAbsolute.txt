@@ -1,0 +1,15 @@
+C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Shared\obj\Debug\net8.0\BusesControl.Shared.csproj.AssemblyReference.cache
+C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Shared\obj\Debug\net8.0\BusesControl.Shared.GeneratedMSBuildEditorConfig.editorconfig
+C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Shared\obj\Debug\net8.0\BusesControl.Shared.AssemblyInfoInputs.cache
+C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Shared\obj\Debug\net8.0\BusesControl.Shared.AssemblyInfo.cs
+C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Shared\obj\Debug\net8.0\BusesControl.Shared.csproj.CoreCompileInputs.cache
+C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Shared\bin\Debug\net8.0\BusesControl.Shared.deps.json
+C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Shared\bin\Debug\net8.0\BusesControl.Shared.dll
+C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Shared\bin\Debug\net8.0\BusesControl.Shared.pdb
+C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Shared\obj\Debug\net8.0\BusesCon.98095043.Up2Date
+C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Shared\obj\Debug\net8.0\BusesControl.Shared.dll
+C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Shared\obj\Debug\net8.0\refint\BusesControl.Shared.dll
+C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Shared\obj\Debug\net8.0\BusesControl.Shared.pdb
+C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Shared\obj\Debug\net8.0\ref\BusesControl.Shared.dll
+C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Shared\bin\Debug\net8.0\BusesControl.Entities.dll
+C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Shared\bin\Debug\net8.0\BusesControl.Entities.pdb
