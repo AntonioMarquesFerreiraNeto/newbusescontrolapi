@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BusesControl.Business")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ae05cde4d04f91e8f23946692d2e8bbcc690d400")]
 [assembly: System.Reflection.AssemblyProductAttribute("BusesControl.Business")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BusesControl.Business")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

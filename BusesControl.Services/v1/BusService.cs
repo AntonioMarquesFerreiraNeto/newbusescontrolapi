@@ -1,6 +1,7 @@
 ﻿using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Message;
 using BusesControl.Commons.Notification.Interfaces;
+using BusesControl.Entities.Enums;
 using BusesControl.Entities.Models;
 using BusesControl.Entities.Request;
 using BusesControl.Filters.Notification;
@@ -10,12 +11,18 @@ using Microsoft.AspNetCore.Http;
 
 namespace BusesControl.Services.v1;
 
-public class BusService( 
+public class BusService(
     INotificationApi _notificationApi,
     IBusBusiness _busBusiness,
     IBusRepository _busRepository
 ) : IBusService
 {
+    public async Task<IEnumerable<BusModel>> FindBySearchAsync(int pageSize, int pageNumber, string? search = null)
+    {
+        var records = await _busRepository.FindBySearchAsync(pageSize, pageNumber, search);
+        return records;
+    }
+
     public async Task<BusModel> GetByIdAsync(Guid id)
     {
         var record = await _busRepository.GetByIdAsync(id);
@@ -41,7 +48,7 @@ public class BusService(
         {
             return false;
         }
-        
+
         var record = new BusModel
         {
             Brand = request.Brand,
@@ -88,7 +95,45 @@ public class BusService(
         record.Chassi = request.Chassi;
         record.SeatingCapacity = request.SeatingCapacity;
         record.Color = request.Color;
-        
+
+        await _busRepository.UpdateAsync(record);
+
+        return true;
+    }
+
+    public async Task<bool> ToggleActiveAsync(Guid id)
+    {
+        var record = await _busRepository.GetByIdAsync(id);
+        if (record is null)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status404NotFound,
+                title: NotificationTitle.NotFound,
+                details: SupportMessage.Bus.NotFound
+            );
+            return false;
+        }
+
+        record.Status = record.Status != BusStatusEnum.Active ? BusStatusEnum.Active : BusStatusEnum.Inactive;
+        await _busRepository.UpdateAsync(record);
+
+        return true;
+    }
+
+    public async Task<bool> ToggleAvailabilityAsync(Guid id)
+    {
+        var record = await _busRepository.GetByIdAsync(id);
+        if (record is null)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status404NotFound,
+                title: NotificationTitle.NotFound,
+                details: SupportMessage.Bus.NotFound
+            );
+            return false;
+        }
+
+        record.Availability = record.Availability != AvailabilityEnum.Available ? AvailabilityEnum.Available : AvailabilityEnum.Unavailable;
         await _busRepository.UpdateAsync(record);
 
         return true;

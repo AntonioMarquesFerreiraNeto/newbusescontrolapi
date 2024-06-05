@@ -18,7 +18,6 @@ public class ValidateModel
             validation.AddToModelState(modelState);
             var result = new ValidationProblemDetails
             {
-                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
                 Status = StatusCodes.Status400BadRequest,
                 Title = NotificationTitle.BadRequest,
                 Detail = "Lista de erro de validações.",

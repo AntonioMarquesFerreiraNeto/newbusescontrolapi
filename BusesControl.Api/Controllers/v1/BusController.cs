@@ -1,4 +1,5 @@
-﻿using BusesControl.Entities.Request;
+﻿using BusesControl.Entities.Models;
+using BusesControl.Entities.Request;
 using BusesControl.Services.v1.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
@@ -15,11 +16,18 @@ public class BusController(
     IBusService _busService
 ) : ControllerBase
 {
+    [HttpGet("find")]
+    public async Task<IActionResult> FindBySearch([FromQuery] int pageSize, [FromQuery] int pageNumber, [FromQuery] string? search = null)
+    {
+        var response = await _busService.FindBySearchAsync(pageSize, pageNumber, search);
+        return Ok(response);
+    }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
-        var record = await _busService.GetByIdAsync(id);
-        return Ok(record);
+        var response = await _busService.GetByIdAsync(id);
+        return Ok(response);
     }
 
     [HttpPost]
@@ -45,6 +53,20 @@ public class BusController(
         }
 
         await _busService.UpdateAsync(id, request);
+        return NoContent();
+    }
+
+    [HttpPatch("{id}/active")]
+    public async Task<IActionResult> ToggleActive([FromRoute] Guid id)
+    {
+        await _busService.ToggleActiveAsync(id);
+        return NoContent();
+    }
+
+    [HttpPatch("{id}/availability")]
+    public async Task<IActionResult> ToggleAvailability([FromRoute] Guid id)
+    {
+        await _busService.ToggleAvailabilityAsync(id);
         return NoContent();
     }
 }
