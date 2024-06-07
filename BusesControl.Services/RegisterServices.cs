@@ -21,5 +21,10 @@ public class RegisterServices
 
         builder.Services.AddScoped<IBusService, BusService>();
         builder.Services.AddScoped<IViaCepIntegrationService, ViaCepIntegrationService>();
+        builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+        builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<ITokenService, TokenService>();
+
+        builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
     }
 }

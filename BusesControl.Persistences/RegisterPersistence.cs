@@ -5,6 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using BusesControl.Persistence.v1.Repositories;
 using BusesControl.Persistence.v1.Repositories.Interfaces;
+using BusesControl.Entities.Models;
+using Microsoft.AspNetCore.Identity;
+using BusesControl.Persistence.v1.UnitOfWork;
 
 namespace BusesControl.Persistence;
 
@@ -12,7 +15,14 @@ public class RegisterPersistence
 {
     public static void Register(WebApplicationBuilder builder)
     {
+        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
         builder.Services.AddScoped<IBusRepository, BusRepository>();
+        builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+
+        builder.Services.AddIdentity<UserModel, IdentityRole>()
+            .AddEntityFrameworkStores<AppDbContext>()
+            .AddDefaultTokenProviders();
 
         var conection = builder.Configuration.GetConnectionString("Connection");
         builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(conection));

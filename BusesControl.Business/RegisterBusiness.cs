@@ -10,5 +10,7 @@ public class RegisterBusiness
     public static void Register(WebApplicationBuilder builder)
     {
         builder.Services.AddScoped<IBusBusiness, BusBusiness>();
+        builder.Services.AddScoped<IEmployeeBusiness, EmployeeBusiness>();
+        builder.Services.AddScoped<IUserBusiness, UserBusiness>();
     }
 }

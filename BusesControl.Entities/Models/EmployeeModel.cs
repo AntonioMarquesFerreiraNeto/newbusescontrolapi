@@ -7,9 +7,9 @@ public class EmployeeModel
 {
     public Guid Id { get; set; }
     [MinLength(60)]
-    public string? Name { get; set; }
+    public string Name { get; set; } = default!;
     [MaxLength(11)]
-    public string? Cpf { get; set; }
+    public string Cpf { get; set; } = default!;
     public DateOnly BirthDate { get; set; }
     [MaxLength(80)]
     public string Email { get; set; } = default!;
@@ -27,10 +27,6 @@ public class EmployeeModel
     public string City { get; set; } = default!;
     [MaxLength(60)]
     public string State { get; set; } = default!;
-    [MaxLength(20)]
-    public string Surname { get; set; } = default!;
-    public string? KeyRedefinition { get; set; } = null;
     public EmployeeTypeEnum Type { get; set; }
     public EmployeeStatusEnum Status { get; set; } = EmployeeStatusEnum.Active;
-    public UserStatusEnum UserStatus { get; set; } = UserStatusEnum.Inactive;
 }

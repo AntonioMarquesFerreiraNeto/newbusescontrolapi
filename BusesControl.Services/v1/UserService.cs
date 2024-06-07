@@ -2,6 +2,7 @@
 using BusesControl.Commons;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
+using BusesControl.Entities.Enums;
 using BusesControl.Entities.Models;
 using BusesControl.Entities.Request;
 using BusesControl.Entities.Response;
@@ -31,7 +32,7 @@ public class UserService(
     public async Task<LoginResponse> LoginAsync(LoginRequest request)
     {
         var record = await _userManager.FindByEmailAsync(request.Username);
-        if (record is null)
+        if (record is null || record.Status == UserStatusEnum.Inactive)
         {
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status401Unauthorized,
@@ -42,7 +43,7 @@ public class UserService(
         }
 
         var result = await _userManager.CheckPasswordAsync(record, request.Password);
-        if (!result)
+        if (result == false)
         {
             _notificationApi.SetNotification(
                  statusCode: StatusCodes.Status401Unauthorized,

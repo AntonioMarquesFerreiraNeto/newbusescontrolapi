@@ -207,3 +207,11 @@ C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Api\obj\Debug\net8.0\
 C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Api\obj\Debug\net8.0\BusesControl.Api.MvcApplicationPartsAssemblyInfo.cs
 C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Api\bin\Debug\net8.0\FluentValidation.AspNetCore.dll
 C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Api\bin\Debug\net8.0\FluentValidation.DependencyInjectionExtensions.dll
+C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Api\bin\Debug\net8.0\AutoMapper.dll
+C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Api\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Api\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Api\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Api\bin\Debug\net8.0\Microsoft.Extensions.Identity.Core.dll
+C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Api\bin\Debug\net8.0\Microsoft.Extensions.Identity.Stores.dll
+C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Api\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
+C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Api\bin\Debug\net8.0\PasswordGenerator.dll
