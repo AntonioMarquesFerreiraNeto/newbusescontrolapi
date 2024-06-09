@@ -11,42 +11,15 @@ namespace BusesControl.Api.Controllers.v1;
 [ApiVersion("1.0")]
 [Route("api/v1/users")]
 public class UserController(
-    IValidator<UserToggleActiveRequest> _userToggleActiveRequestValidator,
-    IValidator<UserSetNickNameRequest> _userSetNickNameRequestValidator,
     IValidator<UserResetPasswordStepCodeRequest> _userResetPasswordStepCodeRequestValidator,
     IValidator<UserResetPasswordStepResetTokenRequest> _userResetPasswordStepResetTokenRequestValidator,
     IValidator<UserResetPasswordStepNewPasswordRequest> _userResetPasswordStepNewPasswordRequestValidator,
+    IValidator<UserChangePasswordRequest> _userChangePasswordRequestValidator,
+    IValidator<UserToggleActiveRequest> _userToggleActiveRequestValidator,
+    IValidator<UserSetNickNameRequest> _userSetNickNameRequestValidator,
     IUserService _userService
 ) : ControllerBase
 {
-    [HttpPatch("set-nickname/me")]
-    [Authorize]
-    public async Task<IActionResult> SetNickname([FromBody] UserSetNickNameRequest request)
-    {
-        var validation = await ValidateModel.CheckIsValid(request, Request.Path, ModelState, _userSetNickNameRequestValidator);
-        if (validation is not null)
-        {
-            return BadRequest(validation);
-        }
-
-        await _userService.SetNicknameAsync(request);
-        return Ok();
-    }
-
-    [HttpPatch("{id}/active")]
-    [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> ToggleActive([FromRoute] Guid id, [FromBody] UserToggleActiveRequest request)
-    {
-        var validation = await ValidateModel.CheckIsValid(request, Request.Path, ModelState, _userToggleActiveRequestValidator);
-        if (validation is not null)
-        {
-            return BadRequest(validation);
-        }
-
-        await _userService.ToggleActiveAsync(id, request);
-        return Ok();
-    }
-
     [HttpPatch("reset-password/step-code")]
     public async Task<IActionResult> ResetPasswordStepCode([FromBody] UserResetPasswordStepCodeRequest request)
     {
@@ -84,5 +57,47 @@ public class UserController(
 
         var response = await _userService.ResetPasswordStepNewPasswordAsync(request);
         return Ok(response);
+    }
+
+    [Authorize]
+    [HttpPatch("change-password")]
+    public async Task<IActionResult> ChangePassword([FromBody] UserChangePasswordRequest request)
+    {
+        var validation = await ValidateModel.CheckIsValid(request, Request.Path, ModelState, _userChangePasswordRequestValidator);
+        if (validation is not null)
+        {
+            return BadRequest(validation);
+        }
+
+        var response = await _userService.ChangePasswordAsync(request);
+        return Ok(response);
+    }
+
+    [Authorize]
+    [HttpPatch("set-nickname/me")]
+    public async Task<IActionResult> SetNickname([FromBody] UserSetNickNameRequest request)
+    {
+        var validation = await ValidateModel.CheckIsValid(request, Request.Path, ModelState, _userSetNickNameRequestValidator);
+        if (validation is not null)
+        {
+            return BadRequest(validation);
+        }
+
+        await _userService.SetNicknameAsync(request);
+        return Ok();
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPatch("{id}/active")]
+    public async Task<IActionResult> ToggleActive([FromRoute] Guid id, [FromBody] UserToggleActiveRequest request)
+    {
+        var validation = await ValidateModel.CheckIsValid(request, Request.Path, ModelState, _userToggleActiveRequestValidator);
+        if (validation is not null)
+        {
+            return BadRequest(validation);
+        }
+
+        await _userService.ToggleActiveAsync(id, request);
+        return Ok();
     }
 }

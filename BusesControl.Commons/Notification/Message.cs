@@ -33,6 +33,9 @@ public class Message
         public readonly static string InvalidRole = "Permisão selecionada é inválida!";
         public readonly static string Unexpected = "Desculpe, não conseguimos processar a requisição do usuário!";
         public readonly static string SuccessStepOne = "Olá, tudo bem? Enviamos um código de redefinição de senha para seu e-mail.";
+        public readonly static string InvalidCurrentPassword = "Senha atual é diferente da senha informada!";
+        public readonly static string InvalidNewPassword = "Nova senha não pode ser igual a atual!";
+        public readonly static string SuccessChangePassword = "Senha alterada com sucesso!";
     }
 
     public class ResetUser 
@@ -41,5 +44,6 @@ public class Message
         public readonly static string CodeInvalid = "Ops, código de redefinição expirado, repita os passos novamente.";
         public readonly static string InvalidPassword = "Nova senha e confirmar senha devem ser iguais!";
         public readonly static string Unexpected = "Desculpe, não conseguimos gerar seu token!";
+        public readonly static string Success = "Senha redefinida com sucesso!";
     }
 }

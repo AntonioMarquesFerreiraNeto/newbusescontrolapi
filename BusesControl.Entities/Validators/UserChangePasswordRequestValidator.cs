@@ -4,10 +4,13 @@ using FluentValidation;
 
 namespace BusesControl.Entities.Validators;
 
-public class UserResetPasswordStepNewPasswordRequestValidator : AbstractValidator<UserResetPasswordStepNewPasswordRequest>
+public class UserChangePasswordRequestValidator : AbstractValidator<UserChangePasswordRequest>
 {
-    public UserResetPasswordStepNewPasswordRequestValidator()
+    public UserChangePasswordRequestValidator()
     {
+        RuleFor(x => x.CurrentPassword)
+            .NotEmpty().WithMessage("Senha atual é um campo obrigatório!");
+
         RuleFor(x => x.NewPassword)
             .NotEmpty().WithMessage("Nova senha é um campo obrigatório!")
             .MinimumLength(10).WithMessage("Nova senha deve ter no minimo 10 caracteres!")

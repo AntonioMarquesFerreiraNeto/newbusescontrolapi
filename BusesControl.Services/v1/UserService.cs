@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using PasswordGenerator;
 using System.Security.Claims;
-using System.Text.RegularExpressions;
 namespace BusesControl.Services.v1;
 
 public class UserService(
@@ -57,14 +56,14 @@ public class UserService(
         return code;
     }
 
-    public UserAuthResponse FindUserAuth()
+    public UserAuthResponse FindAuthenticatedUser()
     {
         if (_httpContextAccessor.HttpContext == null)
         {
             throw new Exception("HttpContext is not available.");
         }
 
-        var userIdClaim = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+        var userIdClaim = _httpContextAccessor.HttpContext.User.FindFirst("UserId");
         var roleClaim = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role);
 
         if (userIdClaim is null || roleClaim is null)
@@ -72,7 +71,7 @@ public class UserService(
             throw new Exception("User ID or role claims are not present in the token.");
         }
 
-        var id = Guid.Parse(userIdClaim.ToString());
+        var id = Guid.Parse(userIdClaim.Value.ToString());
         var role = roleClaim.ToString();
 
         return new UserAuthResponse(id, role);
@@ -231,7 +230,67 @@ public class UserService(
             return default!;
         }
 
-        return new SuccessResponse("Senha redefinida com sucesso!");
+        return new SuccessResponse(Message.ResetUser.Success);
+    }
+
+    public async Task<SuccessResponse> ChangePasswordAsync(UserChangePasswordRequest request)
+    {
+        if (request.NewPassword != request.ConfirmPassword)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.ResetUser.InvalidPassword
+            );
+            return default!;
+        }
+
+        if (request.NewPassword == request.CurrentPassword)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.User.InvalidNewPassword
+            );
+            return default!;
+        }
+
+        var userId = FindAuthenticatedUser().Id.ToString();
+        
+        var userRecord = await _userManager.FindByIdAsync(userId);
+        if (userRecord is null)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status404NotFound,
+                title: NotificationTitle.NotFound,
+                details: Message.User.NotFound
+            );
+            return default!;
+        }
+
+        var result = await _userManager.CheckPasswordAsync(userRecord, request.CurrentPassword);
+        if (!result)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.User.InvalidCurrentPassword
+            );
+            return default!;
+        }
+
+        var changePasswordResult = await _userManager.ChangePasswordAsync(userRecord, request.CurrentPassword, request.NewPassword);
+        if (!changePasswordResult.Succeeded)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status500InternalServerError,
+                title: NotificationTitle.InternalError,
+                details: Message.User.Unexpected
+            );
+            return default!;
+        }
+
+        return new SuccessResponse(Message.User.SuccessChangePassword);
     }
 
     public async Task<bool> CreateForEmployeeAsync(UserCreateRequest request)
@@ -271,7 +330,7 @@ public class UserService(
 
     public async Task<bool> SetNicknameAsync(UserSetNickNameRequest request)
     {
-        var userId = FindUserAuth().Id.ToString();
+        var userId = FindAuthenticatedUser().Id.ToString();
 
         var record = await _userManager.FindByIdAsync(userId);
         if (record is null)

@@ -1,12 +1,7 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Antonio\\Projetos\\Projeto .NET\\BusesControl\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{ABE1F648-4298-4C15-AD23-A88CEEF4E5AB}|BusesControl.Services\\BusesControl.Services.csproj|c:\\antonio\\projetos\\projeto .net\\busescontrol\\busescontrol.services\\v1\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{ABE1F648-4298-4C15-AD23-A88CEEF4E5AB}|BusesControl.Services\\BusesControl.Services.csproj|solutionrelative:busescontrol.services\\v1\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -14,24 +9,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 280,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "UserService.cs",
-              "DocumentMoniker": "C:\\Antonio\\Projetos\\Projeto .NET\\BusesControl\\BusesControl.Services\\v1\\UserService.cs",
-              "RelativeDocumentMoniker": "BusesControl.Services\\v1\\UserService.cs",
-              "ToolTip": "C:\\Antonio\\Projetos\\Projeto .NET\\BusesControl\\BusesControl.Services\\v1\\UserService.cs",
-              "RelativeToolTip": "BusesControl.Services\\v1\\UserService.cs",
-              "ViewState": "AQIAADQBAAAAAAAAAAAUwEcBAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-09T04:54:59.562Z",
-              "EditorCaption": ""
             }
           ]
         }
