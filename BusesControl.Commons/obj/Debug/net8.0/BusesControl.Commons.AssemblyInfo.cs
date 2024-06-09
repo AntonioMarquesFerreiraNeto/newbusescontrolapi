@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BusesControl.Commons")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a866423a08481c91166801c93018cc0d7a9d1fc4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+26bea57cfdd588c4d45439536b41eabb414bfe74")]
 [assembly: System.Reflection.AssemblyProductAttribute("BusesControl.Commons")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BusesControl.Commons")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

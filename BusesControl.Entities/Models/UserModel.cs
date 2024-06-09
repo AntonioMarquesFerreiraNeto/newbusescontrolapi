@@ -4,8 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BusesControl.Entities.Models;
 
-public class UserModel :IdentityUser
+public class UserModel : IdentityUser<Guid>
 {
+    public override Guid Id { get; set; }
     public Guid EmployeeId { get; set; }
     public EmployeeModel Employee { get; set; } = default!;
     [MaxLength(20)]

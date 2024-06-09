@@ -16,3 +16,5 @@ C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Persistences\bin\Debu
 C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Persistences\bin\Debug\net8.0\BusesControl.Entities.pdb
 C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Persistences\obj\Debug\net8.0\BusesCon.CEE547E7.Up2Date
 C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Persistences\obj\Debug\net8.0\BusesControl.Persistence.sourcelink.json
+C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Persistences\bin\Debug\net8.0\BusesControl.Commons.dll
+C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Persistences\bin\Debug\net8.0\BusesControl.Commons.pdb

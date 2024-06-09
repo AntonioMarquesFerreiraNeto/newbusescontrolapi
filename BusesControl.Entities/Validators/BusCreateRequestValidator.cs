@@ -26,7 +26,7 @@ public class BusCreateRequestValidator : AbstractValidator<BusCreateRequest>
 
         RuleFor(x => x.LicensePlate)
             .NotEmpty().WithMessage("Placa é um campo obrigatório.")
-            .Length(8).WithMessage("Placa deve ter 8 caracteres.");
+            .Length(7, 8).WithMessage("Placa deve ter 7 ou 8 caracteres.");
 
         RuleFor(x => x.Chassi)
             .NotEmpty().WithMessage("Chassi é um campo obrigatório.")

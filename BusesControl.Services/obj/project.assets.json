@@ -3165,6 +3165,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
+          "BusesControl.Commons": "1.0.0",
           "FluentValidation": "11.9.1",
           "FluentValidation.AspNetCore": "11.3.0",
           "Humanizer": "2.14.1",

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BusesControl.Business.v1.Interfaces;
+using BusesControl.Commons;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.Enums;
 using BusesControl.Entities.Models;
@@ -38,8 +39,8 @@ public class EmployeeService(
 
     public async Task<bool> CreateAsync(EmployeeCreateRequest request)
     {
-        request.Cpf = Regex.Replace(request.Cpf, @"[^\d]", "");
-        request.PhoneNumber = Regex.Replace(request.PhoneNumber, @"[^\d]", "");
+        request.Cpf = OnlyNumbers.ClearValue(request.Cpf);
+        request.PhoneNumber = OnlyNumbers.ClearValue(request.PhoneNumber);
 
         await _employeeBusiness.ExistsByEmailOrPhoneNumberOrCpfAsync(request.Email, request.PhoneNumber, request.Cpf);
         if (_notificationApi.HasNotification)

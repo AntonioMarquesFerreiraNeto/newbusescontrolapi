@@ -1535,8 +1535,17 @@
           }
         }
       },
+      "BusesControl.Commons/1.0.0": {
+        "dependencies": {
+          "Swashbuckle.AspNetCore": "6.4.0"
+        },
+        "runtime": {
+          "BusesControl.Commons.dll": {}
+        }
+      },
       "BusesControl.Entities/1.0.0": {
         "dependencies": {
+          "BusesControl.Commons": "1.0.0",
           "FluentValidation": "11.9.1",
           "FluentValidation.AspNetCore": "11.3.0",
           "Humanizer": "2.14.1",
@@ -2528,6 +2537,11 @@
       "sha512": "sha512-IXoJOXIqc39AIe+CIR7koBtRGMiCt/LPM3lI+PELtDIy9XdyeSrwXFdWV9dzJ2Awl0paLWUaknLxFQ5HpHZUog==",
       "path": "system.windows.extensions/6.0.0",
       "hashPath": "system.windows.extensions.6.0.0.nupkg.sha512"
+    },
+    "BusesControl.Commons/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     },
     "BusesControl.Entities/1.0.0": {
       "type": "project",

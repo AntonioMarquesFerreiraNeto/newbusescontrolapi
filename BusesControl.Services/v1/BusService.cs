@@ -1,4 +1,5 @@
 ﻿using BusesControl.Business.v1.Interfaces;
+using BusesControl.Commons;
 using BusesControl.Commons.Message;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.Enums;
@@ -41,7 +42,7 @@ public class BusService(
 
     public async Task<bool> CreateAsync(BusCreateRequest request)
     {
-        request.LicensePlate = request.LicensePlate.Replace("-", "");
+        request.LicensePlate = OnlyNumbers.ClearValue(request.LicensePlate);
 
         await _busBusiness.ExistsByRenavamOrLicensePlateOrChassisAsync(request.Renavam, request.LicensePlate, request.Chassi);
         if (_notificationApi.HasNotification)

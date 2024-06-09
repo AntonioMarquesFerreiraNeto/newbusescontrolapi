@@ -1,7 +1,7 @@
-﻿using BusesControl.Entities.Models;
-using BusesControl.Entities.Request;
+﻿using BusesControl.Entities.Request;
 using BusesControl.Services.v1.Interfaces;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Api.Utils;
 
@@ -9,6 +9,7 @@ namespace BusesControl.Api.Controllers.v1;
 
 [ApiController]
 [ApiVersion("1.0")]
+[Authorize]
 [Route("api/v1/bus")]
 public class BusController(
     IValidator<BusCreateRequest> _busCreateRequestValidator,

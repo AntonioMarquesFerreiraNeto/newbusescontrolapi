@@ -1,18 +1,18 @@
 ﻿namespace BusesControl.Commons;
 
-public class AppSettings
+public static class AppSettingsViaCep
 {
-    public AppSettingsViaCep ViaCep { get; set; } = new AppSettingsViaCep();
-    public AppSettingsJWT JWT { get; set; } = new AppSettingsJWT();
+    public static string Url = "https://viacep.com.br/ws";
 }
 
-public class AppSettingsViaCep
+public static class AppSettingsJWT
 {
-    public string Url = "https://viacep.com.br/ws";
+    public static string Key = "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yqsST1peCXBNyeCXBNy4DpeCXBNy4DjCb3cFFHs4dnL04y";
+    public static int ExpireHours = 4;
 }
 
-public class AppSettingsJWT
+public static class AppSettingsResetPassword
 {
-    public string Key = "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yqsST1peCXBNyeCXBNy4DpeCXBNy4DjCb3cFFHs4dnL04y";
-    public int ExpireHours = 4;
+    public static int ExpireCode = 3;
+    public static int ExpireResetToken = 15;    
 }

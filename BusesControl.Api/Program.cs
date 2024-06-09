@@ -8,6 +8,9 @@ using BusesControl.Commons;
 using BusesControl.Commons.Notification;
 using FluentValidation;
 using BusesControl.Entities.Validators;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace BusesControl.Api;
 
@@ -45,6 +48,25 @@ public class Program
         RegisterBusiness.Register(builder);
         RegisterPersistence.Register(builder);
         RegisterCommon.Register(builder);
+
+        var key = Encoding.ASCII.GetBytes(AppSettingsJWT.Key);
+
+        builder.Services.AddAuthentication(auth => {
+            auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(x => {
+            x.RequireHttpsMetadata = false;
+            x.SaveToken = true;
+            x.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                ValidateLifetime = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = false,
+                ValidateAudience = false
+            };
+        });
 
         var app = builder.Build();
         

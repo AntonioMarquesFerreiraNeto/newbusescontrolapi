@@ -28,3 +28,6 @@ C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Entities\obj\Debug\ne
 C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Entities\obj\Debug\net8.0\BusesControl.Entities.pdb
 C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Entities\obj\Debug\net8.0\BusesControl.Entities.genruntimeconfig.cache
 C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Entities\obj\Debug\net8.0\ref\BusesControl.Entities.dll
+C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Entities\bin\Debug\net8.0\BusesControl.Commons.dll
+C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Entities\bin\Debug\net8.0\BusesControl.Commons.pdb
+C:\Antonio\Projetos\Projeto .NET\BusesControl\BusesControl.Entities\obj\Debug\net8.0\BusesCon.04336AE2.Up2Date

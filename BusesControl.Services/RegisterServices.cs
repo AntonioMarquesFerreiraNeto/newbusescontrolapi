@@ -2,6 +2,7 @@
 using BusesControl.Services.v1;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 
@@ -17,7 +18,10 @@ public class RegisterServices
         };
         builder.Services.AddSingleton(jsonSerializerOptions);
 
-        builder.Services.AddScoped<AppSettings>();
+        builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
+        {
+            options.TokenLifespan = TimeSpan.FromMinutes(AppSettingsResetPassword.ExpireResetToken);
+        });
 
         builder.Services.AddScoped<IBusService, BusService>();
         builder.Services.AddScoped<IViaCepIntegrationService, ViaCepIntegrationService>();

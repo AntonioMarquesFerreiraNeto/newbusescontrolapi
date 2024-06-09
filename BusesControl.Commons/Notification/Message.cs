@@ -27,9 +27,19 @@ public class Message
 
     public class User
     {
+        public readonly static string NotFound = "Usuário não encontrado!";
         public readonly static string CredentialsInvalid = "E-mail ou senha informados podem estar incorretos!";
         public readonly static string Exists = "Usuário já se encontra registrado!";
         public readonly static string InvalidRole = "Permisão selecionada é inválida!";
-        public readonly static string Unexpected = "Desculpe, não conseguimos registrar o usuário!";
+        public readonly static string Unexpected = "Desculpe, não conseguimos processar a requisição do usuário!";
+        public readonly static string SuccessStepOne = "Olá, tudo bem? Enviamos um código de redefinição de senha para seu e-mail.";
+    }
+
+    public class ResetUser 
+    {
+        public readonly static string UnexpectedToken = "Código de redefinição não encontrado!";
+        public readonly static string CodeInvalid = "Ops, código de redefinição expirado, repita os passos novamente.";
+        public readonly static string InvalidPassword = "Nova senha e confirmar senha devem ser iguais!";
+        public readonly static string Unexpected = "Desculpe, não conseguimos gerar seu token!";
     }
 }

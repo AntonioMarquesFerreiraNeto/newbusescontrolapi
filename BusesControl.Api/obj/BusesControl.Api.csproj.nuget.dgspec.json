@@ -324,7 +324,11 @@
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
-            "projectReferences": {}
+            "projectReferences": {
+              "C:\\Antonio\\Projetos\\Projeto .NET\\BusesControl\\BusesControl.Commons\\BusesControl.Commons.csproj": {
+                "projectPath": "C:\\Antonio\\Projetos\\Projeto .NET\\BusesControl\\BusesControl.Commons\\BusesControl.Commons.csproj"
+              }
+            }
           }
         },
         "warningProperties": {

@@ -19,10 +19,20 @@ public class RegisterPersistence
 
         builder.Services.AddScoped<IBusRepository, BusRepository>();
         builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+        builder.Services.AddScoped<IResetUserRepository, ResetUserRepository>();
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-        builder.Services.AddIdentity<UserModel, IdentityRole>()
-            .AddEntityFrameworkStores<AppDbContext>()
-            .AddDefaultTokenProviders();
+        builder.Services.AddIdentity<UserModel, IdentityRole<Guid>>(options => 
+        {
+            options.Password.RequireDigit = true; 
+            options.Password.RequireLowercase = true; 
+            options.Password.RequireUppercase = false;
+            options.Password.RequireNonAlphanumeric = true; 
+            options.Password.RequiredLength = 10; 
+            options.Password.RequiredUniqueChars = 1;
+        })
+        .AddEntityFrameworkStores<AppDbContext>()
+        .AddDefaultTokenProviders();
 
         var conection = builder.Configuration.GetConnectionString("Connection");
         builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(conection));
