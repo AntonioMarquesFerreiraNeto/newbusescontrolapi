@@ -12,5 +12,5 @@ public class UserModel : IdentityUser<Guid>
     [MaxLength(20)]
     public string? Nickname { get; set; } = default!;
     public string Role { get; set; } = default!;
-    public UserStatusEnum Status { get; set; } = UserStatusEnum.Active;
+    public UserStatusEnum Status { get; set; } = UserStatusEnum.Inactive;
 }

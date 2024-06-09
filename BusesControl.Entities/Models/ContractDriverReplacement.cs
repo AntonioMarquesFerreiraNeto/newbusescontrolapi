@@ -1,5 +1,5 @@
 ﻿namespace BusesControl.Entities.Models;
 
-public class ContractInstallmentModel
+public class ContractDriverReplacement
 {
 }

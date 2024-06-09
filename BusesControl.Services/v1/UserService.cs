@@ -22,14 +22,13 @@ public class UserService(
     INotificationApi _notificationApi,
     ITokenService _tokenService,
     IUserRepository _userRepository,
-    IResetUserRepository _resetUserRepository,
-    IUserBusiness _userBusiness,
+    IResetPasswordSecurityCodeRepository _resetPasswordSecurityCodeRepository,
     UserManager<UserModel> _userManager
 ) : IUserService
 {
     private static string GeneratePassword()
     {
-        var pwd = new Password(includeLowercase: true, includeUppercase: true, includeNumeric: true, includeSpecial: true, passwordLength: 16);
+        var pwd = new Password(includeLowercase: true, includeUppercase: true, includeNumeric: true, includeSpecial: true, passwordLength: 26);
         var password = pwd.Next();
 
         return password;
@@ -44,13 +43,12 @@ public class UserService(
         var existsCode = true;
         while (existsCode)
         {
-            for (int c = 0; c < 10; c++)
+            for (int c = 0; c < AppSettingsResetPassword.CodeLenght; c++)
             {
-                var caracter = chars[random.Next(chars.Length)];
-                code += caracter;
+                code += chars[random.Next(chars.Length)];
             }
 
-            existsCode = await _resetUserRepository.ExistsByCode(code);
+            existsCode = await _resetPasswordSecurityCodeRepository.ExistsByCode(code);
         }
 
         return code;
@@ -124,20 +122,20 @@ public class UserService(
 
         _unitOfWork.BeginTransaction();
 
-        var oldResetUserRecord = await _resetUserRepository.GetByUserAsync(record.Id);
-        if (oldResetUserRecord is not null)
+        var resetPasswordCodeRecord = await _resetPasswordSecurityCodeRepository.GetByUserAsync(record.Id);
+        if (resetPasswordCodeRecord is not null)
         {
-            _resetUserRepository.Remove(oldResetUserRecord);
+            _resetPasswordSecurityCodeRepository.Remove(resetPasswordCodeRecord);
             await _unitOfWork.CommitAsync();
         }
 
-        var newResetUserRecord = new ResetUserModel
+        var newResetPasswordCodeRecord = new ResetPasswordSecurityCodeModel
         {
             UserId = record.Id,
             Code = await GenerateUniqueCode(),
             Expires = DateTime.UtcNow.AddMinutes(AppSettingsResetPassword.ExpireCode)
         };
-        await _resetUserRepository.Create(newResetUserRecord);
+        await _resetPasswordSecurityCodeRepository.Create(newResetPasswordCodeRecord);
 
         //TODO: Enviar código gerado para o e-mail do usuário neste local.
 
@@ -148,8 +146,8 @@ public class UserService(
 
     public async Task<UserResetPasswordStepResetTokenResponse> ResetPasswordStepResetTokenAsync(UserResetPasswordStepResetTokenRequest request)
     {
-        var resetUserRecord = await _resetUserRepository.GetByCodeAsync(request.Code);
-        if (resetUserRecord is null)
+        var resetPasswordRecord = await _resetPasswordSecurityCodeRepository.GetByCodeAsync(request.Code);
+        if (resetPasswordRecord is null)
         {
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
@@ -159,7 +157,7 @@ public class UserService(
             return default!;
         }
 
-        var difference = DateTime.UtcNow - resetUserRecord.Expires;
+        var difference = DateTime.UtcNow - resetPasswordRecord.Expires;
         var expireCode = TimeSpan.FromMinutes(AppSettingsResetPassword.ExpireCode);
         if (difference >= expireCode)
         {
@@ -171,7 +169,7 @@ public class UserService(
             return default!;
         }
 
-        var userRecord = await _userManager.FindByIdAsync(resetUserRecord.UserId.ToString());
+        var userRecord = await _userManager.FindByIdAsync(resetPasswordRecord.UserId.ToString());
         if (userRecord is null)
         {
             _notificationApi.SetNotification(
@@ -293,12 +291,22 @@ public class UserService(
         return new SuccessResponse(Message.User.SuccessChangePassword);
     }
 
-    public async Task<bool> CreateForEmployeeAsync(UserCreateRequest request)
+    public async Task<UserModel> CreateForUserRegistrationAsync(UserCreateRequest request)
     {
-        await _userBusiness.ValidateForCreateAsync(request.Email, request.Role);
-        if (_notificationApi.HasNotification)
+        var userExists = await _userManager.FindByEmailAsync(request.Email);
+        if (userExists is not null)
         {
-            return false;
+            return default!;
+        }
+
+        if (request.Role == "Driver")
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.User.InvalidRole
+            );
+            return default!;
         }
 
         var record = new UserModel
@@ -310,9 +318,9 @@ public class UserService(
             Role = request.Role
         };
 
-        var password = GeneratePassword();
+        var passwordDefault = GeneratePassword();
 
-        var result = await _userManager.CreateAsync(record, password);
+        var result = await _userManager.CreateAsync(record, passwordDefault);
         if (!result.Succeeded)
         {
             _notificationApi.SetNotification(
@@ -320,12 +328,12 @@ public class UserService(
                 title: NotificationTitle.InternalError,
                 details: Message.User.Unexpected
             );
-            return false;
+            return default!;
         }
 
-        //TODO: enviar e-mail para o usuário informando sobre os passos de autenticação para ele.
+        //TODO: enviar e-mail para o usuário informando sobre os passos de configuração de login para ele.
 
-        return true;
+        return record;
     }
 
     public async Task<bool> SetNicknameAsync(UserSetNickNameRequest request)
@@ -373,8 +381,62 @@ public class UserService(
         }
 
         record.Status = request.Status;
-
         var result = await _userManager.UpdateAsync(record);
+        if (!result.Succeeded)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status500InternalServerError,
+                title: NotificationTitle.InternalError,
+                details: Message.User.Unexpected
+            );
+            return false;
+        }
+
+        return true;
+    }
+
+    public async Task<bool> ActiveForAprrovedUserRegistrationAsync(Guid id)
+    {
+        var record = await _userManager.FindByIdAsync(id.ToString());
+        if (record is null)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status404NotFound,
+                title: NotificationTitle.NotFound,
+                details: Message.User.NotFound
+            );
+            return false;
+        }
+
+        record.Status = UserStatusEnum.Active;
+        var result = await _userManager.UpdateAsync(record);
+        if (!result.Succeeded)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status500InternalServerError,
+                title: NotificationTitle.InternalError,
+                details: Message.User.Unexpected
+            );
+            return false;
+        }
+
+        return true;
+    }
+
+    public async Task<bool> DeleteForUserRegistrationAsync(Guid id)
+    {
+        var record = await _userManager.FindByIdAsync(id.ToString());
+        if (record is null)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status404NotFound,
+                title: NotificationTitle.NotFound,
+                details: Message.User.NotFound
+            );
+            return false;
+        }
+
+        var result = await _userManager.DeleteAsync(record);
         if (!result.Succeeded)
         {
             _notificationApi.SetNotification(

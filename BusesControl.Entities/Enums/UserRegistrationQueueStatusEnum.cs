@@ -2,8 +2,8 @@
 
 public enum UserRegistrationQueueStatusEnum
 {
-    Pending = 1,
-    Approved = 2,
-    Finish = 3,
-    Canceled = 3
+    Started = 1,
+    WaitingForPassword = 2,
+    Finished = 3,
+    Approved = 4
 }

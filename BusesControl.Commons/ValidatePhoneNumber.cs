@@ -6,7 +6,7 @@ public static class ValidatePhoneNumber
 {
     public static bool IsValid(string phoneNumber)
     {
-        phoneNumber = Regex.Replace(phoneNumber, @"[^a-z]", "");
+        phoneNumber = OnlyNumbers.ClearValue(phoneNumber);
         if (phoneNumber.Length != 11)
         {
             return false;

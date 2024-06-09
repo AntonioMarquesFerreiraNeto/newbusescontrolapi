@@ -19,8 +19,10 @@ public class RegisterPersistence
 
         builder.Services.AddScoped<IBusRepository, BusRepository>();
         builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-        builder.Services.AddScoped<IResetUserRepository, ResetUserRepository>();
+        builder.Services.AddScoped<IResetPasswordSecurityCodeRepository, ResetPasswordSecurityCodeRepository>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<IUserRegistrationQueueRepository, UserRegistrationQueueRepository>();
+        builder.Services.AddScoped<IUserRegistrationSecurityCodeRepository, UserRegistrationSecurityCodeRepository>();
 
         builder.Services.AddIdentity<UserModel, IdentityRole<Guid>>(options => 
         {

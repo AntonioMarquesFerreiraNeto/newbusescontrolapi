@@ -8,7 +8,7 @@ public static class ValidateCpf
 {
     public static bool IsValid(string cpf)
     {
-        cpf = Regex.Replace(cpf, @"[.\-]", string.Empty);
+        cpf = OnlyNumbers.ClearValue(cpf);
 
         if (cpf.Length != 11)
         {

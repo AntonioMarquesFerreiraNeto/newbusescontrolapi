@@ -1,6 +1,6 @@
 ﻿namespace BusesControl.Entities.Models;
 
-public class ResetUserModel
+public class ResetPasswordSecurityCodeModel
 {
     public Guid Id { get; set; }
     public Guid UserId { get; set; }

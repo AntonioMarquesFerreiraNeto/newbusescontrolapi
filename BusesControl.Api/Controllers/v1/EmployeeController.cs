@@ -9,7 +9,7 @@ namespace BusesControl.Api.Controllers.v1;
 
 [ApiController]
 [ApiVersion("1.0")]
-[Authorize(Roles = "Admin")]
+//[Authorize(Roles = "Admin")]
 [Route("api/v1/employee")]
 public class EmployeeController(
     IValidator<EmployeeCreateRequest> _employeeCreateRequestValidator,

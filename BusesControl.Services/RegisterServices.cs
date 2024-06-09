@@ -1,4 +1,6 @@
 ﻿using BusesControl.Commons;
+using BusesControl.Persistence.v1.Repositories;
+using BusesControl.Persistence.v1.Repositories.Interfaces;
 using BusesControl.Services.v1;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -28,6 +30,7 @@ public class RegisterServices
         builder.Services.AddScoped<IEmployeeService, EmployeeService>();
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<ITokenService, TokenService>();
+        builder.Services.AddScoped<IUserRegistrationQueueService, UserRegistrationQueueService>();
 
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
     }

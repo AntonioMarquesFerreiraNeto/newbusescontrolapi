@@ -14,7 +14,9 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
 
     public DbSet<BusModel> Buses { get; set; }
     public DbSet<EmployeeModel> Employees { get; set; }
-    public DbSet<ResetUserModel> ResetsUser { get; set; }
+    public DbSet<ResetPasswordSecurityCodeModel> ResetPasswordsSecurityCode { get; set; }
+    public DbSet<UserRegistrationQueueModel> UsersRegistrationQueue { get; set; }
+    public DbSet<UserRegistrationSecurityCodeModel> UsersRegistrationSecurityCode { get; set; }
     public override DbSet<UserModel> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)

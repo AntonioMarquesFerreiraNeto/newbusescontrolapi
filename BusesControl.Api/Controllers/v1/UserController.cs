@@ -84,7 +84,7 @@ public class UserController(
         }
 
         await _userService.SetNicknameAsync(request);
-        return Ok();
+        return NoContent();
     }
 
     [Authorize(Roles = "Admin")]
@@ -98,6 +98,6 @@ public class UserController(
         }
 
         await _userService.ToggleActiveAsync(id, request);
-        return Ok();
+        return NoContent();
     }
 }

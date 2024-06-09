@@ -1,4 +1,5 @@
-﻿using BusesControl.Entities.Request;
+﻿using BusesControl.Entities.Models;
+using BusesControl.Entities.Request;
 using BusesControl.Entities.Response;
 
 namespace BusesControl.Services.v1.Interfaces;
@@ -11,7 +12,9 @@ public interface IUserService
     Task<UserResetPasswordStepResetTokenResponse> ResetPasswordStepResetTokenAsync(UserResetPasswordStepResetTokenRequest request);
     Task<SuccessResponse> ResetPasswordStepNewPasswordAsync(UserResetPasswordStepNewPasswordRequest request);
     Task<SuccessResponse> ChangePasswordAsync(UserChangePasswordRequest request);
-    Task<bool> CreateForEmployeeAsync(UserCreateRequest request);
+    Task<UserModel> CreateForUserRegistrationAsync(UserCreateRequest request);
     Task<bool> SetNicknameAsync(UserSetNickNameRequest request);
     Task<bool> ToggleActiveAsync(Guid id, UserToggleActiveRequest request);
+    Task<bool> DeleteForUserRegistrationAsync(Guid id);
+    Task<bool> ActiveForAprrovedUserRegistrationAsync(Guid id);
 }
