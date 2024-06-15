@@ -449,4 +449,32 @@ public class UserService(
 
         return true;
     }
+
+    public async Task<SuccessResponse> ToggleRoleForEmployeeAsync(string email, EmployeeTypeEnum employeeType)
+    {
+        if (employeeType == EmployeeTypeEnum.Driver)
+        {
+            return new SuccessResponse(Message.Employee.RoleChangedNoAccess);
+        }
+
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user is null) 
+        {
+            return new SuccessResponse(Message.Employee.RoleChangedRegisterInQueue);
+        }
+
+        user.Role = employeeType.ToString();
+        var result = await _userManager.UpdateAsync(user);
+        if (!result.Succeeded)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status500InternalServerError,
+                title: NotificationTitle.InternalError,
+                details: Message.User.Unexpected
+            );
+            return default!;
+        }
+
+        return new SuccessResponse(Message.Employee.RoleAndProfileChanged);
+    }
 }

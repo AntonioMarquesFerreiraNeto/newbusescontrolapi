@@ -9,13 +9,29 @@ namespace BusesControl.Api.Controllers.v1;
 
 [ApiController]
 [ApiVersion("1.0")]
-//[Authorize(Roles = "Admin")]
+[Authorize(Roles = "Admin")]
 [Route("api/v1/employee")]
 public class EmployeeController(
     IValidator<EmployeeCreateRequest> _employeeCreateRequestValidator,
+    IValidator<EmployeeUpdateRequest> _employeeUpdateRequestValidator,
+    IValidator<EmployeeToggleTypeRequest> _employeeToggleTypeRequestValidator,
     IEmployeeService _employeeService
 ) : ControllerBase
 {
+    [HttpGet]
+    public async Task<IActionResult> FindBySearch([FromQuery] int pageSize, [FromQuery] int pageNumber, [FromQuery] string? search)
+    {
+        var response = await _employeeService.FindBySearchAsync(pageSize, pageNumber, search);
+        return Ok(response);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById([FromRoute] Guid id)
+    {
+        var response = await _employeeService.GetByIdAsync(id);
+        return Ok(response);
+    }
+
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] EmployeeCreateRequest request)
     {
@@ -27,5 +43,38 @@ public class EmployeeController(
 
         await _employeeService.CreateAsync(request);
         return NoContent();
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] EmployeeUpdateRequest request)
+    {
+        var validation = await ValidateModel.CheckIsValid(request, Request.Path, ModelState, _employeeUpdateRequestValidator);
+        if (validation is not null)
+        {
+            return BadRequest(validation);
+        }
+
+        await _employeeService.UpdateAsync(id, request);
+        return NoContent();
+    }
+
+    [HttpPatch("{id}/active")]
+    public async Task<IActionResult> ToggleActive([FromRoute] Guid id)
+    {
+        await _employeeService.ToggleActiveAsync(id);
+        return NoContent();
+    }
+
+    [HttpPatch("{id}/type")]
+    public async Task<IActionResult> ToggleType([FromRoute] Guid id, [FromBody] EmployeeToggleTypeRequest request)
+    {
+        var validation = await ValidateModel.CheckIsValid(request, Request.Path, ModelState, _employeeToggleTypeRequestValidator);
+        if (validation is not null)
+        {
+            return BadRequest(validation);
+        }
+
+        var response = await _employeeService.ToggleTypeAsync(id, request);
+        return Ok(response);
     }
 }

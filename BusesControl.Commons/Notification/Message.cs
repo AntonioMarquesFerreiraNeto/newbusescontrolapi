@@ -24,6 +24,10 @@ public class Message
     {
         public readonly static string Exists = "Funcionário já se encontra registrado!";
         public readonly static string NotFound = "Funcionário não encontrado!";
+        public readonly static string NoChangeNeeded = "A requisição não resultou em nenhuma alteração, pois o tipo do registro já é o mesmo.";
+        public readonly static string RoleChangedNoAccess = "Papel do funcionário alterado com sucesso! Devido ao perfil do mesmo, ele não possui acesso ao sistema.";
+        public readonly static string RoleChangedRegisterInQueue = "Papel do funcionário alterado com sucesso, mas se deseja que ele tenha acesso ao sistema, registre o mesmo na fila de registro de usuários.";
+        public readonly static string RoleAndProfileChanged = "Papel e perfil do funcionário alterado com sucesso! Agora ele terá novos acessos ao sistema.";
     }
 
     public class User
