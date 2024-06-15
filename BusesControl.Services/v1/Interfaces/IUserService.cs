@@ -1,4 +1,5 @@
-﻿using BusesControl.Entities.Models;
+﻿using BusesControl.Entities.Enums;
+using BusesControl.Entities.Models;
 using BusesControl.Entities.Request;
 using BusesControl.Entities.Response;
 
@@ -17,4 +18,5 @@ public interface IUserService
     Task<bool> ToggleActiveAsync(Guid id, UserToggleActiveRequest request);
     Task<bool> DeleteForUserRegistrationAsync(Guid id);
     Task<bool> ActiveForAprrovedUserRegistrationAsync(Guid id);
+    Task<SuccessResponse> ToggleRoleForEmployeeAsync(string email, EmployeeTypeEnum employeeType);
 }

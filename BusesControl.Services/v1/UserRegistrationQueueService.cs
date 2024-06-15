@@ -55,7 +55,7 @@ public class UserRegistrationQueueService(
 
     public async Task<SuccessResponse> CreateForEmployeeAsync(UserRegistrationCreateRequest request)
     {    
-        await _userRegistrationQueueBusiness.GetForCreateAsync(request.EmployeeId);
+        await _userRegistrationQueueBusiness.ValidateForCreateAsync(request.EmployeeId);
         if (_notificationApi.HasNotification)
         {
             return default!;
@@ -69,6 +69,8 @@ public class UserRegistrationQueueService(
 
         await _userRegistrationQueueRepository.CreateAsync(record);
         await _unitOfWork.CommitAsync();
+
+        //TODO: Enviar e-mail com a rota do front para iniciar o processo de definição de senha no e-mail do funcionário. 
 
         return new SuccessResponse(Message.UserRegistration.SuccessCreate);
     }

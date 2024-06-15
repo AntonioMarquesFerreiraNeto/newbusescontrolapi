@@ -1,7 +1,9 @@
 ﻿using BusesControl.Entities.Request;
 using BusesControl.Services.v1.Interfaces;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Service.Api.Utils;
 
 namespace BusesControl.Api.Controllers.v1;
 
@@ -9,6 +11,9 @@ namespace BusesControl.Api.Controllers.v1;
 [ApiVersion("1.0")]
 [Route("api/v1/users-registration-queue")]
 public class UserRegistrationQueueController(
+    IValidator<UserRegistrationStepCodeRequest> _userRegistrationStepCodeRequestValidator,
+    IValidator<UserRegistrationStepTokenRequest> _userRegistrationStepTokenRequestValidator,
+    IValidator<UserRegistrationStepPasswordRequest> _userRegistrationStepPasswordRequestValidator,
     IUserRegistrationQueueService _userRegistrationQueueService
 ) : ControllerBase
 {
@@ -30,6 +35,12 @@ public class UserRegistrationQueueController(
     [HttpPatch("step-code")]
     public async Task<IActionResult> RegistrationUserStepCode([FromBody] UserRegistrationStepCodeRequest request)
     {
+        var validation = ValidateModel.CheckIsValid(request, Request.Path, ModelState, _userRegistrationStepCodeRequestValidator);
+        if (validation is not null)
+        {
+            return BadRequest(validation);
+        }
+
         var response = await _userRegistrationQueueService.RegistrationUserStepCodeAsync(request);
         return Ok(response);
     }
@@ -37,6 +48,12 @@ public class UserRegistrationQueueController(
     [HttpPatch("step-token")]
     public async Task<IActionResult> RegistrationUserStepToken([FromBody] UserRegistrationStepTokenRequest request)
     {
+        var validation = ValidateModel.CheckIsValid(request, Request.Path, ModelState, _userRegistrationStepTokenRequestValidator);
+        if (validation is not null)
+        {
+            return BadRequest(validation);
+        }
+
         var response = await _userRegistrationQueueService.RegistrationUserStepTokenAsync(request);
         return Ok(response);
     }
@@ -44,6 +61,12 @@ public class UserRegistrationQueueController(
     [HttpPatch("step-password")]
     public async Task<IActionResult> ResetPasswordStepNewPassword([FromBody] UserRegistrationStepPasswordRequest request)
     {
+        var validation = ValidateModel.CheckIsValid(request, Request.Path, ModelState, _userRegistrationStepPasswordRequestValidator);
+        if (validation is not null)
+        {
+            return BadRequest(validation);
+        }
+
         var response = await _userRegistrationQueueService.RegistrationUserStepPasswordAsync(request);
         return Ok(response);
     }

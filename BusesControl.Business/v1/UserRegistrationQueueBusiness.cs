@@ -16,7 +16,7 @@ public class UserRegistrationQueueBusiness(
     IUserRegistrationQueueRepository _userRegistrationQueueRepository
 ) : IUserRegistrationQueueBusiness
 {
-    public async Task<bool> GetForCreateAsync(Guid employeeId)
+    public async Task<bool> ValidateForCreateAsync(Guid employeeId)
     {
         var employeeRecord = await _employeeRepository.GetByIdAsync(employeeId);
         if (employeeRecord is null)
