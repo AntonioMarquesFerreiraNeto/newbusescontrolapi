@@ -6,17 +6,19 @@ using Microsoft.EntityFrameworkCore;
 namespace BusesControl.Persistence.v1.Repositories;
 
 public class UserRegistrationSecurityCodeRepository(
-    AppDbContext _context
+    AppDbContext context
 ) : IUserRegistrationSecurityCodeRepository
 {
+    private readonly AppDbContext _context = context;
+
     public async Task<UserRegistrationSecurityCodeModel?> GetByCodeAsync(string code)
     {
-        return await _context.UsersRegistrationSecurityCode.SingleOrDefaultAsync(x => x.Code == code);
+        return await _context.UsersRegistrationSecurityCode.AsNoTracking().SingleOrDefaultAsync(x => x.Code == code);
     }
 
     public async Task<UserRegistrationSecurityCodeModel?> GetByUserAsync(Guid userId)
     {
-        return await _context.UsersRegistrationSecurityCode.SingleOrDefaultAsync(x => x.UserId == userId);
+        return await _context.UsersRegistrationSecurityCode.AsNoTracking().SingleOrDefaultAsync(x => x.UserId == userId);
     }
 
     public async Task<bool> CreateAsync(UserRegistrationSecurityCodeModel record)

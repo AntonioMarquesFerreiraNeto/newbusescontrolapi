@@ -13,6 +13,12 @@ public class Message
         public readonly static string Unexpected = "Desculpe, ocorreu um erro interno no servidor.";
     }
 
+    public class Color
+    {
+        public readonly static string NotFound = "Cor não encontrada!";
+        public readonly static string NotActive = "Cor selecionada não está ativa!";
+    }
+
     public class Bus
     {
         public readonly static string NotFound = "Ônibus não encontrado!";

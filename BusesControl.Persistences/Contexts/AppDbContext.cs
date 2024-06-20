@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace BusesControl.Persistence.Contexts;
 
@@ -13,6 +14,7 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
     }
 
     public DbSet<BusModel> Buses { get; set; }
+    public DbSet<ColorModel> Colors { get; set; }
     public DbSet<EmployeeModel> Employees { get; set; }
     public DbSet<ResetPasswordSecurityCodeModel> ResetPasswordsSecurityCode { get; set; }
     public DbSet<UserRegistrationQueueModel> UsersRegistrationQueue { get; set; }
@@ -50,5 +52,11 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
         builder.Entity<IdentityUserToken<Guid>>(entity => {
             entity.ToTable("UserTokens");
         });
+
+        builder.Entity<ColorModel>()
+            .HasMany(c => c.Buses)
+            .WithOne(ca => ca.Color)
+            .HasForeignKey(ca => ca.ColorId)
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

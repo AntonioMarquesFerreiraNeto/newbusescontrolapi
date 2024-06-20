@@ -1,21 +1,24 @@
 ﻿using BusesControl.Entities.Models;
 using BusesControl.Persistence.Contexts;
+using BusesControl.Persistence.v1.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace BusesControl.Persistence.v1.Repositories;
 
 public class ResetPasswordSecurityCodeRepository(
-    AppDbContext _context
-) : Interfaces.IResetPasswordSecurityCodeRepository
+    AppDbContext context
+) : IResetPasswordSecurityCodeRepository
 {
+    private readonly AppDbContext _context = context;
+
     public async Task<ResetPasswordSecurityCodeModel?> GetByUserAsync(Guid userId)
     {
-        return await _context.ResetPasswordsSecurityCode.SingleOrDefaultAsync(x => x.UserId == userId);
+        return await _context.ResetPasswordsSecurityCode.AsNoTracking().SingleOrDefaultAsync(x => x.UserId == userId);
     }
 
     public async Task<ResetPasswordSecurityCodeModel?> GetByCodeAsync(string code)
     {
-        return await _context.ResetPasswordsSecurityCode.SingleOrDefaultAsync(x => x.Code == code);
+        return await _context.ResetPasswordsSecurityCode.AsNoTracking().SingleOrDefaultAsync(x => x.Code == code);
     }
 
     public async Task<bool> Create(ResetPasswordSecurityCodeModel record)

@@ -18,6 +18,7 @@ public class RegisterPersistence
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         builder.Services.AddScoped<IBusRepository, BusRepository>();
+        builder.Services.AddScoped<IColorRepository, ColorRepository>();
         builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
         builder.Services.AddScoped<IResetPasswordSecurityCodeRepository, ResetPasswordSecurityCodeRepository>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();

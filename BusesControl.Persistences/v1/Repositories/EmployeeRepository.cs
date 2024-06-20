@@ -6,10 +6,12 @@ using Microsoft.EntityFrameworkCore;
 namespace BusesControl.Persistence.v1.Repositories;
 
 public class EmployeeRepository(
-    AppDbContext _context
+    AppDbContext context
 ) : IEmployeeRepository
 {
-    public async Task<IEnumerable<EmployeeModel>> FindBySearchAsync(int pageSize, int pageNumber, string? search = null)
+    private readonly AppDbContext _context = context;
+
+    public async Task<IEnumerable<EmployeeModel>> FindBySearchAsync(int pageSize = 0, int pageNumber = 0, string? search = null)
     {
         var query = _context.Employees.AsNoTracking();
 
@@ -19,6 +21,7 @@ public class EmployeeRepository(
         }
 
         query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+        
         var records = await query.ToListAsync();
 
         return records;
@@ -26,7 +29,7 @@ public class EmployeeRepository(
 
     public async Task<EmployeeModel?> GetByIdAsync(Guid id)
     {
-        return await _context.Employees.SingleOrDefaultAsync(x => x.Id == id);
+        return await _context.Employees.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
     }
 
     public async Task<bool> CreateAsync(EmployeeModel record)

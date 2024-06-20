@@ -1,6 +1,4 @@
 ﻿using BusesControl.Commons;
-using BusesControl.Persistence.v1.Repositories;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
 using BusesControl.Services.v1;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -26,6 +24,7 @@ public class RegisterServices
         });
 
         builder.Services.AddScoped<IBusService, BusService>();
+        builder.Services.AddScoped<IColorService, ColorService>();
         builder.Services.AddScoped<IViaCepIntegrationService, ViaCepIntegrationService>();
         builder.Services.AddScoped<IEmployeeService, EmployeeService>();
         builder.Services.AddScoped<IUserService, UserService>();

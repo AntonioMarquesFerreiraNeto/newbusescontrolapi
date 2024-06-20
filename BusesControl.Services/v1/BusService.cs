@@ -15,6 +15,7 @@ namespace BusesControl.Services.v1;
 public class BusService(
     INotificationApi _notificationApi,
     IBusBusiness _busBusiness,
+    IColorBusiness _colorBusiness,
     IBusRepository _busRepository
 ) : IBusService
 {
@@ -44,6 +45,12 @@ public class BusService(
     {
         request.LicensePlate = OnlyNumbers.ClearValue(request.LicensePlate);
 
+        await _colorBusiness.ValidateActiveAsync(request.ColorId);
+        if (_notificationApi.HasNotification)
+        {
+            return false;
+        }
+
         await _busBusiness.ExistsByRenavamOrLicensePlateOrChassisAsync(request.Renavam, request.LicensePlate, request.Chassi);
         if (_notificationApi.HasNotification)
         {
@@ -59,7 +66,7 @@ public class BusService(
             LicensePlate = request.LicensePlate.Replace("-", ""),
             Chassi = request.Chassi,
             SeatingCapacity = request.SeatingCapacity,
-            Color = request.Color,
+            ColorId = request.ColorId,
         };
 
         await _busRepository.CreateAsync(record);
@@ -82,6 +89,12 @@ public class BusService(
             return false;
         }
 
+        await _colorBusiness.ValidateActiveAsync(request.ColorId);
+        if (_notificationApi.HasNotification)
+        {
+            return false;
+        }
+
         await _busBusiness.ExistsByRenavamOrLicensePlateOrChassisAsync(request.Renavam, request.LicensePlate, request.Chassi, id);
         if (_notificationApi.HasNotification)
         {
@@ -95,7 +108,7 @@ public class BusService(
         record.LicensePlate = request.LicensePlate;
         record.Chassi = request.Chassi;
         record.SeatingCapacity = request.SeatingCapacity;
-        record.Color = request.Color;
+        record.ColorId = request.ColorId;
 
         await _busRepository.UpdateAsync(record);
 

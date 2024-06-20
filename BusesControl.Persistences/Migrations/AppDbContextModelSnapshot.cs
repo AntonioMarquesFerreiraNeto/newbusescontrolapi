@@ -41,10 +41,8 @@ namespace BusesControl.Persistence.Migrations
                         .HasMaxLength(17)
                         .HasColumnType("nvarchar(17)");
 
-                    b.Property<string>("Color")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                    b.Property<Guid>("ColorId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("LicensePlate")
                         .IsRequired()
@@ -71,7 +69,28 @@ namespace BusesControl.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ColorId");
+
                     b.ToTable("Buses");
+                });
+
+            modelBuilder.Entity("BusesControl.Entities.Models.ColorModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Colors");
                 });
 
             modelBuilder.Entity("BusesControl.Entities.Models.EmployeeModel", b =>
@@ -115,7 +134,8 @@ namespace BusesControl.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
 
                     b.Property<string>("Neighborhood")
                         .IsRequired()
@@ -436,6 +456,17 @@ namespace BusesControl.Persistence.Migrations
                     b.ToTable("UserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("BusesControl.Entities.Models.BusModel", b =>
+                {
+                    b.HasOne("BusesControl.Entities.Models.ColorModel", "Color")
+                        .WithMany("Buses")
+                        .HasForeignKey("ColorId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Color");
+                });
+
             modelBuilder.Entity("BusesControl.Entities.Models.ResetPasswordSecurityCodeModel", b =>
                 {
                     b.HasOne("BusesControl.Entities.Models.UserModel", "User")
@@ -529,6 +560,11 @@ namespace BusesControl.Persistence.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("BusesControl.Entities.Models.ColorModel", b =>
+                {
+                    b.Navigation("Buses");
                 });
 #pragma warning restore 612, 618
         }
