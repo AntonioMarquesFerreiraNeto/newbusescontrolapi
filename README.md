@@ -1,6 +1,6 @@
 # Projeto .NET 8 com Arquitetura em Camadas
 
-Este projeto é uma aplicação .NET 8 estruturada utilizando a arquitetura em camadas, seguindo boas práticas e padrões de mercado como Clean Architecture e Clean Code. Atualmente, o sistema está em processo de migração, com planos para incorporar padrões adicionais como Specification Pattern e Generic Repository.
+Este projeto é uma aplicação .NET 8 para gerir contratos de locações de ônibus utilizando a arquitetura em camadas, seguindo boas práticas e padrões de mercado como Clean Architecture e Clean Code. Atualmente, o sistema está em processo de migração, com planos para incorporar padrões adicionais como Specification Pattern e Generic Repository.
 
 ## Estrutura do Projeto
 
@@ -12,11 +12,11 @@ A camada de Controllers expõe os endpoints para interação com a aplicação v
 
 ### Commons
 
-A camada Commons contém utilitários e componentes reutilizáveis por outras camadas. Inclui regex, middlewares, notificações (filters), mensagens de sucesso e erro, e validações independentes que podem ser usadas tanto na camada de Service quanto na camada de Business.
+A camada Commons contém utilitários e componentes reutilizáveis por outras camadas. Inclui regex, middlewares, notificações (filters), mensagens de sucesso e erro, e validações independentes (cpf, telefone, placa) que podem ser usadas tanto na camada de Service quanto na camada de Business.
 
 ### Services
 
-A camada de Services é responsável por chamar a camada de Repository e Business. As validações nesta camada controlam o fluxo e aplicam regras comuns a todas as aplicações, e não específicas do sistema. Também gerencia transações e rollbacks por meio do UnitOfWork antes e depois de realizar operações de criação, atualização ou remoção no banco de dados por meio da camada repositories.
+A camada de Services é responsável por chamar a camada de Repository e Business. As validações nesta camada controlam o fluxo e aplicam regras comuns a todas as aplicações, e não específicas do sistema. Também gerencia transações e rollbacks por meio do UnitOfWork antes e depois de realizar operações de criação, atualização ou remoção no banco de dados por meio da camada repositories. O que permite o controle sobre a integridade dos dados. 
 
 ### Business
 
@@ -32,11 +32,11 @@ A camada de Repositories gerencia o acesso aos dados. Embora não esteja utiliza
 
 ## Tratamento de Exceções
 
-Em cenários específicos, exceções podem ser lançadas em camadas além da Repository. Por exemplo, na camada de Service onde há jobs para monitoramento de pagamentos e atrasos. Nesses casos, a lógica de exceção permite tratar falhas individualmente para que operações independentes não sejam afetadas por erros, como ao processar a folha de pagamento de contratos distintos. Dessa forma, se ocorrer uma falha no contrato de um cliente, um rollback é executado apenas para aquele cliente, permitindo que as demais operações continuem normalmente, caso não haja falhas nelas.
+Neste projeto, evitamos ao máximo o uso de try catch para estourar exceções. Não que o projeto seja contra, mas por perfomance e em facilidade no uso do pattern de notification nos métodos, a tendência é que evite o uso demasiado de "throw new exception()". Por padrão, não Usamos try catch em pontos específicos do código, isto é, exceções podem ser lançadas somente em pontos específicos, o que não torna exceções um ponto negativo da aplicação,  já que possuímos um middleware que realiza o tratamento das mesma em cenários de erros não mapeados ou instabilidade no banco de dados. Mas por exemplo, na camada de Service onde há jobs para monitoramento de pagamentos e atrasos ou em cenários que seja necessário continuar com a execução do fluxo mesmo que resulte em alguma falha com exceção com integração ou manipulação, será necessário tratar essas exceções por meio do try catch. No caso de jobs, a lógica de exceção permite tratar falhas individualmente para que operações independentes não sejam afetadas por erros, como ao processar a folha de pagamento de um contrato de uma lista distinta, ou seja, realiza o tratamento e continue a execução do próximo. 
 
 ## Notification Pattern
 
-Utilizamos o Notification Pattern para retornar erros de acordo com a convenção de APIs RESTful. As notificações incluem o título do erro (ex.: Requisição Inválida, Não Encontrado), o status code e detalhes customizados da mensagem. As respostas de erro podem incluir status como 200 (OK), 204 (No Content), 400 (Bad Request), 401 (Unauthorized), 403 (Forbidden), 404 (Not Found), 409 (Conflict), 500 (Internal Server Error), e outros conforme o contexto específico. Além disso, um middleware protege a aplicação para não retornar informações sensíveis em caso de exceções, formatando a resposta como um erro 500 com uma mensagem genérica de falha no processamento.
+Utilizamos o Notification Pattern no lugar de exceções para retornar erros de acordo com a convenção de APIs RESTful e evitar o lançamento de exceções demasiadamente. As notificações incluem o título do erro (ex.: Requisição Inválida, Não Encontrado), o status code e detalhes customizados da mensagem. As respostas de sucesso e erro podem incluir status como 200 (OK), 204 (No Content), 400 (Bad Request), 401 (Unauthorized), 403 (Forbidden), 404 (Not Found), 409 (Conflict), 500 (Internal Server Error), e outros conforme o contexto específico. Além disso, um middleware protege a aplicação para não retornar informações sensíveis em caso de exceções, formatando a resposta como um erro 500 com uma mensagem genérica de falha no processamento.
 
 ## Tecnologias Utilizadas
 
