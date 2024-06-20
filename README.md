@@ -20,7 +20,7 @@ A camada de Services é responsável por chamar a camada de Repository e Busines
 
 ### Business
 
-A camada de Business gerencia as regras de negócio e pode otimizar o fluxo para evitar custos de processamento e latência com o banco de dados. Valida as regras de negócio ao buscar registros para criação ou atualização. Esta camada interage com a camada de Repository apenas para buscar registros e não realiza operações de criação, atualização ou remoção. Ela é chamada somente pela camada de Service e não conhece as outras camadas.
+A camada de Business gerencia as regras de negócio. Em cenários específicos, como ao buscar um registro, realiza validações de fluxo seguidas de validações de negócio antes de retornar o registro à camada de Service. Caso contrário, foca exclusivamente nas regras de negócio. Esta camada interage apenas com a camada de Repository para consultas, não realizando operações de criação, atualização ou remoção. Ela é acionada exclusivamente pela camada de Service e tem conhecimento apenas da camada de Repository para verificação de existência ou busca de dados para validações.
 
 ### Entities
 
