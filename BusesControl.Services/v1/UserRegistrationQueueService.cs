@@ -47,7 +47,7 @@ public class UserRegistrationQueueService(
         return code;
     }
 
-    public async Task<IEnumerable<UserRegistrationQueueModel>> FindAsync(int pageSize, int pageNumber, string? search)
+    public async Task<IEnumerable<UserRegistrationQueueModel>> FindBySearchAsync(int pageSize, int pageNumber, string? search)
     {
         var records = await _userRegistrationQueueRepository.FindAsync(pageSize, pageNumber, search);
         return records;

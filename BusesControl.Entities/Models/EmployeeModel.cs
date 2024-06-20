@@ -6,7 +6,7 @@ namespace BusesControl.Entities.Models;
 public class EmployeeModel
 {
     public Guid Id { get; set; }
-    [MinLength(60)]
+    [MaxLength(60)]
     public string Name { get; set; } = default!;
     [MaxLength(11)]
     public string Cpf { get; set; } = default!;
