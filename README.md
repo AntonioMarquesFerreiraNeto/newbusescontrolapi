@@ -8,7 +8,10 @@ O projeto está organizado nas seguintes camadas:
 
 ### Controllers (API)
 
-A camada de Controllers expõe os endpoints para interação com a aplicação via HTTP. Ela não contém nenhuma lógica de negócios, apenas validação de entidades usando FluentValidation e retornando BadRequest em caso de falhas. Utilizamos o Notification Pattern para retornar erros de acordo com a convenção de APIs RESTful, incluindo o título do erro (ex.: Requisição Inválida, Não Encontrado), o status code e detalhes customizados da mensagem. Exceções são lançadas apenas na camada de Repository, e um middleware protege a aplicação para não retornar informações sensíveis, formatando a resposta como um erro 500 com uma mensagem de falha no processamento.
+A camada de Controllers expõe os endpoints para interação com a aplicação via HTTP. Ela não contém nenhuma lógica de negócios, apenas validação de entidades usando FluentValidation e retornando respostas apropriadas de acordo com o resultado das validações e operações. Utilizamos o Notification Pattern para retornar erros de acordo com a convenção de APIs RESTful, incluindo o título do erro (ex.: Requisição Inválida, Não Encontrado), o status code e detalhes customizados da mensagem. Os status de resposta incluem 200 (OK), 204 (No Content), 400 (Bad Request), 401 (Unauthorized), 403 (Forbidden), 404 (Not Found), 409 (Conflict), 500 (Internal Server Error), e outros conforme o contexto específico.
+
+Exceções são lançadas na camada de Repository apenas em cenários onde falhas não mapeadas ocorrem. O princípio é chamar a camada de Repository somente quando todas as validações foram bem-sucedidas, minimizando assim a chance de erros. Além disso, um middleware protege a aplicação para não retornar informações sensíveis em caso de exceções, formatando a resposta como um erro 500 com uma mensagem genérica de falha no processamento.
+
 
 ### Commons
 
@@ -35,6 +38,7 @@ A camada de Repositories gerencia o acesso aos dados. Embora não esteja utiliza
 O projeto utiliza diversas tecnologias, algumas das quais foram definidas e reutilizadas da versão anterior do projeto, incluindo:
 
 - **Azure**: Utilizado para hospedagem do servidor e serviços adicionais como envio de emails.
+- **Azure Key Vault**: Planejado para uso futuro para gerenciamento de segredos.
 - **Zenvia**: Para envio de SMS.
 - **Assas**: Para possíveis transações bancárias.
 - **Entity Framework**: Para acesso e manipulação de dados.
@@ -42,8 +46,9 @@ O projeto utiliza diversas tecnologias, algumas das quais foram definidas e reut
 - **ClosedXML**: Para geração de relatórios em Excel.
 - **SQL Server com Docker**: Utilizado como banco de dados, facilitando o ambiente de desenvolvimento e deploy.
 - **Docker**: Possivelmente utilizado também para a API em futuras atualizações.
+- **UserManager**: Para gerenciamento de usuários e controle de autenticação e autorização.
 
-Essas tecnologias já foram integradas na versão anterior do projeto, que está pronta, mas com menos regras em relação às convenções padrões de mercado e boas práticas.
+Uma parte dessas tecnologias já foram integradas na versão anterior do projeto ou serão apenas nessa, que está pronta, mas com menos regras em relação às convenções padrões de mercado e boas práticas.
 
 ## Instalação e Uso
 
@@ -83,7 +88,7 @@ Essas tecnologias já foram integradas na versão anterior do projeto, que está
 
 6. Execute as migrações do banco de dados (caso esteja utilizando Entity Framework):
     ```sh
-    dotnet ef database update
+    dotnet ef database update -s BusesControl.Services -p BusesControl.Persistence
     ```
 
 7. Execute o projeto:
