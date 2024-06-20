@@ -16,7 +16,7 @@ A camada Commons contém utilitários e componentes reutilizáveis por outras ca
 
 ### Services
 
-A camada de Services é responsável por chamar a camada de Repository e Business. As validações nesta camada controlam o fluxo e aplicam regras comuns a todas as aplicações, e não específicas do sistema. Também gerencia transações e rollbacks por meio do UnitOfWork antes e depois de realizar operações de criação, atualização ou remoção no banco de dados.
+A camada de Services é responsável por chamar a camada de Repository e Business. As validações nesta camada controlam o fluxo e aplicam regras comuns a todas as aplicações, e não específicas do sistema. Também gerencia transações e rollbacks por meio do UnitOfWork antes e depois de realizar operações de criação, atualização ou remoção no banco de dados por meio da camada repositories.
 
 ### Business
 
@@ -24,7 +24,7 @@ A camada de Business gerencia as regras de negócio e pode otimizar o fluxo para
 
 ### Entities
 
-A camada de Entities contém os validadores (FluentValidation), respostas, requisições, modelos, enums e DTOs. As respostas são usadas para devolver registros ao frontend, enquanto os corpos das requisições são recebidos por classes de Request. Os DTOs são usados para integração com outras aplicações que necessitam de um corpo específico. As models representam os dados do domínio e são utilizadas para mapear os dados da aplicação para o banco de dados.
+A camada de Entities contém os validadores (FluentValidation), responses, requests, models, enums e DTOs. As respostas são usadas para devolver registros ao frontend, enquanto os corpos das requisições são recebidos por classes de Request. Os DTOs são usados para integração com outras aplicações que necessitam de um corpo específico. As models representam os dados do domínio e são utilizadas para mapear os dados da aplicação para o banco de dados.
 
 ### Repositories
 
@@ -52,6 +52,7 @@ O projeto utiliza diversas tecnologias, algumas das quais foram definidas e reut
 - **SQL Server com Docker**: Utilizado como banco de dados, facilitando o ambiente de desenvolvimento e deploy.
 - **Docker**: Possivelmente utilizado também para a API em futuras atualizações.
 - **UserManager**: Para gerenciamento de usuários e controle de autenticação e autorização.
+- **AutoMapper**: Utilizado para mapeamento de objetos em aplicações .NET, facilitando a transferência de dados entre models, DTOs, requests e responses.
 
 Essas tecnologias já foram integradas na versão anterior do projeto, que está pronta, mas com menos regras em relação às convenções padrões de mercado e boas práticas.
 
