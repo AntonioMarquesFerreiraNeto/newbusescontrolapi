@@ -54,7 +54,7 @@ O projeto utiliza diversas tecnologias, algumas das quais foram definidas e reut
 - **UserManager**: Para gerenciamento de usuários e controle de autenticação e autorização.
 - **AutoMapper**: Utilizado para mapeamento de objetos em aplicações .NET, facilitando a transferência de dados entre models, DTOs, requests e responses.
 - **JWT**: Utilizado para geração e validação de tokens de autenticação, garantindo segurança na comunicação entre cliente e servidor.
-- 
+
 Boa parte dessas tecnologias já foram integradas na versão anterior do projeto, que está pronta, mas com menos regras em relação às convenções padrões de mercado e boas práticas. Outras estão nessa ou serão implementadas.
 
 ## Instalação e Uso
