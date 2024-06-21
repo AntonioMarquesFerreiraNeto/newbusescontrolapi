@@ -36,9 +36,7 @@ public class BusUpdateRequestValidator : AbstractValidator<BusUpdateRequest>
             .NotEmpty().WithMessage("Capacidade de assentos é um campo obrigatório.")
             .LessThanOrEqualTo(240).WithMessage("Capacidade não permitida.");
 
-        RuleFor(x => x.Color)
-            .NotEmpty().WithMessage("Cor é um campo obrigatório.")
-            .MinimumLength(3).WithMessage("Marca deve ter no mínimo 3 caracteres.")
-            .MaximumLength(30).WithMessage("Cor deve ter no máximo 30 caracteres.");
+        RuleFor(x => x.ColorId)
+            .NotEmpty().WithMessage("Cor é um campo obrigatório.");
     }
 }

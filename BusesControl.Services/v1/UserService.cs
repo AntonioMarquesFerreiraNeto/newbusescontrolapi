@@ -1,5 +1,4 @@
-﻿using BusesControl.Business.v1.Interfaces;
-using BusesControl.Commons;
+﻿using BusesControl.Commons;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.Enums;
@@ -135,6 +134,7 @@ public class UserService(
             Code = await GenerateUniqueCode(),
             Expires = DateTime.UtcNow.AddMinutes(AppSettingsResetPassword.ExpireCode)
         };
+
         await _resetPasswordSecurityCodeRepository.Create(newResetPasswordCodeRecord);
 
         //TODO: Enviar código gerado para o e-mail do usuário neste local.

@@ -7,9 +7,11 @@ using System.Linq.Expressions;
 namespace BusesControl.Persistence.v1.Repositories;
 
 public class UserRepository(
-    AppDbContext _context
+    AppDbContext context
 ) : IUserRepository
 {
+    private readonly AppDbContext _context = context;
+
     public async Task<UserModel?> GetByEmailAndCpfAndBirthDateAsync(string email, string cpf, DateOnly birthDate)
     {
         Expression<Func<UserModel, bool>> criteria = x => x.Email == email && 

@@ -1,5 +1,4 @@
 ﻿using BusesControl.Business.v1.Interfaces;
-using BusesControl.Commons;
 using BusesControl.Commons.Message;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.Enums;
@@ -7,14 +6,17 @@ using BusesControl.Entities.Models;
 using BusesControl.Entities.Request;
 using BusesControl.Filters.Notification;
 using BusesControl.Persistence.v1.Repositories.Interfaces;
+using BusesControl.Persistence.v1.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Http;
 
 namespace BusesControl.Services.v1;
 
 public class BusService(
+    IUnitOfWork _unitOfWork,
     INotificationApi _notificationApi,
     IBusBusiness _busBusiness,
+    IColorBusiness _colorBusiness,
     IBusRepository _busRepository
 ) : IBusService
 {
@@ -42,7 +44,13 @@ public class BusService(
 
     public async Task<bool> CreateAsync(BusCreateRequest request)
     {
-        request.LicensePlate = OnlyNumbers.ClearValue(request.LicensePlate);
+        request.LicensePlate = request.LicensePlate.Replace("-", "");
+
+        await _colorBusiness.ValidateActiveAsync(request.ColorId);
+        if (_notificationApi.HasNotification)
+        {
+            return false;
+        }
 
         await _busBusiness.ExistsByRenavamOrLicensePlateOrChassisAsync(request.Renavam, request.LicensePlate, request.Chassi);
         if (_notificationApi.HasNotification)
@@ -59,10 +67,11 @@ public class BusService(
             LicensePlate = request.LicensePlate.Replace("-", ""),
             Chassi = request.Chassi,
             SeatingCapacity = request.SeatingCapacity,
-            Color = request.Color,
+            ColorId = request.ColorId,
         };
 
         await _busRepository.CreateAsync(record);
+        await _unitOfWork.CommitAsync();
 
         return true;
     }
@@ -82,6 +91,12 @@ public class BusService(
             return false;
         }
 
+        await _colorBusiness.ValidateActiveAsync(request.ColorId);
+        if (_notificationApi.HasNotification)
+        {
+            return false;
+        }
+
         await _busBusiness.ExistsByRenavamOrLicensePlateOrChassisAsync(request.Renavam, request.LicensePlate, request.Chassi, id);
         if (_notificationApi.HasNotification)
         {
@@ -95,9 +110,10 @@ public class BusService(
         record.LicensePlate = request.LicensePlate;
         record.Chassi = request.Chassi;
         record.SeatingCapacity = request.SeatingCapacity;
-        record.Color = request.Color;
+        record.ColorId = request.ColorId;
 
-        await _busRepository.UpdateAsync(record);
+        _busRepository.Update(record);
+        await _unitOfWork.CommitAsync();
 
         return true;
     }
@@ -116,7 +132,8 @@ public class BusService(
         }
 
         record.Status = record.Status != BusStatusEnum.Active ? BusStatusEnum.Active : BusStatusEnum.Inactive;
-        await _busRepository.UpdateAsync(record);
+        _busRepository.Update(record);
+        await _unitOfWork.CommitAsync();
 
         return true;
     }
@@ -135,7 +152,9 @@ public class BusService(
         }
 
         record.Availability = record.Availability != AvailabilityEnum.Available ? AvailabilityEnum.Available : AvailabilityEnum.Unavailable;
-        await _busRepository.UpdateAsync(record);
+        
+        _busRepository.Update(record);
+        await _unitOfWork.CommitAsync();
 
         return true;
     }

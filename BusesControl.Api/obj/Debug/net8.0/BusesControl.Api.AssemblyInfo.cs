@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BusesControl.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+51da9c903bcc932b7e3e5741cc5d9030f282fc09")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0fe029e2db4cd08df793957176d635e30d103601")]
 [assembly: System.Reflection.AssemblyProductAttribute("BusesControl.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BusesControl.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

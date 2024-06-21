@@ -7,6 +7,7 @@ public interface IBusRepository
     Task<IEnumerable<BusModel>> FindBySearchAsync(int pageSize, int pageNumber, string? search = null);
     Task<BusModel?> GetByIdAsync(Guid id);
     Task<bool> CreateAsync(BusModel bus);
-    Task<bool> UpdateAsync(BusModel bus);
+    bool Update(BusModel bus);
     Task<bool> ExistsByRenavamOrLicensePlateOrChassisAsync(string renavam, string licensePlate, string chassi, Guid? id = null);
+    Task<bool> ExistsByColorAsync(Guid colorId);
 }

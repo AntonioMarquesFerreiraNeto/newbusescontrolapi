@@ -1,6 +1,6 @@
 ﻿namespace BusesControl.Entities.Request;
 
-public class BusUpdateRequest
+public class BusCreateRequest
 {
     public string Brand { get; set; } = default!;
     public string Name { get; set; } = default!;
@@ -9,5 +9,5 @@ public class BusUpdateRequest
     public string LicensePlate { get; set; } = default!;
     public string Chassi { get; set; } = default!;
     public int SeatingCapacity { get; set; }
-    public string Color { get; set; } = default!;
+    public Guid ColorId { get; set; } = default!;
 }
