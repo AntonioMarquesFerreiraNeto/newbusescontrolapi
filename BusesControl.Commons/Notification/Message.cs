@@ -38,6 +38,12 @@ public class Message
         public readonly static string RoleAndProfileChanged = "Papel e perfil do funcionário alterado com sucesso! Agora ele terá novos acessos ao sistema.";
     }
 
+    public class SettingsPanel
+    {
+        public readonly static string NotFound = "Painel de configurações não encontrado!";
+        public readonly static string Exists = "Já existe um painel de configurações para o parent especificado!";
+    }
+
     public class User
     {
         public readonly static string NotFound = "Usuário não encontrado!";

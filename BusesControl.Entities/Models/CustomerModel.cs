@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BusesControl.Entities.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace BusesControl.Entities.Models;
 
@@ -8,14 +9,15 @@ public class CustomerModel
     [MaxLength(90)]
     public string Name { get; set; } = default!;
     [MaxLength(11)]
-    public string Cpf { get; set; } = default!;
+    public string? Cpf { get; set; } = default!;
     [MaxLength(14)]
-    public string Cnpj { get; set; } = default!;
-    public DateOnly BirthDate { get; set; }
+    public string? Cnpj { get; set; } = default!;
+    public DateOnly? BirthDate { get; set; }
+    public DateOnly? OpenDate { get; set; }
     [MaxLength(80)]
     public string Email { get; set; } = default!;
     [MinLength(90)]
-    public string MotherName { get; set; } = default!;
+    public string? MotherName { get; set; } = default!;
     [MaxLength(11)]
     public string PhoneNumber { get; set; } = default!;
     [MaxLength(20)]
@@ -30,4 +32,6 @@ public class CustomerModel
     public string City { get; set; } = default!;
     [MaxLength(60)]
     public string State { get; set; } = default!;
+    public bool Active { get; set; } = true;
+    public CustomerTypeEnum Type { get; set; }
 }

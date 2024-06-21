@@ -27,6 +27,7 @@ public class RegisterServices
         builder.Services.AddScoped<IColorService, ColorService>();
         builder.Services.AddScoped<IViaCepIntegrationService, ViaCepIntegrationService>();
         builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+        builder.Services.AddScoped<ISettingsPanelService, SettingsPanelService>();
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IUserRegistrationQueueService, UserRegistrationQueueService>();
