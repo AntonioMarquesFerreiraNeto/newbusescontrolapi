@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BusesControl.Entities")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c3359e065cc6352e1b8c0fee3aa00f6d98deda88")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3c10d30555ef605dfb9f5b6ca7aff045ccbdeac8")]
 [assembly: System.Reflection.AssemblyProductAttribute("BusesControl.Entities")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BusesControl.Entities")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
