@@ -28,22 +28,18 @@ public class BusRepository(
 
     public async Task<BusModel?> GetByIdAsync(Guid id)
     {
-        return await _context.Buses.AsNoTracking().Include(x => x.Color).SingleOrDefaultAsync(x => x.Id == id);
+        return await _context.Buses.Include(x => x.Color).SingleOrDefaultAsync(x => x.Id == id);
     }
 
     public async Task<bool> CreateAsync(BusModel bus)
     {
         await _context.Buses.AddAsync(bus);
-        await _context.SaveChangesAsync();
-
         return true;
     }
 
-    public async Task<bool> UpdateAsync(BusModel bus)
+    public bool Update(BusModel bus)
     {
         _context.Buses.Update(bus);
-        await _context.SaveChangesAsync();
-
         return true;
     }
 
@@ -54,5 +50,10 @@ public class BusRepository(
             x.LicensePlate == licensePlate ||
             x.Chassi == chassi) && x.Id != id
         );
+    }
+
+    public async Task<bool> ExistsByColorAsync(Guid colorId)
+    {
+        return await _context.Buses.AnyAsync(x => x.ColorId == colorId);
     }
 }

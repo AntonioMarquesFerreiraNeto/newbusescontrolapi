@@ -11,13 +11,13 @@ public class ColorRepository(
 {
     private readonly AppDbContext _context = context;
 
-    public async Task<IEnumerable<ColorModel>> FindBySearchAsync(int page = 0, int pageSize = 0, string? color = null)
+    public async Task<IEnumerable<ColorModel>> FindBySearchAsync(int page = 0, int pageSize = 0, string? search = null)
     {
         var query = _context.Colors.AsNoTracking();
 
-        if (color is not null)
+        if (search is not null)
         {
-            query = query.Where(x => x.Color.Contains(color));
+            query = query.Where(x => x.Color.Contains(search));
         }
 
         if (page >= 1 && pageSize >= 1)
@@ -51,5 +51,10 @@ public class ColorRepository(
     {
         _context.Colors.Remove(record);
         return true;
+    }
+
+    public async Task<bool> ExistsAsync(string color, Guid? id = null)
+    {
+        return await _context.Colors.AnyAsync(x => x.Color == color && x.Id != id);
     }
 }

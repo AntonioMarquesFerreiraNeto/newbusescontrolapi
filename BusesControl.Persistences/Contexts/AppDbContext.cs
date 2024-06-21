@@ -53,10 +53,11 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
             entity.ToTable("UserTokens");
         });
 
-        builder.Entity<ColorModel>()
-            .HasMany(c => c.Buses)
-            .WithOne(ca => ca.Color)
-            .HasForeignKey(ca => ca.ColorId)
+        builder.Entity<BusModel>()
+            .HasOne(x => x.Color)
+            .WithMany()
+            .HasForeignKey(x => x.ColorId)
             .OnDelete(DeleteBehavior.NoAction);
+
     }
 }

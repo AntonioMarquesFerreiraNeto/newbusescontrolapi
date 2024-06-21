@@ -17,6 +17,8 @@ public class Message
     {
         public readonly static string NotFound = "Cor não encontrada!";
         public readonly static string NotActive = "Cor selecionada não está ativa!";
+        public readonly static string Exists = "Cor já se encontra registrada!";
+        public readonly static string ExistsInBus = "Cor é usada em pelo menos um ônibus!";
     }
 
     public class Bus
