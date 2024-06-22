@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusesControl.Entities.Models;
 using BusesControl.Entities.Request;
+using BusesControl.Entities.Responses;
 
 namespace BusesControl.Services.v1.AutoMapper;
 
@@ -11,5 +12,8 @@ public class AutoMapper : Profile
         CreateMap<EmployeeModel, UserCreateRequest>()
             .ForMember(dest => dest.EmployeeId, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Type.ToString()));
+
+        CreateMap<SettingsPanelModel, SettingsPanelResponse>();
+        CreateMap<UserModel, UserResponse>();
     }
 }

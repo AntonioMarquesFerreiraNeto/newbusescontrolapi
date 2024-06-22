@@ -34,22 +34,18 @@ public class EmployeeRepository(
 
     public async Task<bool> CreateAsync(EmployeeModel record)
     {
-        await _context.AddAsync(record);
+        await _context.Employees.AddAsync(record);
         return true;
     }
 
     public bool Update(EmployeeModel record)
     {
-        _context.Update(record);
+        _context.Employees.Update(record);
         return true;
     }
 
     public async Task<bool> ExistsByEmailOrPhoneNumberOrCpfAsync(string email, string phoneNumber, string cpf, Guid? id = null)
     {
-        return await _context.Employees.AnyAsync(x =>
-            (x.Email == email ||
-            x.PhoneNumber == phoneNumber ||
-            x.Cpf == cpf) && x.Id != id
-        );
+        return await _context.Employees.AnyAsync(x => (x.Email == email ||x.PhoneNumber == phoneNumber || x.Cpf == cpf) && x.Id != id);
     }
 }

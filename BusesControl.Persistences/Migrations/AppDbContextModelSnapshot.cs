@@ -93,6 +93,82 @@ namespace BusesControl.Persistence.Migrations
                     b.ToTable("Colors");
                 });
 
+            modelBuilder.Entity("BusesControl.Entities.Models.CustomerModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<DateOnly?>("BirthDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
+
+                    b.Property<string>("Cnpj")
+                        .HasMaxLength(14)
+                        .HasColumnType("nvarchar(14)");
+
+                    b.Property<string>("ComplementResidential")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
+
+                    b.Property<string>("Cpf")
+                        .HasMaxLength(11)
+                        .HasColumnType("nvarchar(11)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.Property<string>("HomeNumber")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Logradouro")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(90)
+                        .HasColumnType("nvarchar(90)");
+
+                    b.Property<string>("Neighborhood")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
+
+                    b.Property<DateOnly?>("OpenDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(11)
+                        .HasColumnType("nvarchar(11)");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Customers");
+                });
+
             modelBuilder.Entity("BusesControl.Entities.Models.EmployeeModel", b =>
                 {
                     b.Property<Guid>("Id")
@@ -184,6 +260,45 @@ namespace BusesControl.Persistence.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("ResetPasswordsSecurityCode");
+                });
+
+            modelBuilder.Entity("BusesControl.Entities.Models.SettingsPanelModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("CustomerDelinquencyEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("LateFeeInterestRate")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<int>("Parent")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("RequesterId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("TerminationFee")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RequesterId");
+
+                    b.ToTable("SettingsPanel");
                 });
 
             modelBuilder.Entity("BusesControl.Entities.Models.UserModel", b =>
@@ -459,7 +574,7 @@ namespace BusesControl.Persistence.Migrations
             modelBuilder.Entity("BusesControl.Entities.Models.BusModel", b =>
                 {
                     b.HasOne("BusesControl.Entities.Models.ColorModel", "Color")
-                        .WithMany("Buses")
+                        .WithMany()
                         .HasForeignKey("ColorId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
@@ -476,6 +591,17 @@ namespace BusesControl.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BusesControl.Entities.Models.SettingsPanelModel", b =>
+                {
+                    b.HasOne("BusesControl.Entities.Models.UserModel", "Requester")
+                        .WithMany()
+                        .HasForeignKey("RequesterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Requester");
                 });
 
             modelBuilder.Entity("BusesControl.Entities.Models.UserModel", b =>
@@ -560,11 +686,6 @@ namespace BusesControl.Persistence.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("BusesControl.Entities.Models.ColorModel", b =>
-                {
-                    b.Navigation("Buses");
                 });
 #pragma warning restore 612, 618
         }

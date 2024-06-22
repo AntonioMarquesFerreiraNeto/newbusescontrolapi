@@ -79,6 +79,9 @@ public class EmployeeService(
 
     public async Task<bool> UpdateAsync(Guid id, EmployeeUpdateRequest request)
     {
+        request.Cpf = OnlyNumbers.ClearValue(request.Cpf);
+        request.PhoneNumber = OnlyNumbers.ClearValue(request.PhoneNumber);
+
         var record = await _employeeRepository.GetByIdAsync(id);
         if (record is null)
         {
@@ -89,9 +92,6 @@ public class EmployeeService(
             );
             return false;
         }
-
-        request.Cpf = OnlyNumbers.ClearValue(request.Cpf);
-        request.PhoneNumber = OnlyNumbers.ClearValue(request.PhoneNumber);
 
         await _employeeBusiness.ExistsByEmailOrPhoneNumberOrCpfAsync(request.Email, request.PhoneNumber, request.PhoneNumber, id);
         if (_notificationApi.HasNotification)
