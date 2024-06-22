@@ -138,6 +138,12 @@ namespace BusesControl.Persistence.Migrations
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
 
+<<<<<<< HEAD
+=======
+                    b.Property<string>("MotherName")
+                        .HasColumnType("nvarchar(max)");
+
+>>>>>>> 3a9cc1cf2b23eafb9b2664df99d086fd4d58575f
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(90)
