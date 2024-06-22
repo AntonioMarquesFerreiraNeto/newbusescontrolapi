@@ -22,9 +22,9 @@ public class EmployeeService(
     IEmployeeRepository _employeeRepository
 ) : IEmployeeService
 {
-    public async Task<IEnumerable<EmployeeModel>> FindBySearchAsync(int pageSize, int pageNumber, string? search = null)
+    public async Task<IEnumerable<EmployeeModel>> FindBySearchAsync(int page, int pageSize, string? search = null)
     {
-        var records = await _employeeRepository.FindBySearchAsync(pageSize, pageNumber, search);
+        var records = await _employeeRepository.FindBySearchAsync(page, pageSize, search);
         return records;
     }
 

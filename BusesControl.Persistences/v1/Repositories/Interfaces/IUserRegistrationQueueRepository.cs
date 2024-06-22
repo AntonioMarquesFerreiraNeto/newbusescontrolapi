@@ -4,7 +4,7 @@ namespace BusesControl.Persistence.v1.Repositories.Interfaces;
 
 public interface IUserRegistrationQueueRepository
 {
-    Task<IEnumerable<UserRegistrationQueueModel>> FindAsync(int pageSize, int pageNumber, string? search);
+    Task<IEnumerable<UserRegistrationQueueModel>> FindAsync(int page, int pageSize, string? search);
     Task<UserRegistrationQueueModel?> GetByIdAsync(Guid id);
     Task<UserRegistrationQueueModel?> GetByUserAsync(Guid userId);
     Task<UserRegistrationQueueModel?> GetByEmployeeAttributesAsync(string email, string cpf, DateOnly birthDate);

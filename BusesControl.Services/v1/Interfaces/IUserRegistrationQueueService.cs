@@ -6,7 +6,7 @@ namespace BusesControl.Services.v1.Interfaces;
 
 public interface IUserRegistrationQueueService
 {
-    Task<IEnumerable<UserRegistrationQueueModel>> FindBySearchAsync(int pageSize, int pageNumber, string? search);
+    Task<IEnumerable<UserRegistrationQueueModel>> FindBySearchAsync(int page, int pageSize, string? search);
     Task<SuccessResponse> CreateForEmployeeAsync(UserRegistrationCreateRequest request);
     Task<SuccessResponse> RegistrationUserStepCodeAsync(UserRegistrationStepCodeRequest request);
     Task<UserRegistrationStepTokenResponse> RegistrationUserStepTokenAsync(UserRegistrationStepTokenRequest request);

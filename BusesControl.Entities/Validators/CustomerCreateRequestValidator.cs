@@ -44,6 +44,7 @@ public class CustomerCreateRequestValidator : AbstractValidator<CustomerCreateRe
 
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage("E-mail é um campo obrigatório")
+            .EmailAddress().WithMessage("E-mail inválido")
             .MaximumLength(80).WithMessage("E-mail deve ter no mínimo 80 caracteres!");
 
         RuleFor(x => x.PhoneNumber)

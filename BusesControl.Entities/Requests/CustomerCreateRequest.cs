@@ -17,6 +17,5 @@ public class CustomerCreateRequest
     public string Neighborhood { get; set; } = default!;
     public string City { get; set; } = default!;
     public string State { get; set; } = default!;
-    public bool Active { get; set; } = true;
     public CustomerTypeEnum Type { get; set; }
 }

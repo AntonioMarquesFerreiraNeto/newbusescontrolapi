@@ -20,9 +20,9 @@ public class BusService(
     IBusRepository _busRepository
 ) : IBusService
 {
-    public async Task<IEnumerable<BusModel>> FindBySearchAsync(int pageSize, int pageNumber, string? search = null)
+    public async Task<IEnumerable<BusModel>> FindBySearchAsync(int page, int pageSize, string? search = null)
     {
-        var records = await _busRepository.FindBySearchAsync(pageSize, pageNumber, search);
+        var records = await _busRepository.FindBySearchAsync(page, pageSize, search);
         return records;
     }
 

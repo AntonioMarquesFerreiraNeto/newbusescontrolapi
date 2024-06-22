@@ -4,7 +4,7 @@ namespace BusesControl.Persistence.v1.Repositories.Interfaces;
 
 public interface IBusRepository
 {
-    Task<IEnumerable<BusModel>> FindBySearchAsync(int pageSize, int pageNumber, string? search = null);
+    Task<IEnumerable<BusModel>> FindBySearchAsync(int page = 0, int pageSize = 0, string? search = null);
     Task<BusModel?> GetByIdAsync(Guid id);
     Task<bool> CreateAsync(BusModel bus);
     bool Update(BusModel bus);

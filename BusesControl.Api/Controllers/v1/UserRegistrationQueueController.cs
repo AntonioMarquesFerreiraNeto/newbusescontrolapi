@@ -18,9 +18,9 @@ public class UserRegistrationQueueController(
 ) : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> FindBySearch([FromQuery] int pageSize, [FromQuery] int pageNumber, [FromQuery] string? search = null)
+    public async Task<IActionResult> FindBySearch([FromQuery] int page, [FromQuery] int pageSize, [FromQuery] string? search = null)
     {
-        var response = await _userRegistrationQueueService.FindBySearchAsync(pageSize, pageNumber, search);
+        var response = await _userRegistrationQueueService.FindBySearchAsync(page, pageSize, search);
         return Ok(response);
     }
 

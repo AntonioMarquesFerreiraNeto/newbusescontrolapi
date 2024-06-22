@@ -11,7 +11,7 @@ public class EmployeeRepository(
 {
     private readonly AppDbContext _context = context;
 
-    public async Task<IEnumerable<EmployeeModel>> FindBySearchAsync(int pageSize = 0, int pageNumber = 0, string? search = null)
+    public async Task<IEnumerable<EmployeeModel>> FindBySearchAsync(int page = 0, int pageSize = 0, string? search = null)
     {
         var query = _context.Employees.AsNoTracking();
 
@@ -20,7 +20,7 @@ public class EmployeeRepository(
             query = query.Where(x => x.Name.Contains(search) || x.Cpf.Contains(search) || x.Email.Contains(search));
         }
 
-        query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+        query = query.Skip((page - 1) * pageSize).Take(pageSize);
         
         var records = await query.ToListAsync();
 

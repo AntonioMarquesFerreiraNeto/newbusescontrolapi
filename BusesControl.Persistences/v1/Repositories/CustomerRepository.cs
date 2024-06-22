@@ -11,7 +11,7 @@ public class CustomerRepository(
 {
     private readonly AppDbContext _context = context;
 
-    public async Task<IEnumerable<CustomerModel>> FindBySearchAsync(int pageSize = 0, int pageNumber = 0, string? search = null)
+    public async Task<IEnumerable<CustomerModel>> FindBySearchAsync(int page = 0, int pageSize = 0, string? search = null)
     {
         var query = _context.Customers.AsNoTracking();
 
@@ -20,7 +20,10 @@ public class CustomerRepository(
             query = query.Where(x => x.Name.Contains(search) || x.Email.Contains(search));
         }
 
-        query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+        if (page > 0 & pageSize > 0)
+        {
+            query = query.Skip((page - 1) * pageSize).Take(pageSize);
+        }
 
         var records = await query.ToListAsync();
 
@@ -46,18 +49,6 @@ public class CustomerRepository(
 
     public async Task<bool> ExistsByEmailOrPhoneNumberOrCpfOrCnpjAsync(string email, string phoneNumber, string? cpf, string? cnpj, Guid? id = null)
     {
-        var query = _context.Customers.Where(x => (x.Email == email || x.PhoneNumber == phoneNumber) && x.Id != id);
-
-        if (!string.IsNullOrEmpty(cpf))
-        {
-            query = query.Where(x => x.Cpf == cpf);
-        }
-
-        if (!string.IsNullOrEmpty(cnpj))
-        {
-            query = query.Where(x => x.Cnpj == cnpj);
-        }
-
-        return await query.AnyAsync();
+        return await _context.Customers.AnyAsync(x => (x.Email == email || x.PhoneNumber == phoneNumber || (!string.IsNullOrEmpty(cpf) && x.Cpf == cpf) || (!string.IsNullOrEmpty(cnpj) && x.Cnpj == cnpj)) && (id == null || x.Id != id));
     }
 }
