@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BusesControl.Business")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7135d629b2b4da0c5b920258beddae81a46b4b51")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+436146784e9eba7467ccb3cc06abb026bdbc6192")]
 [assembly: System.Reflection.AssemblyProductAttribute("BusesControl.Business")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BusesControl.Business")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
