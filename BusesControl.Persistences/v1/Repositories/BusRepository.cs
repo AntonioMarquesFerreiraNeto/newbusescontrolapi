@@ -45,6 +45,11 @@ public class BusRepository(
         return true;
     }
 
+    public async Task<bool> ExistsAsync(Guid id)
+    {
+        return await _context.Buses.AnyAsync(x => x.Id == id);
+    }
+
     public async Task<bool> ExistsByRenavamOrLicensePlateOrChassisAsync(string renavam, string licensePlate, string chassi, Guid? id = null)
     {
         return await _context.Buses.AnyAsync(x =>

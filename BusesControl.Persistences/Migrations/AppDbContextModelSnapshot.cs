@@ -93,6 +93,91 @@ namespace BusesControl.Persistence.Migrations
                     b.ToTable("Colors");
                 });
 
+            modelBuilder.Entity("BusesControl.Entities.Models.ContractModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ApproverId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BusId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Details")
+                        .HasMaxLength(2500)
+                        .HasColumnType("nvarchar(2500)");
+
+                    b.Property<Guid>("DriverId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("InstallmentsCount")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("PaymentMethod")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("TerminateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApproverId");
+
+                    b.HasIndex("BusId");
+
+                    b.HasIndex("DriverId");
+
+                    b.ToTable("Contracts");
+                });
+
+            modelBuilder.Entity("BusesControl.Entities.Models.CustomerContractModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ContractId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("ProcessTermination")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ProcessTerminationDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContractId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("CustomersContract");
+                });
+
             modelBuilder.Entity("BusesControl.Entities.Models.CustomerModel", b =>
                 {
                     b.Property<Guid>("Id")
@@ -582,6 +667,50 @@ namespace BusesControl.Persistence.Migrations
                     b.Navigation("Color");
                 });
 
+            modelBuilder.Entity("BusesControl.Entities.Models.ContractModel", b =>
+                {
+                    b.HasOne("BusesControl.Entities.Models.EmployeeModel", "Approver")
+                        .WithMany()
+                        .HasForeignKey("ApproverId");
+
+                    b.HasOne("BusesControl.Entities.Models.BusModel", "Bus")
+                        .WithMany()
+                        .HasForeignKey("BusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BusesControl.Entities.Models.EmployeeModel", "Driver")
+                        .WithMany()
+                        .HasForeignKey("DriverId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Approver");
+
+                    b.Navigation("Bus");
+
+                    b.Navigation("Driver");
+                });
+
+            modelBuilder.Entity("BusesControl.Entities.Models.CustomerContractModel", b =>
+                {
+                    b.HasOne("BusesControl.Entities.Models.ContractModel", "Contract")
+                        .WithMany("CustomersContract")
+                        .HasForeignKey("ContractId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BusesControl.Entities.Models.CustomerModel", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Contract");
+
+                    b.Navigation("Customer");
+                });
+
             modelBuilder.Entity("BusesControl.Entities.Models.ResetPasswordSecurityCodeModel", b =>
                 {
                     b.HasOne("BusesControl.Entities.Models.UserModel", "User")
@@ -686,6 +815,11 @@ namespace BusesControl.Persistence.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("BusesControl.Entities.Models.ContractModel", b =>
+                {
+                    b.Navigation("CustomersContract");
                 });
 #pragma warning restore 612, 618
         }

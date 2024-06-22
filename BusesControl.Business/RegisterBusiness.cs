@@ -11,6 +11,7 @@ public class RegisterBusiness
     {
         builder.Services.AddScoped<IBusBusiness, BusBusiness>();
         builder.Services.AddScoped<IColorBusiness, ColorBusiness>();
+        builder.Services.AddScoped<IContractBusiness, ContractBusiness>();
         builder.Services.AddScoped<ICustomerBusiness, CustomerBusiness>();
         builder.Services.AddScoped<IEmployeeBusiness, EmployeeBusiness>();
         builder.Services.AddScoped<ISettingsPanelBusiness, SettingsPanelBusiness>();

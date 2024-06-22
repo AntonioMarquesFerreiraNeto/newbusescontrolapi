@@ -5,8 +5,8 @@ namespace BusesControl.Entities.Enums;
 public enum AvailabilityEnum
 {
     [Description("Disponível")]
-    Available = 0,
+    Available = 1,
 
     [Description("Indisponível")]
-    Unavailable = 1
+    Unavailable = 2
 }

@@ -62,16 +62,18 @@ public class UserService(
 
         var userIdClaim = _httpContextAccessor.HttpContext.User.FindFirst("UserId");
         var roleClaim = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role);
+        var employeeIdClaim = _httpContextAccessor.HttpContext.User.FindFirst("EmployeeId");
 
-        if (userIdClaim is null || roleClaim is null)
+        if (userIdClaim is null || roleClaim is null || employeeIdClaim is null)
         {
             throw new Exception("User ID or role claims are not present in the token.");
         }
 
         var id = Guid.Parse(userIdClaim.Value.ToString());
         var role = roleClaim.ToString();
+        var employeeId = Guid.Parse(employeeIdClaim.Value.ToString());
 
-        return new UserAuthResponse(id, role);
+        return new UserAuthResponse(id, role, employeeId);
     }
 
     public async Task<LoginResponse> LoginAsync(LoginRequest request)

@@ -19,6 +19,13 @@ public class Message
         public readonly static string NotFound = "Cliente não encontrado!";
     }
 
+    public class Contract
+    {
+        public readonly static string NotFound = "Contrato não encontrado!";
+        public readonly static string SuccessfullyApproved = "Contrato aprovado com sucesso.";
+        public readonly static string NotIsWaitingReview = "Contrato não está esperando revisão!";
+    }
+
     public class Color
     {
         public readonly static string NotFound = "Cor não encontrada!";
@@ -32,6 +39,7 @@ public class Message
         public readonly static string NotFound = "Ônibus não encontrado!";
         public readonly static string Invalid = "Operação inválida!";
         public readonly static string Exists = "Ônibus já se encontra registrado!";
+        public readonly static string NotAvailable = "Ônibus não está disponível para novos contratos";
     }
 
     public class Employee

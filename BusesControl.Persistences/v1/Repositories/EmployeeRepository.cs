@@ -44,6 +44,11 @@ public class EmployeeRepository(
         return true;
     }
 
+    public async Task<bool> ExistsAsync(Guid id)
+    {
+        return await _context.Employees.AnyAsync(x => x.Id == id);
+    }
+
     public async Task<bool> ExistsByEmailOrPhoneNumberOrCpfAsync(string email, string phoneNumber, string cpf, Guid? id = null)
     {
         return await _context.Employees.AnyAsync(x => (x.Email == email ||x.PhoneNumber == phoneNumber || x.Cpf == cpf) && x.Id != id);

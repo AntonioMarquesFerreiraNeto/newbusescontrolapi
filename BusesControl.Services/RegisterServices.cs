@@ -25,6 +25,7 @@ public class RegisterServices
 
         builder.Services.AddScoped<IBusService, BusService>();
         builder.Services.AddScoped<IColorService, ColorService>();
+        builder.Services.AddScoped<IContractService, ContractService>();
         builder.Services.AddScoped<ICustomerService, CustomerService>();
         builder.Services.AddScoped<IViaCepIntegrationService, ViaCepIntegrationService>();
         builder.Services.AddScoped<IEmployeeService, EmployeeService>();

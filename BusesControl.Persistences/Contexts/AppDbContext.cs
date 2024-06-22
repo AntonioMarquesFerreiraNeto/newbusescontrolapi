@@ -15,6 +15,8 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
     public DbSet<BusModel> Buses { get; set; }
     public DbSet<ColorModel> Colors { get; set; }
     public DbSet<CustomerModel> Customers { get; set; }
+    public DbSet<ContractModel> Contracts { get; set; }
+    public DbSet<CustomerContractModel> CustomersContract { get; set; }
     public DbSet<EmployeeModel> Employees { get; set; }
     public DbSet<SettingsPanelModel> SettingsPanel { get; set; }
     public DbSet<ResetPasswordSecurityCodeModel> ResetPasswordsSecurityCode { get; set; }
