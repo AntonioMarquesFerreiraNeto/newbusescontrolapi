@@ -52,7 +52,7 @@
           "dependencies": {
             "Swashbuckle.AspNetCore": {
               "target": "Package",
-              "version": "[6.4.0, )"
+              "version": "[6.6.2, )"
             }
           },
           "imports": [
@@ -127,7 +127,7 @@
           "dependencies": {
             "FluentValidation": {
               "target": "Package",
-              "version": "[11.9.1, )"
+              "version": "[11.9.2, )"
             },
             "FluentValidation.AspNetCore": {
               "target": "Package",
@@ -159,7 +159,7 @@
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
-              "version": "[6.4.0, )"
+              "version": "[6.6.2, )"
             }
           },
           "imports": [

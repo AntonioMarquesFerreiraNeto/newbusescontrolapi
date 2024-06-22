@@ -22,9 +22,9 @@ public class EmployeeService(
     IEmployeeRepository _employeeRepository
 ) : IEmployeeService
 {
-    public async Task<IEnumerable<EmployeeModel>> FindBySearchAsync(int pageSize, int pageNumber, string? search = null)
+    public async Task<IEnumerable<EmployeeModel>> FindBySearchAsync(int page, int pageSize, string? search = null)
     {
-        var records = await _employeeRepository.FindBySearchAsync(pageSize, pageNumber, search);
+        var records = await _employeeRepository.FindBySearchAsync(page, pageSize, search);
         return records;
     }
 
@@ -79,6 +79,9 @@ public class EmployeeService(
 
     public async Task<bool> UpdateAsync(Guid id, EmployeeUpdateRequest request)
     {
+        request.Cpf = OnlyNumbers.ClearValue(request.Cpf);
+        request.PhoneNumber = OnlyNumbers.ClearValue(request.PhoneNumber);
+
         var record = await _employeeRepository.GetByIdAsync(id);
         if (record is null)
         {
@@ -89,9 +92,6 @@ public class EmployeeService(
             );
             return false;
         }
-
-        request.Cpf = OnlyNumbers.ClearValue(request.Cpf);
-        request.PhoneNumber = OnlyNumbers.ClearValue(request.PhoneNumber);
 
         await _employeeBusiness.ExistsByEmailOrPhoneNumberOrCpfAsync(request.Email, request.PhoneNumber, request.PhoneNumber, id);
         if (_notificationApi.HasNotification)

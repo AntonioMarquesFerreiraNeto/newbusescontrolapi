@@ -1,4 +1,5 @@
-﻿using BusesControl.Entities.Request;
+﻿using Asp.Versioning;
+using BusesControl.Entities.Request;
 using BusesControl.Services.v1.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
@@ -19,9 +20,9 @@ public class EmployeeController(
 ) : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> FindBySearch([FromQuery] int pageSize, [FromQuery] int pageNumber, [FromQuery] string? search)
+    public async Task<IActionResult> FindBySearch([FromQuery] int page, [FromQuery] int pageSize, [FromQuery] string? search)
     {
-        var response = await _employeeService.FindBySearchAsync(pageSize, pageNumber, search);
+        var response = await _employeeService.FindBySearchAsync(page, pageSize, search);
         return Ok(response);
     }
 

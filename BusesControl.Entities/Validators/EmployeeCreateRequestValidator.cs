@@ -15,7 +15,7 @@ public class EmployeeCreateRequestValidator : AbstractValidator<EmployeeCreateRe
 
         RuleFor(x => x.Cpf)
             .NotEmpty().WithMessage("Cpf é um campo obrigatório")
-            .Must(ValidateCpf.IsValid).WithMessage("Cpf inválido!");
+            .Must(ValidateCpfOrCnpj.CpfIsValid).WithMessage("Cpf inválido!");
 
         RuleFor(x => x.BirthDate)
             .NotEmpty().WithMessage("Data de nascimento é um campo obrigatório")
@@ -23,6 +23,7 @@ public class EmployeeCreateRequestValidator : AbstractValidator<EmployeeCreateRe
 
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage("E-mail é um campo obrigatório")
+            .EmailAddress().WithMessage("E-mail inválido")
             .MaximumLength(80).WithMessage("E-mail deve ter no mínimo 80 caracteres!");
 
         RuleFor(x => x.PhoneNumber)

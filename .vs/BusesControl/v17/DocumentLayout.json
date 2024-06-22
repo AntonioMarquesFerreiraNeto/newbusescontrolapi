@@ -1,19 +1,173 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Antonio\\Projetos\\Projeto .NET\\BusesControl\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{3EE5E1ED-B947-498D-8E71-60E91F6C4A48}|BusesControl.Api\\BusesControl.Api.csproj|c:\\antonio\\projetos\\projeto .net\\busescontrol\\busescontrol.api\\controllers\\v1\\viacepintegrationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3EE5E1ED-B947-498D-8E71-60E91F6C4A48}|BusesControl.Api\\BusesControl.Api.csproj|solutionrelative:busescontrol.api\\controllers\\v1\\viacepintegrationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3EE5E1ED-B947-498D-8E71-60E91F6C4A48}|BusesControl.Api\\BusesControl.Api.csproj|c:\\antonio\\projetos\\projeto .net\\busescontrol\\busescontrol.api\\controllers\\v1\\userregistrationqueuecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3EE5E1ED-B947-498D-8E71-60E91F6C4A48}|BusesControl.Api\\BusesControl.Api.csproj|solutionrelative:busescontrol.api\\controllers\\v1\\userregistrationqueuecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3EE5E1ED-B947-498D-8E71-60E91F6C4A48}|BusesControl.Api\\BusesControl.Api.csproj|c:\\antonio\\projetos\\projeto .net\\busescontrol\\busescontrol.api\\controllers\\v1\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3EE5E1ED-B947-498D-8E71-60E91F6C4A48}|BusesControl.Api\\BusesControl.Api.csproj|solutionrelative:busescontrol.api\\controllers\\v1\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3EE5E1ED-B947-498D-8E71-60E91F6C4A48}|BusesControl.Api\\BusesControl.Api.csproj|c:\\antonio\\projetos\\projeto .net\\busescontrol\\busescontrol.api\\controllers\\v1\\settingspanelcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3EE5E1ED-B947-498D-8E71-60E91F6C4A48}|BusesControl.Api\\BusesControl.Api.csproj|solutionrelative:busescontrol.api\\controllers\\v1\\settingspanelcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3EE5E1ED-B947-498D-8E71-60E91F6C4A48}|BusesControl.Api\\BusesControl.Api.csproj|c:\\antonio\\projetos\\projeto .net\\busescontrol\\busescontrol.api\\controllers\\v1\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3EE5E1ED-B947-498D-8E71-60E91F6C4A48}|BusesControl.Api\\BusesControl.Api.csproj|solutionrelative:busescontrol.api\\controllers\\v1\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3EE5E1ED-B947-498D-8E71-60E91F6C4A48}|BusesControl.Api\\BusesControl.Api.csproj|c:\\antonio\\projetos\\projeto .net\\busescontrol\\busescontrol.api\\controllers\\v1\\employeecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3EE5E1ED-B947-498D-8E71-60E91F6C4A48}|BusesControl.Api\\BusesControl.Api.csproj|solutionrelative:busescontrol.api\\controllers\\v1\\employeecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3EE5E1ED-B947-498D-8E71-60E91F6C4A48}|BusesControl.Api\\BusesControl.Api.csproj|c:\\antonio\\projetos\\projeto .net\\busescontrol\\busescontrol.api\\controllers\\v1\\customercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3EE5E1ED-B947-498D-8E71-60E91F6C4A48}|BusesControl.Api\\BusesControl.Api.csproj|solutionrelative:busescontrol.api\\controllers\\v1\\customercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3EE5E1ED-B947-498D-8E71-60E91F6C4A48}|BusesControl.Api\\BusesControl.Api.csproj|c:\\antonio\\projetos\\projeto .net\\busescontrol\\busescontrol.api\\controllers\\v1\\colorcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3EE5E1ED-B947-498D-8E71-60E91F6C4A48}|BusesControl.Api\\BusesControl.Api.csproj|solutionrelative:busescontrol.api\\controllers\\v1\\colorcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3EE5E1ED-B947-498D-8E71-60E91F6C4A48}|BusesControl.Api\\BusesControl.Api.csproj|c:\\antonio\\projetos\\projeto .net\\busescontrol\\busescontrol.api\\controllers\\v1\\buscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3EE5E1ED-B947-498D-8E71-60E91F6C4A48}|BusesControl.Api\\BusesControl.Api.csproj|solutionrelative:busescontrol.api\\controllers\\v1\\buscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedWidth": 280,
-          "SelectedChildIndex": -1,
+          "DockedWidth": 324,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ViaCepIntegrationController.cs",
+              "DocumentMoniker": "C:\\Antonio\\Projetos\\Projeto .NET\\BusesControl\\BusesControl.Api\\Controllers\\v1\\ViaCepIntegrationController.cs",
+              "RelativeDocumentMoniker": "BusesControl.Api\\Controllers\\v1\\ViaCepIntegrationController.cs",
+              "ToolTip": "C:\\Antonio\\Projetos\\Projeto .NET\\BusesControl\\BusesControl.Api\\Controllers\\v1\\ViaCepIntegrationController.cs",
+              "RelativeToolTip": "BusesControl.Api\\Controllers\\v1\\ViaCepIntegrationController.cs",
+              "ViewState": "AQIAAAQAAAAAAAAAAAAowBQAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-22T08:34:11.962Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "UserRegistrationQueueController.cs",
+              "DocumentMoniker": "C:\\Antonio\\Projetos\\Projeto .NET\\BusesControl\\BusesControl.Api\\Controllers\\v1\\UserRegistrationQueueController.cs",
+              "RelativeDocumentMoniker": "BusesControl.Api\\Controllers\\v1\\UserRegistrationQueueController.cs",
+              "ToolTip": "C:\\Antonio\\Projetos\\Projeto .NET\\BusesControl\\BusesControl.Api\\Controllers\\v1\\UserRegistrationQueueController.cs",
+              "RelativeToolTip": "BusesControl.Api\\Controllers\\v1\\UserRegistrationQueueController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAEAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-22T08:34:08.339Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "UserController.cs",
+              "DocumentMoniker": "C:\\Antonio\\Projetos\\Projeto .NET\\BusesControl\\BusesControl.Api\\Controllers\\v1\\UserController.cs",
+              "RelativeDocumentMoniker": "BusesControl.Api\\Controllers\\v1\\UserController.cs",
+              "ToolTip": "C:\\Antonio\\Projetos\\Projeto .NET\\BusesControl\\BusesControl.Api\\Controllers\\v1\\UserController.cs",
+              "RelativeToolTip": "BusesControl.Api\\Controllers\\v1\\UserController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAGAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-22T08:34:04.411Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "SettingsPanelController.cs",
+              "DocumentMoniker": "C:\\Antonio\\Projetos\\Projeto .NET\\BusesControl\\BusesControl.Api\\Controllers\\v1\\SettingsPanelController.cs",
+              "RelativeDocumentMoniker": "BusesControl.Api\\Controllers\\v1\\SettingsPanelController.cs",
+              "ToolTip": "C:\\Antonio\\Projetos\\Projeto .NET\\BusesControl\\BusesControl.Api\\Controllers\\v1\\SettingsPanelController.cs",
+              "RelativeToolTip": "BusesControl.Api\\Controllers\\v1\\SettingsPanelController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAEAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-22T08:33:59.877Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "LoginController.cs",
+              "DocumentMoniker": "C:\\Antonio\\Projetos\\Projeto .NET\\BusesControl\\BusesControl.Api\\Controllers\\v1\\LoginController.cs",
+              "RelativeDocumentMoniker": "BusesControl.Api\\Controllers\\v1\\LoginController.cs",
+              "ToolTip": "C:\\Antonio\\Projetos\\Projeto .NET\\BusesControl\\BusesControl.Api\\Controllers\\v1\\LoginController.cs",
+              "RelativeToolTip": "BusesControl.Api\\Controllers\\v1\\LoginController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-22T08:33:56.259Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "EmployeeController.cs",
+              "DocumentMoniker": "C:\\Antonio\\Projetos\\Projeto .NET\\BusesControl\\BusesControl.Api\\Controllers\\v1\\EmployeeController.cs",
+              "RelativeDocumentMoniker": "BusesControl.Api\\Controllers\\v1\\EmployeeController.cs",
+              "ToolTip": "C:\\Antonio\\Projetos\\Projeto .NET\\BusesControl\\BusesControl.Api\\Controllers\\v1\\EmployeeController.cs",
+              "RelativeToolTip": "BusesControl.Api\\Controllers\\v1\\EmployeeController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-22T08:33:52.244Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "CustomerController.cs",
+              "DocumentMoniker": "C:\\Antonio\\Projetos\\Projeto .NET\\BusesControl\\BusesControl.Api\\Controllers\\v1\\CustomerController.cs",
+              "RelativeDocumentMoniker": "BusesControl.Api\\Controllers\\v1\\CustomerController.cs",
+              "ToolTip": "C:\\Antonio\\Projetos\\Projeto .NET\\BusesControl\\BusesControl.Api\\Controllers\\v1\\CustomerController.cs",
+              "RelativeToolTip": "BusesControl.Api\\Controllers\\v1\\CustomerController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAGAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-22T08:33:48.203Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "ColorController.cs",
+              "DocumentMoniker": "C:\\Antonio\\Projetos\\Projeto .NET\\BusesControl\\BusesControl.Api\\Controllers\\v1\\ColorController.cs",
+              "RelativeDocumentMoniker": "BusesControl.Api\\Controllers\\v1\\ColorController.cs",
+              "ToolTip": "C:\\Antonio\\Projetos\\Projeto .NET\\BusesControl\\BusesControl.Api\\Controllers\\v1\\ColorController.cs",
+              "RelativeToolTip": "BusesControl.Api\\Controllers\\v1\\ColorController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAYAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-22T08:33:43.133Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "BusController.cs",
+              "DocumentMoniker": "C:\\Antonio\\Projetos\\Projeto .NET\\BusesControl\\BusesControl.Api\\Controllers\\v1\\BusController.cs",
+              "RelativeDocumentMoniker": "BusesControl.Api\\Controllers\\v1\\BusController.cs",
+              "ToolTip": "C:\\Antonio\\Projetos\\Projeto .NET\\BusesControl\\BusesControl.Api\\Controllers\\v1\\BusController.cs",
+              "RelativeToolTip": "BusesControl.Api\\Controllers\\v1\\BusController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAVAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-22T08:33:11.831Z",
+              "EditorCaption": ""
             }
           ]
         }

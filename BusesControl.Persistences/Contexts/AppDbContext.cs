@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
 
 namespace BusesControl.Persistence.Contexts;
 
@@ -15,10 +14,13 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
 
     public DbSet<BusModel> Buses { get; set; }
     public DbSet<ColorModel> Colors { get; set; }
+    public DbSet<CustomerModel> Customers { get; set; }
     public DbSet<EmployeeModel> Employees { get; set; }
+    public DbSet<SettingsPanelModel> SettingsPanel { get; set; }
     public DbSet<ResetPasswordSecurityCodeModel> ResetPasswordsSecurityCode { get; set; }
     public DbSet<UserRegistrationQueueModel> UsersRegistrationQueue { get; set; }
     public DbSet<UserRegistrationSecurityCodeModel> UsersRegistrationSecurityCode { get; set; }
+
     public override DbSet<UserModel> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)

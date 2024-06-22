@@ -1,4 +1,5 @@
-﻿using BusesControl.Entities.Request;
+﻿using Asp.Versioning;
+using BusesControl.Entities.Request;
 using BusesControl.Services.v1.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
@@ -18,9 +19,9 @@ public class BusController(
 ) : ControllerBase
 {
     [HttpGet("find")]
-    public async Task<IActionResult> FindBySearch([FromQuery] int pageSize, [FromQuery] int pageNumber, [FromQuery] string? search = null)
+    public async Task<IActionResult> FindBySearch([FromQuery] int page, [FromQuery] int pageSize, [FromQuery] string? search = null)
     {
-        var response = await _busService.FindBySearchAsync(pageSize, pageNumber, search);
+        var response = await _busService.FindBySearchAsync(page, pageSize, search);
         return Ok(response);
     }
 

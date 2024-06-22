@@ -11,7 +11,7 @@ public class UserRegistrationQueueRepository(
 {
     private readonly AppDbContext _context = context;
 
-    public async Task<IEnumerable<UserRegistrationQueueModel>> FindAsync(int pageSize, int pageNumber, string? search)
+    public async Task<IEnumerable<UserRegistrationQueueModel>> FindAsync(int page, int pageSize, string? search = null)
     {
         var query = _context.UsersRegistrationQueue.Include(x => x.Employee).AsNoTracking();
 
@@ -20,7 +20,7 @@ public class UserRegistrationQueueRepository(
             query = query.Where(x => x.Employee.Name.Contains(search));
         }
 
-        query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+        query = query.Skip((page - 1) * pageSize).Take(pageSize);
         
         var records = await query.ToListAsync();
 

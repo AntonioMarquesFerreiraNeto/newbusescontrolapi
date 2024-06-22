@@ -11,7 +11,7 @@ public class BusRepository(
 {
     private readonly AppDbContext _context = context;
 
-    public async Task<IEnumerable<BusModel>> FindBySearchAsync(int pageSize, int pageNumber, string? search = null)
+    public async Task<IEnumerable<BusModel>> FindBySearchAsync(int page = 0, int pageSize = 0, string? search = null)
     {
         var query = _context.Buses.Include(x => x.Color).AsNoTracking();
 
@@ -20,10 +20,12 @@ public class BusRepository(
             query = query.Where(x => x.Name.Contains(search) || x.Brand.Contains(search) || x.Chassi.Contains(search) || x.Color.Color.Contains(search) || x.LicensePlate.Contains(search));
         }
 
-        query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
-        var records = await query.ToListAsync();
+        if (page > 0 & pageSize > 0)
+        {
+            query = query.Skip((page - 1) * pageSize).Take(pageSize);
+        }
 
-        return records;
+        return await query.ToListAsync();
     }
 
     public async Task<BusModel?> GetByIdAsync(Guid id)
