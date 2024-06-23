@@ -1,4 +1,5 @@
-﻿using BusesControl.Entities.Models;
+﻿using BusesControl.Entities.Enums;
+using BusesControl.Entities.Models;
 using BusesControl.Persistence.Contexts;
 using BusesControl.Persistence.v1.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -29,9 +30,14 @@ public class ContractRepository(
         return await query.SingleOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<IEnumerable<ContractModel>> FindAsync(int page = 0, int pageSize = 0)
+    public async Task<IEnumerable<ContractModel>> FindAsync(int page = 0, int pageSize = 0, ContractStatusEnum? status = null)
     {
         var query = _context.Contracts.AsNoTracking();
+
+        if (status is not null)
+        {
+            query = query.Where(x => x.Status == status);
+        }
 
         if (page > 0 && pageSize > 0)
         {

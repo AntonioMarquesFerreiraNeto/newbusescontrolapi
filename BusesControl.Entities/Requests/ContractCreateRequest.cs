@@ -14,4 +14,5 @@ public class ContractCreateRequest
     [MaxLength(2500)]
     public string? Details { get; set; }
     public DateTime TerminateDate { get; set; }
+    public IEnumerable<Guid> CustomersId { get; set; } = default!;
 }

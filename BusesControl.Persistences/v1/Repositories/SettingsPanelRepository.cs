@@ -17,6 +17,11 @@ public class SettingsPanelRepository(
         return await _context.SettingsPanel.AsNoTracking().Include(x => x.Requester).SingleOrDefaultAsync(x => x.Id == id);
     }
 
+    public async Task<SettingsPanelModel?> GetByParentAsync(SettingsPanelParentEnum parent)
+    {
+        return await _context.SettingsPanel.AsNoTracking().SingleOrDefaultAsync(x => x.Parent == parent);
+    }
+
     public async Task<IEnumerable<SettingsPanelModel>> FindAsync(int page = 0, int pageSize = 0)
     {
         var query = _context.SettingsPanel.AsNoTracking();

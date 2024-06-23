@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BusesControl.Persistence")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cfe577eff135e4b37e93744f4e5bdfb995c529dc")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+54fa69e21879ee782e50c71cf7fe4d073c4c9998")]
 [assembly: System.Reflection.AssemblyProductAttribute("BusesControl.Persistence")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BusesControl.Persistence")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

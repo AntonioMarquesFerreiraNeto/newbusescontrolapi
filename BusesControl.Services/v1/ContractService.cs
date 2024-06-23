@@ -5,9 +5,11 @@ using BusesControl.Entities.Enums;
 using BusesControl.Entities.Models;
 using BusesControl.Entities.Requests;
 using BusesControl.Entities.Response;
+using BusesControl.Filters.Notification;
 using BusesControl.Persistence.v1.Repositories.Interfaces;
 using BusesControl.Persistence.v1.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 namespace BusesControl.Services.v1;
 
@@ -32,8 +34,36 @@ public class ContractService(
         return monthDifference;
     }
 
+    public async Task<ContractModel?> GetByIdAsync(Guid id)
+    {
+        var record = await _contractRepository.GetByIdWithIncludesAsync(id);
+        if (record is null)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status404NotFound,
+                title: NotificationTitle.NotFound,
+                details: Message.Contract.NotFound
+            );
+            return default!;
+        }
+
+        return record;
+    }
+
+    public async Task<IEnumerable<ContractModel>> FindAsync(int page, int pageSize, ContractStatusEnum status)
+    {
+        var records = await _contractRepository.FindAsync(page, pageSize, status);
+        return records;
+    }
+
     public async Task<bool> CreateAsync(ContractCreateRequest request)
     {
+        await _contractBusiness.ValidateTerminationDateAsync(request.TerminateDate);
+        if (_notificationApi.HasNotification)
+        {
+            return false;
+        }
+        
         await _contractBusiness.ValidateForCreateAsync(request.BusId, request.DriverId);
         if (_notificationApi.HasNotification)
         {
@@ -51,6 +81,63 @@ public class ContractService(
         };
 
         await _contractRepository.CreateAsync(record);
+        await _unitOfWork.CommitAsync();
+
+        return true;
+    }
+
+    public async Task<bool> UpdateAsync(Guid id, ContractUpdateRequest request)
+    {
+        await _contractBusiness.ValidateTerminationDateAsync(request.TerminateDate);
+        if (_notificationApi.HasNotification)
+        {
+            return false;
+        }
+
+        var record = await _contractBusiness.GetForUpdateAsync(id, request.BusId, request.DriverId);
+        if (_notificationApi.HasNotification)
+        {
+            return false;
+        }
+
+        record.BusId = request.BusId;
+        record.DriverId = request.DriverId;
+        record.TotalPrice = request.TotalPrice;
+        record.PaymentMethod = request.PaymentMethod;
+        record.Details = request.Details;
+        record.TerminateDate = request.TerminateDate;
+
+        _contractRepository.Update(record);
+        await _unitOfWork.CommitAsync();
+
+        return true;
+    }
+
+    public async Task<bool> DeniedAsync(Guid id)
+    {
+        var record = await _contractBusiness.GetForDeniedAsync(id);
+        if (_notificationApi.HasNotification)
+        {
+            return false;
+        }
+
+        record.Status = ContractStatusEnum.Denied;
+        _contractRepository.Update(record);
+        await _unitOfWork.CommitAsync();
+
+        return true;
+    }
+
+    public async Task<bool> WaitingReviewAsync(Guid id)
+    {
+        var record = await _contractBusiness.GetForWaitingReviewAsync(id);
+        if (_notificationApi.HasNotification)
+        {
+            return false;
+        }
+
+        record.Status = ContractStatusEnum.WaitingReview;
+        _contractRepository.Update(record);
         await _unitOfWork.CommitAsync();
 
         return true;

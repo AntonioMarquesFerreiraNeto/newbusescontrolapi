@@ -366,6 +366,9 @@ namespace BusesControl.Persistence.Migrations
                         .HasPrecision(5, 2)
                         .HasColumnType("decimal(5,2)");
 
+                    b.Property<int?>("LimitDateTermination")
+                        .HasColumnType("int");
+
                     b.Property<int>("Parent")
                         .HasColumnType("int");
 
@@ -724,7 +727,7 @@ namespace BusesControl.Persistence.Migrations
 
             modelBuilder.Entity("BusesControl.Entities.Models.SettingsPanelModel", b =>
                 {
-                    b.HasOne("BusesControl.Entities.Models.UserModel", "Requester")
+                    b.HasOne("BusesControl.Entities.Models.EmployeeModel", "Requester")
                         .WithMany()
                         .HasForeignKey("RequesterId")
                         .OnDelete(DeleteBehavior.Cascade)

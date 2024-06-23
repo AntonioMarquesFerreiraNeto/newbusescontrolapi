@@ -14,9 +14,7 @@ public class AutoMapper : Profile
             .ForMember(dest => dest.EmployeeId, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Type.ToString()));
 
-        CreateMap<SettingsPanelModel, SettingsPanelResponse>();
         CreateMap<UserModel, UserResponse>();
-
         CreateMap<CustomerCreateRequest, CustomerUpdateRequest>();
         CreateMap<CustomerUpdateRequest, CustomerCreateRequest>();
     }
