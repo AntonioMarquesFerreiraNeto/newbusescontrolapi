@@ -27,6 +27,7 @@ public class RegisterServices
         builder.Services.AddScoped<IColorService, ColorService>();
         builder.Services.AddScoped<IContractService, ContractService>();
         builder.Services.AddScoped<ICustomerService, CustomerService>();
+        builder.Services.AddScoped<ICustomerContractService, CustomerContractService>();
         builder.Services.AddScoped<IViaCepIntegrationService, ViaCepIntegrationService>();
         builder.Services.AddScoped<IEmployeeService, EmployeeService>();
         builder.Services.AddScoped<ISettingsPanelService, SettingsPanelService>();
