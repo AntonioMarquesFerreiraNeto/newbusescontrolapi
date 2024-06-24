@@ -11,6 +11,7 @@ public interface IContractService
     Task<IEnumerable<ContractModel>> FindAsync(int page, int pageSize, ContractStatusEnum status);
     Task<bool> CreateAsync(ContractCreateRequest request);
     Task<bool> UpdateAsync(Guid id, ContractUpdateRequest request);
+    Task<bool> DeleteAsync(Guid id);
     Task<bool> DeniedAsync(Guid id);
     Task<bool> WaitingReviewAsync(Guid id);
     Task<SuccessResponse> ApproveAsync(Guid id);

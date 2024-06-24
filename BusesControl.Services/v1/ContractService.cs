@@ -17,6 +17,7 @@ public class ContractService(
     IUnitOfWork _unitOfWork,
     INotificationApi _notificationApi,
     IUserService _userService,
+    ICustomerContractService _customerContractService,
     IContractBusiness _contractBusiness,
     IContractRepository _contractRepository
 ) : IContractService
@@ -70,6 +71,8 @@ public class ContractService(
             return false;
         }
 
+        _unitOfWork.BeginTransaction();
+
         var record = new ContractModel
         {
             BusId = request.BusId,
@@ -82,6 +85,14 @@ public class ContractService(
 
         await _contractRepository.CreateAsync(record);
         await _unitOfWork.CommitAsync();
+
+        await _customerContractService.CreateForContractAsync(request.CustomersId, record.Id);
+        if (_notificationApi.HasNotification)
+        {
+            return false;
+        }
+
+        await _unitOfWork.CommitAsync(true);
 
         return true;
     }
@@ -100,6 +111,8 @@ public class ContractService(
             return false;
         }
 
+        _unitOfWork.BeginTransaction();
+
         record.BusId = request.BusId;
         record.DriverId = request.DriverId;
         record.TotalPrice = request.TotalPrice;
@@ -108,6 +121,28 @@ public class ContractService(
         record.TerminateDate = request.TerminateDate;
 
         _contractRepository.Update(record);
+        await _unitOfWork.CommitAsync();
+
+        await _customerContractService.UpdateForContractAsync(request.CustomersId, record.Id);
+        if (_notificationApi.HasNotification)
+        {
+            return false;
+        }
+
+        await _unitOfWork.CommitAsync(true);
+
+        return true;
+    }
+
+    public async Task<bool> DeleteAsync(Guid id)
+    {
+        var record = await _contractBusiness.GetForDeleteAsync(id);
+        if (_notificationApi.HasNotification)
+        {
+            return false;
+        }
+
+        _contractRepository.Delete(record);
         await _unitOfWork.CommitAsync();
 
         return true;

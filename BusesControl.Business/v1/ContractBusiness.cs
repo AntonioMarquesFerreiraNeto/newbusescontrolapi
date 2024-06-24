@@ -89,6 +89,32 @@ public class ContractBusiness(
         return true;
     }
 
+    public async Task<ContractModel> GetForDeleteAsync(Guid id)
+    {
+        var record = await _contractRepository.GetByIdAsync(id);
+        if (record is null)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status404NotFound,
+                title: NotificationTitle.NotFound,
+                details: Message.Contract.NotFound
+            );
+            return default!;
+        }
+
+        if (record.Status != ContractStatusEnum.WaitingReview || record.Status != ContractStatusEnum.Denied)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.Contract.InvalidRemoveRequest
+            );
+            return default!;
+        }
+
+        return record;
+    }
+
     public async Task<ContractModel> GetForUpdateAsync(Guid id, Guid busId, Guid driverId)
     {
         var contractRecord = await _contractRepository.GetByIdAsync(id);

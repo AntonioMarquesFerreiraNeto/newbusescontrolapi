@@ -16,9 +16,14 @@ public class CustomerContractRepository(
         return await _context.CustomersContract.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<bool> CreateAsync(CustomerContractModel record)
+    public async Task<IEnumerable<CustomerContractModel>> FindByContractAsync(Guid contractId)
     {
-        await _context.CustomersContract.AddAsync(record);
+        return await _context.CustomersContract.Where(x => x.ContractId == contractId).ToListAsync();
+    }
+
+    public async Task<bool> CreateRangeAsync(IEnumerable<CustomerContractModel> record)
+    {
+        await _context.CustomersContract.AddRangeAsync(record);
         return true;
     }
 
@@ -28,9 +33,9 @@ public class CustomerContractRepository(
         return true;
     }
 
-    public bool Delete(CustomerContractModel record)
+    public bool RemoveRange(IEnumerable<CustomerContractModel> records)
     {
-        _context.CustomersContract.Remove(record);
+        _context.CustomersContract.RemoveRange(records);
         return true;
     }
 }
