@@ -89,4 +89,12 @@ public class ContractController(
         await _contractService.DeleteAsync(id);
         return NoContent();
     }
+
+    [AllowAnonymous]
+    [HttpGet]
+    public async Task<IActionResult> GetGeneratedContractForCustomer([FromBody] Guid contractId, [FromBody] Guid customerId)
+    {
+        var response = await _contractService.GetGeneratedContractForCustomerAsync(contractId, customerId);
+        return Ok(response);
+    }
 }

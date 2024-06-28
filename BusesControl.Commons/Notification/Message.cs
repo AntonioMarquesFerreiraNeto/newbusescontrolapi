@@ -20,6 +20,11 @@ public class Message
         public readonly static string NotInCompliance = "Cliente não está em compliance com outras pendências.";
     }
 
+    public class CustomerContract
+    {
+        public readonly static string NotFound = "Contrato do cliente não encontrado!";
+    }
+
     public class Contract
     {
         public readonly static string NotFound = "Contrato não encontrado!";

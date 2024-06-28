@@ -1,6 +1,7 @@
 ﻿using BusesControl.Commons;
 using BusesControl.Services.v1;
 using BusesControl.Services.v1.Interfaces;
+using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,6 +35,7 @@ public class RegisterServices
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IUserRegistrationQueueService, UserRegistrationQueueService>();
+        builder.Services.AddScoped<IGenerationPdfService, GenerationPdfService>();
 
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
     }

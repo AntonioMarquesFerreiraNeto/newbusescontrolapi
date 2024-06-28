@@ -10,7 +10,6 @@ using BusesControl.Persistence.v1.Repositories.Interfaces;
 using BusesControl.Persistence.v1.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace BusesControl.Services.v1;
 
@@ -18,6 +17,7 @@ public class ContractService(
     IUnitOfWork _unitOfWork,
     INotificationApi _notificationApi,
     IUserService _userService,
+    IGenerationPdfService _generationPdfService,
     ICustomerContractService _customerContractService,
     IContractBusiness _contractBusiness,
     IContractRepository _contractRepository
@@ -50,6 +50,17 @@ public class ContractService(
         }
 
         return record;
+    }
+
+    public async Task<byte[]> GetGeneratedContractForCustomerAsync(Guid contractId, Guid customerId)
+    {
+        var contractGenerated = await _generationPdfService.ContractForCustomerAsync(contractId, customerId);
+        if (_notificationApi.HasNotification)
+        {
+            return default!;
+        }
+
+        return contractGenerated;
     }
 
     public async Task<IEnumerable<ContractModel>> FindByOptionalStatusAsync(int page, int pageSize, ContractStatusEnum? status)
