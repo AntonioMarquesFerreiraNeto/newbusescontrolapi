@@ -52,7 +52,7 @@ public class ContractBusiness(
         return true;
     }
 
-    public async Task<bool> ValidateForCreateAsync(Guid busId, Guid driverId)
+    public async Task<bool> ValidateBusAndEmployeeVinculationAsync(Guid busId, Guid driverId)
     {
         var busRecord = await _busRepository.GetByIdAsync(busId);
         if (busRecord is null)
@@ -61,6 +61,16 @@ public class ContractBusiness(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Bus.NotFound
+            );
+            return default!;
+        }
+
+        if (busRecord.Status == BusStatusEnum.Inactive)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.Bus.NotActive
             );
             return default!;
         }
@@ -86,36 +96,30 @@ public class ContractBusiness(
             return default!;
         }
 
-        return true;
-    }
-
-    public async Task<ContractModel> GetForDeleteAsync(Guid id)
-    {
-        var record = await _contractRepository.GetByIdAsync(id);
-        if (record is null)
-        {
-            _notificationApi.SetNotification(
-                statusCode: StatusCodes.Status404NotFound,
-                title: NotificationTitle.NotFound,
-                details: Message.Contract.NotFound
-            );
-            return default!;
-        }
-
-        if (record.Status != ContractStatusEnum.WaitingReview || record.Status != ContractStatusEnum.Denied)
+        if (employeeRecord.Status == EmployeeStatusEnum.Inactive)
         {
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
-                details: Message.Contract.InvalidRemoveRequest
+                details: Message.Employee.NotActive
             );
             return default!;
         }
 
-        return record;
+        if (employeeRecord.Type != EmployeeTypeEnum.Driver)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.Contract.EmployeeNotDriver
+            );
+            return default!;
+        }
+
+        return true;
     }
 
-    public async Task<ContractModel> GetForUpdateAsync(Guid id, Guid busId, Guid driverId)
+    public async Task<ContractModel> GetForUpdateAsync(Guid id)
     {
         var contractRecord = await _contractRepository.GetByIdAsync(id);
         if (contractRecord is null)
@@ -128,44 +132,12 @@ public class ContractBusiness(
             return default!;
         }
 
-        if (contractRecord.Status != ContractStatusEnum.WaitingReview || contractRecord.Status != ContractStatusEnum.Denied)
+        if (contractRecord.Status != ContractStatusEnum.WaitingReview && contractRecord.Status != ContractStatusEnum.Denied)
         {
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Contract.InvalidEditRequest
-            );
-            return default!;
-        }
-
-        var busRecord = await _busRepository.GetByIdAsync(busId);
-        if (busRecord is null)
-        {
-            _notificationApi.SetNotification(
-                statusCode: StatusCodes.Status404NotFound,
-                title: NotificationTitle.NotFound,
-                details: Message.Bus.NotFound
-            );
-            return default!;
-        }
-
-        if (busRecord.Availability != AvailabilityEnum.Available)
-        {
-            _notificationApi.SetNotification(
-                statusCode: StatusCodes.Status400BadRequest,
-                title: NotificationTitle.BadRequest,
-                details: Message.Bus.NotAvailable
-            );
-            return default!;
-        }
-
-        var employeeRecord = await _employeeRepository.GetByIdAsync(driverId);
-        if (employeeRecord is null)
-        {
-            _notificationApi.SetNotification(
-                statusCode: StatusCodes.Status400BadRequest,
-                title: NotificationTitle.BadRequest,
-                details: Message.Employee.NotFound
             );
             return default!;
         }
@@ -249,5 +221,47 @@ public class ContractBusiness(
         }
 
         return record;
+    }
+
+    public async Task<ContractModel> GetForDeleteAsync(Guid id)
+    {
+        var record = await _contractRepository.GetByIdAsync(id);
+        if (record is null)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status404NotFound,
+                title: NotificationTitle.NotFound,
+                details: Message.Contract.NotFound
+            );
+            return default!;
+        }
+
+        if (record.Status != ContractStatusEnum.WaitingReview && record.Status != ContractStatusEnum.Denied)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.Contract.InvalidRemoveRequest
+            );
+            return default!;
+        }
+
+        return record;
+    }
+
+    public bool ValidateDuplicateCustomersValidate(IEnumerable<Guid> customersId)
+    {
+        var duplicateExists = customersId.GroupBy(x => x).Any(x => x.Count() > 1);
+        if (duplicateExists)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status409Conflict,
+                title: NotificationTitle.Conflict,
+                details: Message.Contract.DuplicateCustomers
+            );
+            return false;
+        }
+
+        return true;
     }
 }

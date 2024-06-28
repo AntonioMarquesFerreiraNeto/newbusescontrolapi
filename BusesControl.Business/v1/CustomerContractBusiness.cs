@@ -25,7 +25,7 @@ public class CustomerContractBusiness(
             return false;
         }
 
-        if (customerRecord.InCompliance)
+        if (!customerRecord.InCompliance)
         {
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,

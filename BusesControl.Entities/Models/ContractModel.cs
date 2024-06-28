@@ -17,7 +17,7 @@ public class ContractModel
     [MaxLength(2500)]
     public string? Details { get; set; }
     public int? InstallmentsCount { get; set; }
-    public DateTime CreatedAt { get; set; } = default!;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }
     public DateTime? StartDate { get; set; }
     public DateTime TerminateDate { get; set; }

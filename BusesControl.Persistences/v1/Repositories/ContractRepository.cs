@@ -30,7 +30,7 @@ public class ContractRepository(
         return await query.SingleOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<IEnumerable<ContractModel>> FindAsync(int page = 0, int pageSize = 0, ContractStatusEnum? status = null)
+    public async Task<IEnumerable<ContractModel>> FindByOptionalStatusAsync(int page = 0, int pageSize = 0, ContractStatusEnum? status = null)
     {
         var query = _context.Contracts.AsNoTracking();
 

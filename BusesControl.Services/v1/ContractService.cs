@@ -51,21 +51,27 @@ public class ContractService(
         return record;
     }
 
-    public async Task<IEnumerable<ContractModel>> FindAsync(int page, int pageSize, ContractStatusEnum status)
+    public async Task<IEnumerable<ContractModel>> FindByOptionalStatusAsync(int page, int pageSize, ContractStatusEnum? status)
     {
-        var records = await _contractRepository.FindAsync(page, pageSize, status);
+        var records = await _contractRepository.FindByOptionalStatusAsync(page, pageSize, status);
         return records;
     }
 
     public async Task<bool> CreateAsync(ContractCreateRequest request)
     {
-        await _contractBusiness.ValidateTerminationDateAsync(request.TerminateDate);
+        _contractBusiness.ValidateDuplicateCustomersValidate(request.CustomersId);
         if (_notificationApi.HasNotification)
         {
             return false;
         }
         
-        await _contractBusiness.ValidateForCreateAsync(request.BusId, request.DriverId);
+        await _contractBusiness.ValidateTerminationDateAsync(request.TerminateDate);
+        if (_notificationApi.HasNotification)
+        {
+            return false;
+        }
+
+        await _contractBusiness.ValidateBusAndEmployeeVinculationAsync(request.BusId, request.DriverId);
         if (_notificationApi.HasNotification)
         {
             return false;
@@ -99,13 +105,25 @@ public class ContractService(
 
     public async Task<bool> UpdateAsync(Guid id, ContractUpdateRequest request)
     {
+        _contractBusiness.ValidateDuplicateCustomersValidate(request.CustomersId);
+        if (_notificationApi.HasNotification)
+        {
+            return false;
+        }
+
         await _contractBusiness.ValidateTerminationDateAsync(request.TerminateDate);
         if (_notificationApi.HasNotification)
         {
             return false;
         }
 
-        var record = await _contractBusiness.GetForUpdateAsync(id, request.BusId, request.DriverId);
+        await _contractBusiness.ValidateBusAndEmployeeVinculationAsync(request.BusId, request.DriverId);
+        if (_notificationApi.HasNotification)
+        {
+            return false;
+        }
+
+        var record = await _contractBusiness.GetForUpdateAsync(id);
         if (_notificationApi.HasNotification)
         {
             return false;
@@ -119,6 +137,7 @@ public class ContractService(
         record.PaymentMethod = request.PaymentMethod;
         record.Details = request.Details;
         record.TerminateDate = request.TerminateDate;
+        record.UpdatedAt = DateTime.UtcNow;
 
         _contractRepository.Update(record);
         await _unitOfWork.CommitAsync();

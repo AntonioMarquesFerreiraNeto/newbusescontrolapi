@@ -27,7 +27,7 @@ public class ColorBusiness(
             return false;
         }
 
-        if (record.Active is not true)
+        if (!record.Active)
         {
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,

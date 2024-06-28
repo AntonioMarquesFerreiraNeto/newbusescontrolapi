@@ -53,7 +53,7 @@ public class CustomerContractService(
         var customersContractRecords = await _customerContractRepository.FindByContractAsync(contractId);
 
         var newCustomersId = customersId.Where(x => !customersContractRecords.Any(y => y.CustomerId == x));
-        var removeCustomersContract = customersContractRecords.Where(x => !newCustomersId.Any(y => y == x.CustomerId));
+        var removeCustomersContract = customersContractRecords.Where(x => !customersId.Any(y => y == x.CustomerId));
 
         await CreateForContractAsync(newCustomersId, contractId);
         if (_notificationApi.HasNotification)

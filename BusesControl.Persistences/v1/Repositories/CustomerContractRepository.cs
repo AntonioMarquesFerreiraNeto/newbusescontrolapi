@@ -18,7 +18,7 @@ public class CustomerContractRepository(
 
     public async Task<IEnumerable<CustomerContractModel>> FindByContractAsync(Guid contractId)
     {
-        return await _context.CustomersContract.Where(x => x.ContractId == contractId).ToListAsync();
+        return await _context.CustomersContract.AsNoTracking().Where(x => x.ContractId == contractId).ToListAsync();
     }
 
     public async Task<bool> CreateRangeAsync(IEnumerable<CustomerContractModel> record)

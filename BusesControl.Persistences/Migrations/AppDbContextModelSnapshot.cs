@@ -218,6 +218,9 @@ namespace BusesControl.Persistence.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<bool>("InCompliance")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Logradouro")
                         .IsRequired()
                         .HasMaxLength(60)
