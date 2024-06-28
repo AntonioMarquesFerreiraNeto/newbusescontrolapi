@@ -57,6 +57,7 @@ public class SettingsPanelService(
             TerminationFee = request.TerminationFee,
             LateFeeInterestRate = request.LateFeeInterestRate,
             CustomerDelinquencyEnabled = request.CustomerDelinquencyEnabled,
+            LimitDateTermination = request.LimitDateTermination,
             Parent = request.Parent,
             Active = request.Active
         };
@@ -81,6 +82,7 @@ public class SettingsPanelService(
         record.TerminationFee = request.TerminationFee;
         record.LateFeeInterestRate = request.LateFeeInterestRate;
         record.CustomerDelinquencyEnabled = request.CustomerDelinquencyEnabled;
+        record.LimitDateTermination = request.LimitDateTermination;
         record.Parent = request.Parent;
         record.Active = request.Active;
         record.UpdatedAt = DateTime.UtcNow;

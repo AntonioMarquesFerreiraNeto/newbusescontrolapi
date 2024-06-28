@@ -78,8 +78,8 @@ public class ContractController(
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Approve([FromRoute] Guid id)
     {
-        await _contractService.ApproveAsync(id);
-        return NoContent();
+        var response =  await _contractService.ApproveAsync(id);
+        return Ok(response);
     }
 
     [HttpDelete("{id}")]

@@ -14,6 +14,10 @@ public class SettingsPanelUpdateRequestValidator : AbstractValidator<SettingsPan
         RuleFor(x => x.TerminationFee)
             .LessThanOrEqualTo(30).WithMessage("Taxa de rescisão não pode ultrapassar 30%");
 
+        RuleFor(x => x.LimitDateTermination)
+            .GreaterThanOrEqualTo(1).WithMessage("Limite mínimo de anos de contratos tem que maior ou igual a 1")
+            .When(x => x.LimitDateTermination is not null);
+
         RuleFor(x => x.LateFeeInterestRate)
             .LessThanOrEqualTo(30).WithMessage("Taxa de juros não pode ultrapassar 30%");
     }

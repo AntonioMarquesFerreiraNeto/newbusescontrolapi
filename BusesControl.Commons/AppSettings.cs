@@ -12,7 +12,7 @@ public static class AppSettingsViaCep
 public static class AppSettingsJWT
 {
     public static string Key = "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yqsST1peCXBNyeCXBNy4DpeCXBNy4DjCb3cFFHs4dnL04y";
-    public static int ExpireHours = 3;
+    public static int ExpireHours = 24;
 }
 
 public static class AppSettingsResetPassword

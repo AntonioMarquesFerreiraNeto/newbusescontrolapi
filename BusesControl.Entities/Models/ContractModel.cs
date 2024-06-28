@@ -25,5 +25,5 @@ public class ContractModel
     public bool IsApproved { get; set; } = false;
     public Guid? ApproverId { get; set; }
     public EmployeeModel? Approver { get; set; } = default!;
-    public virtual ICollection<CustomerContractModel> CustomersContract { get; set; } = default!;
+    public ICollection<CustomerContractModel> CustomersContract { get; set; } = default!;
 }
