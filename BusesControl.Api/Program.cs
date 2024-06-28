@@ -11,6 +11,7 @@ using BusesControl.Entities.Validators;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.OpenApi.Models;
 
 namespace BusesControl.Api;
 
@@ -37,7 +38,15 @@ public class Program
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(options => 
+        {
+            options.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "BusesControl API",
+                Description = "API para Gerenciamento de contrato de locações frotas de ônibus",
+                Version = "v1"
+            });
+        });
 
         ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.Stop;
         builder.Services.AddValidatorsFromAssemblyContaining<BusCreateRequestValidator>();
@@ -69,7 +78,7 @@ public class Program
         });
 
         var app = builder.Build();
-        
+
         app.UseMiddleware<NotificationMiddleware>();
 
         // Configure the HTTP request pipeline.

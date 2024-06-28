@@ -1,7 +1,7 @@
 ﻿using BusesControl.Entities.Models;
 using BusesControl.Persistence.Contexts;
 using BusesControl.Persistence.v1.Repositories.Interfaces;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace BusesControl.Persistence.v1.Repositories;
 
@@ -11,7 +11,7 @@ public class CustomerContractRepository(
 {
     private readonly AppDbContext _context = context;
 
-    public async Task<CustomerContractModel> GetByIdAsync(Guid id)
+    public async Task<CustomerContractModel?> GetByIdAsync(Guid id)
     {
         return await _context.CustomersContract.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
     }

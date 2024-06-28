@@ -25,8 +25,8 @@ public class ContractBusiness(
         if (dateNow >= terminateDate)
         {
             _notificationApi.SetNotification(
-                statusCode: StatusCodes.Status404NotFound,
-                title: NotificationTitle.NotFound,
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
                 details: Message.Contract.TerminationDateNotInFuture
             );
             return false;
@@ -41,8 +41,8 @@ public class ContractBusiness(
             if (terminateDate > dateLimit)
             {
                 _notificationApi.SetNotification(
-                    statusCode: StatusCodes.Status404NotFound,
-                    title: NotificationTitle.NotFound,
+                    statusCode: StatusCodes.Status400BadRequest,
+                    title: NotificationTitle.BadRequest,
                     details: Message.Contract.TerminationDateExceedsLimit
                 );
                 return false;
@@ -189,7 +189,7 @@ public class ContractBusiness(
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
-                details: Message.Contract.NotIsWaitingReview
+                details: Message.Contract.NotIsDenied
             );
             return default!;
         }
