@@ -1,20 +1,9 @@
-# Build results
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-x64/
-x86/
-[Aa][Rr][Mm]/
-[Aa][Rr][Mm]64/
-bld/
-[Bb]in/
-[Oo]bj/
-[Ll]og/
-[Ll]ogs/
+# Build directories
+bin/
+obj/
 
-# VS Code directories
-.vscode/
+# Visual Studio directory
+.vs/
 
 # User-specific files
 *.rsuser
@@ -38,9 +27,6 @@ $RECYCLE.BIN/
 
 # VS Code directories
 .vscode/
-
-# Visual Studio 2019/2022
-.vs/
 
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt
