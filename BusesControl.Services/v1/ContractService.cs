@@ -10,6 +10,7 @@ using BusesControl.Persistence.v1.Repositories.Interfaces;
 using BusesControl.Persistence.v1.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BusesControl.Services.v1;
 
@@ -153,20 +154,6 @@ public class ContractService(
         return true;
     }
 
-    public async Task<bool> DeleteAsync(Guid id)
-    {
-        var record = await _contractBusiness.GetForDeleteAsync(id);
-        if (_notificationApi.HasNotification)
-        {
-            return false;
-        }
-
-        _contractRepository.Delete(record);
-        await _unitOfWork.CommitAsync();
-
-        return true;
-    }
-
     public async Task<bool> DeniedAsync(Guid id)
     {
         var record = await _contractBusiness.GetForDeniedAsync(id);
@@ -175,6 +162,7 @@ public class ContractService(
             return false;
         }
 
+        record.UpdatedAt = DateTime.UtcNow;
         record.Status = ContractStatusEnum.Denied;
         _contractRepository.Update(record);
         await _unitOfWork.CommitAsync();
@@ -190,6 +178,7 @@ public class ContractService(
             return false;
         }
 
+        record.UpdatedAt = DateTime.UtcNow;
         record.Status = ContractStatusEnum.WaitingReview;
         _contractRepository.Update(record);
         await _unitOfWork.CommitAsync();
@@ -208,6 +197,7 @@ public class ContractService(
         var startDate = DateTime.UtcNow;
         var installmentsCount = record.PaymentMethod == ContractPaymentMethodEnum.Single ? 1 : CalculateMonths(startDate, record.TerminateDate);
 
+        record.UpdatedAt = DateTime.UtcNow;
         record.StartDate = startDate;
         record.Status = ContractStatusEnum.InProgress;
         record.InstallmentsCount = installmentsCount;
@@ -220,5 +210,19 @@ public class ContractService(
         //TODO: chamar service de Financial para tratar as questões financeiras do contrato, e gerar as folhas de pagamento em FinancialInstallment.
 
         return new SuccessResponse(Message.Contract.SuccessfullyApproved);
+    }
+
+    public async Task<bool> DeleteAsync(Guid id)
+    {
+        var record = await _contractBusiness.GetForDeleteAsync(id);
+        if (_notificationApi.HasNotification)
+        {
+            return false;
+        }
+
+        _contractRepository.Delete(record);
+        await _unitOfWork.CommitAsync();
+
+        return true;
     }
 }
