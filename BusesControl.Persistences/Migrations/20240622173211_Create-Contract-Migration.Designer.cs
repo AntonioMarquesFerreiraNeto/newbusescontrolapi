@@ -4,6 +4,7 @@ using BusesControl.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BusesControl.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240622173211_Create-Contract-Migration")]
+    partial class CreateContractMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -218,9 +221,6 @@ namespace BusesControl.Persistence.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<bool>("InCompliance")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Logradouro")
                         .IsRequired()
                         .HasMaxLength(60)
@@ -368,9 +368,6 @@ namespace BusesControl.Persistence.Migrations
                     b.Property<decimal>("LateFeeInterestRate")
                         .HasPrecision(5, 2)
                         .HasColumnType("decimal(5,2)");
-
-                    b.Property<int?>("LimitDateTermination")
-                        .HasColumnType("int");
 
                     b.Property<int>("Parent")
                         .HasColumnType("int");
@@ -730,7 +727,7 @@ namespace BusesControl.Persistence.Migrations
 
             modelBuilder.Entity("BusesControl.Entities.Models.SettingsPanelModel", b =>
                 {
-                    b.HasOne("BusesControl.Entities.Models.EmployeeModel", "Requester")
+                    b.HasOne("BusesControl.Entities.Models.UserModel", "Requester")
                         .WithMany()
                         .HasForeignKey("RequesterId")
                         .OnDelete(DeleteBehavior.Cascade)

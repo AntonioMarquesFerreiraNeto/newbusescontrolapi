@@ -8,5 +8,6 @@ public interface IEmployeeRepository
     Task<EmployeeModel?> GetByIdAsync(Guid id);
     Task<bool> CreateAsync(EmployeeModel record);
     bool Update(EmployeeModel record);
+    Task<bool> ExistsAsync(Guid id);
     Task<bool> ExistsByEmailOrPhoneNumberOrCpfAsync(string email, string phoneNumber, string cpf, Guid? id = null);
 }

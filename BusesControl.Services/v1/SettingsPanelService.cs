@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using BusesControl.Business.v1.Interfaces;
+﻿using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.Models;
 using BusesControl.Entities.Requests;
-using BusesControl.Entities.Responses;
 using BusesControl.Filters.Notification;
 using BusesControl.Persistence.v1.Repositories.Interfaces;
 using BusesControl.Persistence.v1.UnitOfWork;
@@ -14,7 +12,6 @@ using Microsoft.AspNetCore.Http;
 namespace BusesControl.Services.v1;
 
 public class SettingsPanelService(
-    IMapper _mapper,
     IUnitOfWork _unitOfWork,
     IUserService _userService,
     ISettingsPanelBusiness _settingsPanelBusiness,
@@ -22,7 +19,7 @@ public class SettingsPanelService(
     ISettingsPanelRepository _settingsPanelRepository
 ) : ISettingsPanelService
 {
-    public async Task<SettingsPanelResponse> GetByIdAsync(Guid id)
+    public async Task<SettingsPanelModel> GetByIdAsync(Guid id)
     {
         var record = await _settingsPanelRepository.GetByIdAsync(id);
         if (record is null)
@@ -35,7 +32,7 @@ public class SettingsPanelService(
             return default!;
         }
 
-        return _mapper.Map<SettingsPanelResponse>(record);
+        return record;
     }
 
     public async Task<IEnumerable<SettingsPanelModel>> FindAsync(int page, int pageSize)
@@ -52,11 +49,11 @@ public class SettingsPanelService(
             return false;
         }
 
-        var userId = _userService.FindAuthenticatedUser().Id;
+        var employeeId = _userService.FindAuthenticatedUser().EmployeeId;
 
         var record = new SettingsPanelModel
         {
-            RequesterId = userId,
+            RequesterId = employeeId,
             TerminationFee = request.TerminationFee,
             LateFeeInterestRate = request.LateFeeInterestRate,
             CustomerDelinquencyEnabled = request.CustomerDelinquencyEnabled,
@@ -78,9 +75,9 @@ public class SettingsPanelService(
             return false;
         }
 
-        var userId = _userService.FindAuthenticatedUser().Id;
+        var employeeId = _userService.FindAuthenticatedUser().EmployeeId;
 
-        record.RequesterId = userId;
+        record.RequesterId = employeeId;
         record.TerminationFee = request.TerminationFee;
         record.LateFeeInterestRate = request.LateFeeInterestRate;
         record.CustomerDelinquencyEnabled = request.CustomerDelinquencyEnabled;

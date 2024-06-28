@@ -1,16 +1,63 @@
-bin/
-obj/
+# Build directories
 bin/
 obj/
 
+# Visual Studio directory
 .vs/
 
-bin/
-obj/
-.vs/
-bin/
-obj/
-bin/
-obj/
-bin/
-obj/
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Mono auto generated files
+mono_crash.*
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# VS Code directories
+.vscode/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# JetBrains Rider
+.idea/
+
+# Rider's project specific settings
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf
+.idea/**/contentModel.xml
+.idea/**/assetWizardSettings.xml
+
+# Lightweight UIs
+*.VC.db
+*.VC.VC.opendb
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+project.json.lock

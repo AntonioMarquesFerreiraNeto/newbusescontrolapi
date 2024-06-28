@@ -17,6 +17,21 @@ public class Message
     {
         public readonly static string Exists = "Cliente já se encontra registrado!";
         public readonly static string NotFound = "Cliente não encontrado!";
+        public readonly static string NotInCompliance = "Cliente não está em compliance com outras pendências.";
+    }
+
+    public class Contract
+    {
+        public readonly static string NotFound = "Contrato não encontrado!";
+        public readonly static string SuccessfullyApproved = "Contrato aprovado com sucesso.";
+        public readonly static string NotIsDenied = "Contrato não está negado!";
+        public readonly static string NotIsWaitingReview = "Contrato não está esperando revisão!";
+        public readonly static string TerminationDateNotInFuture = "A data de término deve ser no futuro.";
+        public readonly static string TerminationDateExceedsLimit = "A data de término não deve exceder o limite de anos estabelecido no painel de configurações para contrato a partir da data atual.";
+        public readonly static string InvalidEditRequest = "Contrato não pode ser editado. Ele deve estar negado ou aguardando revisão.";
+        public readonly static string InvalidRemoveRequest = "Contrato não pode ser removido. Ele já foi aprovado!.";
+        public readonly static string EmployeeNotDriver = "Funcionário selecionado não é motorista!";
+        public readonly static string DuplicateCustomers = "Pelo menos um cliente está duplicado nesta requisição!";
     }
 
     public class Color
@@ -30,14 +45,17 @@ public class Message
     public class Bus
     {
         public readonly static string NotFound = "Ônibus não encontrado!";
+        public readonly static string NotActive = "Ônibus não está ativo!";
         public readonly static string Invalid = "Operação inválida!";
         public readonly static string Exists = "Ônibus já se encontra registrado!";
+        public readonly static string NotAvailable = "Ônibus não está disponível para novos contratos";
     }
 
     public class Employee
     {
         public readonly static string Exists = "Funcionário já se encontra registrado!";
         public readonly static string NotFound = "Funcionário não encontrado!";
+        public readonly static string NotActive = "Funcionário não está ativo!";
         public readonly static string NoChangeNeeded = "A requisição não resultou em nenhuma alteração, pois o tipo do registro já é o mesmo.";
         public readonly static string RoleChangedNoAccess = "Papel do funcionário alterado com sucesso! Devido ao perfil do mesmo, ele não possui acesso ao sistema.";
         public readonly static string RoleChangedRegisterInQueue = "Papel do funcionário alterado com sucesso, mas se deseja que ele tenha acesso ao sistema, registre o mesmo na fila de registro de usuários.";

@@ -8,6 +8,7 @@ public interface IBusRepository
     Task<BusModel?> GetByIdAsync(Guid id);
     Task<bool> CreateAsync(BusModel bus);
     bool Update(BusModel bus);
+    Task<bool> ExistsAsync(Guid id);
     Task<bool> ExistsByRenavamOrLicensePlateOrChassisAsync(string renavam, string licensePlate, string chassi, Guid? id = null);
     Task<bool> ExistsByColorAsync(Guid colorId);
 }

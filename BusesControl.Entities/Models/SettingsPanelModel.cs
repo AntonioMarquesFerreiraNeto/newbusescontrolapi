@@ -11,10 +11,11 @@ public class SettingsPanelModel
     [Precision(5, 2)]
     public decimal LateFeeInterestRate { get; set; }
     public bool CustomerDelinquencyEnabled { get; set; }
+    public int? LimitDateTermination { get; set; }
     public SettingsPanelParentEnum Parent { get; set; }
     public bool Active { get; set; }
     public Guid RequesterId { get; set; }
-    public UserModel Requester { get; set; } = default!;
+    public EmployeeModel Requester { get; set; } = default!;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }
 }
