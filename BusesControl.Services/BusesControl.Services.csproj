@@ -10,13 +10,12 @@
     <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="ClosedXML" Version="0.102.2" />
-    <PackageReference Include="DinkToPdf" Version="1.0.8" />
     <PackageReference Include="Humanizer" Version="2.14.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.6" />
     <PackageReference Include="PasswordGenerator" Version="2.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
-
+	
   <ItemGroup>
     <ProjectReference Include="..\BusesControl.Business\BusesControl.Business.csproj" />
     <ProjectReference Include="..\BusesControl.Commons\BusesControl.Commons.csproj" />

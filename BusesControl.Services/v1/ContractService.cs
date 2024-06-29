@@ -5,6 +5,7 @@ using BusesControl.Entities.Enums;
 using BusesControl.Entities.Models;
 using BusesControl.Entities.Requests;
 using BusesControl.Entities.Response;
+using BusesControl.Entities.Responses;
 using BusesControl.Filters.Notification;
 using BusesControl.Persistence.v1.Repositories.Interfaces;
 using BusesControl.Persistence.v1.UnitOfWork;
@@ -20,7 +21,8 @@ public class ContractService(
     IGenerationPdfService _generationPdfService,
     ICustomerContractService _customerContractService,
     IContractBusiness _contractBusiness,
-    IContractRepository _contractRepository
+    IContractRepository _contractRepository,
+    ICustomerContractRepository _customerContractRepository
 ) : IContractService
 {
     private static int CalculateMonths(DateTime startDate, DateTime endDate)
@@ -52,15 +54,26 @@ public class ContractService(
         return record;
     }
 
-    public async Task<byte[]> GetGeneratedContractForCustomerAsync(Guid contractId, Guid customerId)
+    public async Task<PdfCoResponse> GetGeneratedContractForCustomerAsync(Guid id, Guid customerId)
     {
-        var contractGenerated = await _generationPdfService.ContractForCustomerAsync(contractId, customerId);
+        var customerContractRecord = await _customerContractRepository.GetByContractAndCustomerWithIncludesAsync(id, customerId);
+        if (customerContractRecord is null)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status404NotFound,
+                title: NotificationTitle.NotFound,
+                details: Message.CustomerContract.NotFound
+            );
+            return default!;
+        }
+
+        var response = await _generationPdfService.GeneratePdfFromTemplateAsync(customerContractRecord);
         if (_notificationApi.HasNotification)
         {
             return default!;
         }
 
-        return contractGenerated;
+        return response;
     }
 
     public async Task<IEnumerable<ContractModel>> FindByOptionalStatusAsync(int page, int pageSize, ContractStatusEnum? status)

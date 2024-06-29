@@ -8,16 +8,13 @@
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f7f9fc;
             color: #333;
         }
 
         .container {
-            width: 80%;
-            margin: 30px auto;
-            padding: 30px;
-            background-color: #fff;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 97%;
+            margin: 10px auto;
+            padding: 5px;
             border-radius: 10px;
         }
 
@@ -30,7 +27,7 @@
 
         p {
             margin: 15px 0;
-            line-height: 1.8;
+            line-height: 1.9;
             text-align: justify;
         }
 
@@ -65,13 +62,17 @@
             padding-top: 5px;
         }
 
+        .signature-p {
+            font-size: 10pt;
+        }
+
         .footer {
-            display: flex;
-            justify-content: space-between;
-            text-align: center;
-            margin-top: 60px;
             font-size: 0.77em;
             color: #777;
+            position: fixed;
+            bottom: -10px;
+            width: 100%;
+            text-align: center;
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
@@ -83,11 +84,7 @@
 
         <p class="section-title">CONTRATANTE</p>
         <p>
-            <span class="highlight">Antonio Marques Ferreira Neto</span>, portador(a) do CPF: <span class="highlight">928.074.456-91</span>,
-            RG: <span class="highlight">2595594</span>, filho(a) da Sra. Stella Alice Brito, residente e domiciliado no imóvel
-            Nº 05 (Praça Roque Fiori), próximo ao complemento residencial (Amparo), no bairro Centro, da cidade de
-            São João da Boa Vista, Estado de São Paulo. Neste ato, qualificado(a) como Contratante, sendo os meios de contato
-            <span class="highlight">(19) 98573-3935</span> e <span class="highlight">antoniomarquesfneto@gmail.com</span>.
+            {Contractor}
         </p>
 
         <p class="section-title">CONTRATADA</p>
@@ -106,11 +103,7 @@
 
         <p class="section-title">CLÁUSULA SEGUNDA - VEÍCULOS</p>
         <p>
-            O(s) veículo(s) a ser(em) utilizado(s) no transporte será(ão) descrito(s) a seguir: Veículo Marcopolo,
-            modelo Paradiso 1200, placa <span class="highlight">LYE-5316</span>, chassi <span class="highlight">3AF76644561AE345G</span>,
-            cor preta, ano de fabricação 2015, com capacidade para 55 passageiros. Em caso de indisponibilidade do
-            veículo designado, a Contratada poderá utilizar outro veículo habilitado no Sistema de Habilitação de
-            Transportes de Passageiros – SisHAB, da ANTT.
+            {Bus}
         </p>
 
         <p class="section-title">CLÁUSULA TERCEIRA - OBRIGAÇÕES DO CONTRATANTE</p>
@@ -128,15 +121,12 @@
 
         <p class="section-title">CLÁUSULA QUINTA - RESCISÃO</p>
         <p>
-            Em caso de rescisão antecipada deste contrato sem o devido pagamento das parcelas, será aplicada uma
-            multa de <span class="highlight">3%</span> sobre o valor total do contrato por cliente inadimplente, calculada sobre
-            o valor de <span class="highlight">R$ 566,67</span>.
+            {Termination}
         </p>
 
         <p class="section-title">CLÁUSULA SEXTA - VIGÊNCIA</p>
         <p>
-            O presente contrato vigorará pelo período de <span class="highlight">10/04/2024</span> a <span class="highlight">10/04/2025</span>,
-            conforme acordado entre as partes.
+            {Validity}
         </p>
 
         <p class="section-title">CLÁUSULA SÉTIMA - DISPOSIÇÕES GERAIS</p>
@@ -150,21 +140,20 @@
         <div class="signature-section">
             <div class="signature-box">
                 <div class="signature-line"></div>
-                <p>Assinatura do Representante Legal do Contratante</p>
+                <p class="signature-p">Assinatura do Representante Legal do Contratante</p>
             </div>
             <div class="signature-box">
                 <div class="signature-line"></div>
-                <p>Assinatura do Administrador que Aprovou o Contrato</p>
+                <p class="signature-p">Assinatura do Administrador que Aprovou o Contrato</p>
             </div>
             <div class="signature-box">
                 <div class="signature-line"></div>
-                <p>Assinatura da Empresa Representante</p>
+                <p class="signature-p">Assinatura da Empresa Representante</p>
             </div>
         </div>
 
         <div class="footer">
-            <p>&copy; 2024 Buss Viagens LTDA. Todos os direitos reservados.</p>
-            <p>Gerado em 28 de Junho de 2024.</p>
+            <p class="footer-p">&copy; 2024 Buss Viagens LTDA. Todos os direitos reservados.</p>
         </div>
     </div>
 </body>

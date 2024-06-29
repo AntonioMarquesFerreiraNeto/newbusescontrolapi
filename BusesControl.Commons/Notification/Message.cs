@@ -23,6 +23,7 @@ public class Message
     public class CustomerContract
     {
         public readonly static string NotFound = "Contrato do cliente não encontrado!";
+        public readonly static string PdfUnexpected = "Desculpe, não conseguimos gerar seu pdf!";
     }
 
     public class Contract

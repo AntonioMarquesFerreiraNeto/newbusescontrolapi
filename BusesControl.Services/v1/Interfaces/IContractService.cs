@@ -2,13 +2,15 @@
 using BusesControl.Entities.Models;
 using BusesControl.Entities.Requests;
 using BusesControl.Entities.Response;
+using BusesControl.Entities.Responses;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BusesControl.Services.v1.Interfaces;
 
 public interface IContractService
 {
     Task<ContractModel?> GetByIdAsync(Guid id);
-    Task<byte[]> GetGeneratedContractForCustomerAsync(Guid contractId, Guid customerId);
+    Task<PdfCoResponse> GetGeneratedContractForCustomerAsync(Guid contractId, Guid customerId);
     Task<IEnumerable<ContractModel>> FindByOptionalStatusAsync(int page, int pageSize, ContractStatusEnum? status);
     Task<bool> CreateAsync(ContractCreateRequest request);
     Task<bool> UpdateAsync(Guid id, ContractUpdateRequest request);

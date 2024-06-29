@@ -21,7 +21,7 @@ public class CustomerContractRepository(
         return await _context.CustomersContract.AsNoTracking()
                         .Include(x => x.Contract).ThenInclude(x => x.Approver)
                         .Include(x => x.Contract).ThenInclude(x => x.Driver)
-                        .Include(x => x.Contract).ThenInclude(x => x.Bus)
+                        .Include(x => x.Contract).ThenInclude(x => x.Bus.Color)
                         .Include(x => x.Customer)
                         .SingleOrDefaultAsync(x => x.ContractId == contractId && x.CustomerId == customerId);
     }

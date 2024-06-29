@@ -1,7 +1,6 @@
 ﻿using BusesControl.Commons;
 using BusesControl.Services.v1;
 using BusesControl.Services.v1.Interfaces;
-using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;

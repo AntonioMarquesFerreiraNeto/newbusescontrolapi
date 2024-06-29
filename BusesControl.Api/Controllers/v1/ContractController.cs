@@ -5,7 +5,9 @@ using BusesControl.Services.v1.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Rotativa.AspNetCore;
 using Service.Api.Utils;
+using System.Net.Http;
 
 namespace BusesControl.Api.Controllers.v1;
 
@@ -16,7 +18,8 @@ namespace BusesControl.Api.Controllers.v1;
 public class ContractController(
     IValidator<ContractCreateRequest> _contractCreateRequestValidator,
     IValidator<ContractUpdateRequest> _contractUpdateRequestValidator,
-    IContractService _contractService
+    IContractService _contractService,
+    IGenerationPdfService generationPdfService
 ) : ControllerBase
 {
     [HttpGet]
@@ -91,10 +94,10 @@ public class ContractController(
     }
 
     [AllowAnonymous]
-    [HttpGet]
-    public async Task<IActionResult> GetGeneratedContractForCustomer([FromBody] Guid contractId, [FromBody] Guid customerId)
+    [HttpGet("{id}/customers/{customerId}/pdf-contract")]
+    public async Task<IActionResult> GetGeneratedContractForCustomer([FromRoute] Guid id, [FromRoute] Guid customerId)
     {
-        var response = await _contractService.GetGeneratedContractForCustomerAsync(contractId, customerId);
+        var response = await _contractService.GetGeneratedContractForCustomerAsync(id, customerId);
         return Ok(response);
     }
 }
