@@ -35,8 +35,4 @@
     <ProjectReference Include="..\BusesControl.Commons\BusesControl.Commons.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTOs\" />
-  </ItemGroup>
-
 </Project>

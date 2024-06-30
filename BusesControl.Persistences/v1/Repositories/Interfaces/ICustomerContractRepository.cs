@@ -10,4 +10,5 @@ public interface ICustomerContractRepository
     Task<bool> CreateRangeAsync(IEnumerable<CustomerContractModel> record);
     bool Update(CustomerContractModel record);
     bool RemoveRange(IEnumerable<CustomerContractModel> records);
+    Task<int> CountByContractAsync(Guid contractId);
 }

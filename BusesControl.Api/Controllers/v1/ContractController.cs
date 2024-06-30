@@ -5,9 +5,7 @@ using BusesControl.Services.v1.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Rotativa.AspNetCore;
 using Service.Api.Utils;
-using System.Net.Http;
 
 namespace BusesControl.Api.Controllers.v1;
 
@@ -18,8 +16,7 @@ namespace BusesControl.Api.Controllers.v1;
 public class ContractController(
     IValidator<ContractCreateRequest> _contractCreateRequestValidator,
     IValidator<ContractUpdateRequest> _contractUpdateRequestValidator,
-    IContractService _contractService,
-    IGenerationPdfService generationPdfService
+    IContractService _contractService
 ) : ControllerBase
 {
     [HttpGet]
@@ -33,6 +30,13 @@ public class ContractController(
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
         var response = await _contractService.GetByIdAsync(id);
+        return Ok(response);
+    }
+
+    [HttpGet("{id}/customers/{customerId}/pdf-contract")]
+    public async Task<IActionResult> GetGeneratedContractForCustomer([FromRoute] Guid id, [FromRoute] Guid customerId)
+    {
+        var response = await _contractService.GetGeneratedContractForCustomerAsync(id, customerId);
         return Ok(response);
     }
 
@@ -85,19 +89,26 @@ public class ContractController(
         return Ok(response);
     }
 
+    [HttpPatch("{id}/start-progress")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> StartProgress([FromRoute] Guid id)
+    {
+        var response = await _contractService.StartProgressAsync(id);
+        return Ok(response);
+    }
+
+    [HttpPatch("{id}/customers/{customerId}/start-process-termination")]
+    public async Task<IActionResult> StartProcessTermination([FromRoute] Guid id, [FromRoute] Guid customerId)
+    {
+        var response = await _contractService.StartProcessTerminationAsync(id, customerId);
+        return Ok(response);
+    }
+
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
         await _contractService.DeleteAsync(id);
         return NoContent();
-    }
-
-    [AllowAnonymous]
-    [HttpGet("{id}/customers/{customerId}/pdf-contract")]
-    public async Task<IActionResult> GetGeneratedContractForCustomer([FromRoute] Guid id, [FromRoute] Guid customerId)
-    {
-        var response = await _contractService.GetGeneratedContractForCustomerAsync(id, customerId);
-        return Ok(response);
     }
 }

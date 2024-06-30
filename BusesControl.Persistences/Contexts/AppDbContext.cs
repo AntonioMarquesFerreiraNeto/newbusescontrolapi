@@ -63,5 +63,10 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
             .HasForeignKey(x => x.ColorId)
             .OnDelete(DeleteBehavior.NoAction);
 
+        builder.Entity<ContractModel>()
+            .HasOne(x => x.SettingsPanel)
+            .WithMany()
+            .HasForeignKey(x => x.SettingsPanelId)
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

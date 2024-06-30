@@ -5,5 +5,6 @@ namespace BusesControl.Services.v1.Interfaces;
 
 public interface IGenerationPdfService
 {
-    Task<PdfCoResponse> GeneratePdfFromTemplateAsync(CustomerContractModel record);
+    Task<PdfCoResponse> GeneratePdfFromTemplateAsync(CustomerContractModel customerContract);
+    Task<PdfCoResponse> GeneratePdfTerminationFromTemplateAsync(CustomerContractModel customerContract);
 }

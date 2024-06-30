@@ -10,48 +10,13 @@ using Microsoft.AspNetCore.Http;
 namespace BusesControl.Business.v1;
 
 public class ContractBusiness(
-    ISettingsPanelRepository _settingsPanelRepository,
     IContractRepository _contractRepository,
+    ICustomerContractRepository _customerContractRepository,
     IBusRepository _busRepository,
     IEmployeeRepository _employeeRepository,
     INotificationApi _notificationApi
 ) : IContractBusiness
 {
-    public async Task<bool> ValidateTerminationDateAsync(DateTime terminateDate)
-    {
-        terminateDate = terminateDate.Date;
-        var dateNow = DateTime.UtcNow.Date;
-
-        if (dateNow >= terminateDate)
-        {
-            _notificationApi.SetNotification(
-                statusCode: StatusCodes.Status400BadRequest,
-                title: NotificationTitle.BadRequest,
-                details: Message.Contract.TerminationDateNotInFuture
-            );
-            return false;
-        }
-
-        var settingPanelRecord = await _settingsPanelRepository.GetByParentAsync(SettingsPanelParentEnum.Contract);
-
-        if (settingPanelRecord?.LimitDateTermination is not null)
-        {
-            var dateLimit = dateNow.AddYears(settingPanelRecord.LimitDateTermination.Value);
-
-            if (terminateDate > dateLimit)
-            {
-                _notificationApi.SetNotification(
-                    statusCode: StatusCodes.Status400BadRequest,
-                    title: NotificationTitle.BadRequest,
-                    details: Message.Contract.TerminationDateExceedsLimit
-                );
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     public async Task<bool> ValidateBusAndEmployeeVinculationAsync(Guid busId, Guid driverId)
     {
         var busRecord = await _busRepository.GetByIdAsync(busId);
@@ -117,6 +82,58 @@ public class ContractBusiness(
         }
 
         return true;
+    }
+
+    public async Task<CustomerContractModel> GetForGeneratedContractForCustomerAsync(Guid id, Guid customerId)
+    {
+        var customerContractRecord = await _customerContractRepository.GetByContractAndCustomerWithIncludesAsync(id, customerId);
+        if (customerContractRecord is null)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status404NotFound,
+                title: NotificationTitle.NotFound,
+                details: Message.CustomerContract.NotFound
+            );
+            return default!;
+        }
+
+        if (!customerContractRecord.Contract.IsApproved)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.CustomerContract.NotPdfContract
+            );
+            return default!;
+        }
+
+        return customerContractRecord;
+    }
+
+    public async Task<CustomerContractModel> GetForGeneratedTerminationForCustomerAsync(Guid id, Guid customerId)
+    {
+        var customerContractRecord = await _customerContractRepository.GetByContractAndCustomerWithIncludesAsync(id, customerId);
+        if (customerContractRecord is null)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status404NotFound,
+                title: NotificationTitle.NotFound,
+                details: Message.CustomerContract.NotFound
+            );
+            return default!;
+        }
+
+        if (customerContractRecord.Contract.Status != ContractStatusEnum.InProgress)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.CustomerContract.NotPdfTermination
+            );
+            return default!;
+        }
+
+        return customerContractRecord;
     }
 
     public async Task<ContractModel> GetForUpdateAsync(Guid id)
@@ -223,6 +240,32 @@ public class ContractBusiness(
         return record;
     }
 
+    public async Task<ContractModel> GetForStartProgressAsync(Guid id)
+    {
+        var record = await _contractRepository.GetByIdAsync(id);
+        if (record is null)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status404NotFound,
+                title: NotificationTitle.NotFound,
+                details: Message.Contract.NotFound
+            );
+            return default!;
+        }
+
+        if (record.Status != ContractStatusEnum.WaitingSignature)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.Contract.NotIsWaitingSignature
+            );
+            return default!;
+        }
+
+        return record;
+    }
+
     public async Task<ContractModel> GetForDeleteAsync(Guid id)
     {
         var record = await _contractRepository.GetByIdAsync(id);
@@ -247,6 +290,39 @@ public class ContractBusiness(
         }
 
         return record;
+    }
+
+    public bool ValidateTerminationDate(SettingsPanelModel settingsPanelRecord, DateTime terminateDate)
+    {
+        terminateDate = terminateDate.Date;
+        var dateNow = DateTime.UtcNow.Date;
+
+        if (dateNow >= terminateDate)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.Contract.TerminationDateNotInFuture
+            );
+            return false;
+        }
+
+        if (settingsPanelRecord.LimitDateTermination is not null)
+        {
+            var dateLimit = dateNow.AddYears(settingsPanelRecord.LimitDateTermination.Value);
+
+            if (terminateDate > dateLimit)
+            {
+                _notificationApi.SetNotification(
+                    statusCode: StatusCodes.Status400BadRequest,
+                    title: NotificationTitle.BadRequest,
+                    details: Message.Contract.TerminationDateExceedsLimit
+                );
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public bool ValidateDuplicateCustomersValidate(IEnumerable<Guid> customersId)

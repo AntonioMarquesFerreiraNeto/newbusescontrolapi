@@ -7,4 +7,6 @@ public interface ISettingsPanelBusiness
 {
     Task<bool> ExistsByParentAsync(SettingsPanelParentEnum parent);
     Task<SettingsPanelModel> GetForUpdateAsync(Guid id, SettingsPanelParentEnum parent);
+    Task<SettingsPanelModel> GetForCreateOrUpdateContractAsync(Guid settingsPanelId);
+    Task<SettingsPanelModel> GetForDeleteAsync(Guid id);
 }

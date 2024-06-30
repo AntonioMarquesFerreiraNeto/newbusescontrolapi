@@ -17,5 +17,12 @@ public class AutoMapper : Profile
         CreateMap<UserModel, UserResponse>();
         CreateMap<CustomerCreateRequest, CustomerUpdateRequest>();
         CreateMap<CustomerUpdateRequest, CustomerCreateRequest>();
+
+        CreateMap<ContractModel, ContractResponse>();
+        CreateMap<CustomerModel, CustomerResponse>();
+        CreateMap<CustomerContractModel, CustomerContractResponse>();
+        CreateMap<EmployeeModel, EmployeeResponse>();
+        CreateMap<BusModel, BusResponse>();
+        CreateMap<SettingsPanelModel, SettingsPanelResponse>();
     }
 }

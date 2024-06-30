@@ -21,6 +21,7 @@ public class CustomerContractRepository(
         return await _context.CustomersContract.AsNoTracking()
                         .Include(x => x.Contract).ThenInclude(x => x.Approver)
                         .Include(x => x.Contract).ThenInclude(x => x.Driver)
+                        .Include(x => x.Contract).ThenInclude(x => x.SettingsPanel)
                         .Include(x => x.Contract).ThenInclude(x => x.Bus.Color)
                         .Include(x => x.Customer)
                         .SingleOrDefaultAsync(x => x.ContractId == contractId && x.CustomerId == customerId);
@@ -47,5 +48,10 @@ public class CustomerContractRepository(
     {
         _context.CustomersContract.RemoveRange(records);
         return true;
+    }
+
+    public async Task<int> CountByContractAsync(Guid contractId)
+    {
+        return await _context.CustomersContract.AsNoTracking().Where(x => x.ContractId == contractId).CountAsync();
     }
 }

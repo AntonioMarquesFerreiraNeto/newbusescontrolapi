@@ -19,6 +19,25 @@ public class SettingsPanelService(
     ISettingsPanelRepository _settingsPanelRepository
 ) : ISettingsPanelService
 {
+    private async Task<string> GenerateReferenceUniqueAsync()
+    {
+        var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        var reference = "#";
+        var random = new Random();
+        var existsReference = true;
+
+        while (existsReference)
+        {
+            for (int c = 0; c < 7; c++)
+            {
+                reference += chars[random.Next(chars.Length)];
+            }
+            existsReference = await _settingsPanelRepository.ExitsByReferenceAsync(reference);
+        }
+
+        return reference;
+    }
+
     public async Task<SettingsPanelModel> GetByIdAsync(Guid id)
     {
         var record = await _settingsPanelRepository.GetByIdAsync(id);
@@ -50,9 +69,11 @@ public class SettingsPanelService(
         }
 
         var employeeId = _userService.FindAuthenticatedUser().EmployeeId;
+        var reference = await GenerateReferenceUniqueAsync();
 
         var record = new SettingsPanelModel
         {
+            Reference = reference,
             RequesterId = employeeId,
             TerminationFee = request.TerminationFee,
             LateFeeInterestRate = request.LateFeeInterestRate,
@@ -95,14 +116,9 @@ public class SettingsPanelService(
 
     public async Task<bool> DeleteAsync(Guid id)
     {
-        var record = await _settingsPanelRepository.GetByIdAsync(id);
-        if (record is null)
+        var record = await _settingsPanelBusiness.GetForDeleteAsync(id);
+        if (_notificationApi.HasNotification)
         {
-            _notificationApi.SetNotification(
-                statusCode: StatusCodes.Status404NotFound,
-                title: NotificationTitle.NotFound,
-                details: Message.SettingsPanel.NotFound
-            );
             return false;
         }
 

@@ -65,4 +65,14 @@ public class CustomerContractService(
 
         return true;
     }
+
+    public async Task<bool> StartProcessTerminationWithOutValidationAsync(CustomerContractModel record)
+    {
+        record.ProcessTermination = true;
+        record.ProcessTerminationDate = DateTime.UtcNow;
+        _customerContractRepository.Update(record);
+        await _unitOfWork.CommitAsync();
+
+        return true;
+    }
 }
