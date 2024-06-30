@@ -8,8 +8,10 @@ public enum ContractStatusEnum
     WaitingReview = 1,
     [Description("Negado")]
     Denied = 2,
+    [Description("Colhendo assinaturas")]
+    WaitingSignature = 3,
     [Description("Em andamento")]
-    InProgress = 3,
+    InProgress = 4,
     [Description("Concluído")]
-    Completed = 4
+    Completed = 5
 }

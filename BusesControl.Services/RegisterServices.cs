@@ -34,6 +34,7 @@ public class RegisterServices
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IUserRegistrationQueueService, UserRegistrationQueueService>();
+        builder.Services.AddScoped<IGenerationPdfService, GenerationPdfService>();
 
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
     }

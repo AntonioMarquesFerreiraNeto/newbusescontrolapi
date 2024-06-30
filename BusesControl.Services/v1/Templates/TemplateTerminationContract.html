@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Rescisão de Prestação de Serviços</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .container {
+            width: 97%;
+            margin: 10px auto;
+            padding: 5px;
+            border-radius: 10px;
+        }
+
+        h1, h2 {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            color: #003366;
+            margin-bottom: 20px;
+        }
+
+        p {
+            margin: 15px 0;
+            line-height: 1.9;
+            text-align: justify;
+        }
+
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: bold;
+            color: #2b5787;
+            margin-top: 30px;
+            border-bottom: 1px solid #2b5787;
+            padding-bottom: 8px;
+        }
+
+        .highlight {
+            color: #b05d5a;
+        }
+
+        .signature-section {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 50px;
+        }
+
+        .signature-box {
+            width: 30%;
+            text-align: center;
+        }
+
+        .signature-line {
+            margin-top: 40px;
+            border-top: 1px solid #333;
+            padding-top: 5px;
+        }
+
+        .signature-p {
+            font-size: 10pt;
+        }
+
+        .footer {
+            font-size: 0.70em;
+            color: #777;
+            position: fixed;
+            bottom: -20px;
+            right: 20px;
+            text-align: center;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Rescisão de Prestação de Serviços</h1>
+        <h2>Contrato nº {ReferenceContract}</h2>
+
+        <p class="section-title">CONTRATANTE</p>
+        <p>
+            {Contractor}
+        </p>
+
+        <p class="section-title">CONTRATADA</p>
+        <p>
+            <span class="highlight">Buss Viagens LTDA</span>, pessoa jurídica de direito privado, inscrita no CNPJ sob o nº
+            <span class="highlight">02.116.484/0001-02</span>, com sede na cidade de Goianésia, Estado de Goiás, Brasil,
+            representada neste ato pelo sócio fundador Manoel Hamilton Rodrigues, doravante denominada Contratada.
+        </p>
+
+        <p class="section-title">CLÁUSULA QUINTA - RESCISÃO</p>
+        <p>
+            {Termination}
+        </p>
+
+        <div class="signature-section">
+            <div class="signature-box">
+                <div class="signature-line"></div>
+                <p class="signature-p">Assinatura do Representante Legal do Contratante</p>
+            </div>
+            <div class="signature-box">
+                <div class="signature-line"></div>
+                <p class="signature-p">Assinatura do Administrador que Aprovou o Contrato</p>
+            </div>
+            <div class="signature-box">
+                <div class="signature-line"></div>
+                <p class="signature-p">Assinatura da Empresa Representante</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p class="footer-p">{GlobalFooter}</p>
+        </div>
+    </div>
+</body>
+</html>

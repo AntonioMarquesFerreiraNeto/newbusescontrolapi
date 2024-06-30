@@ -33,6 +33,13 @@ public class ContractController(
         return Ok(response);
     }
 
+    [HttpGet("{id}/customers/{customerId}/pdf-contract")]
+    public async Task<IActionResult> GetGeneratedContractForCustomer([FromRoute] Guid id, [FromRoute] Guid customerId)
+    {
+        var response = await _contractService.GetGeneratedContractForCustomerAsync(id, customerId);
+        return Ok(response);
+    }
+
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] ContractCreateRequest request)
     {
@@ -79,6 +86,21 @@ public class ContractController(
     public async Task<IActionResult> Approve([FromRoute] Guid id)
     {
         var response =  await _contractService.ApproveAsync(id);
+        return Ok(response);
+    }
+
+    [HttpPatch("{id}/start-progress")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> StartProgress([FromRoute] Guid id)
+    {
+        var response = await _contractService.StartProgressAsync(id);
+        return Ok(response);
+    }
+
+    [HttpPatch("{id}/customers/{customerId}/start-process-termination")]
+    public async Task<IActionResult> StartProcessTermination([FromRoute] Guid id, [FromRoute] Guid customerId)
+    {
+        var response = await _contractService.StartProcessTerminationAsync(id, customerId);
         return Ok(response);
     }
 

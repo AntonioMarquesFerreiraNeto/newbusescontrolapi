@@ -64,4 +64,19 @@ public class ContractRepository(
         _context.Contracts.Remove(record);
         return true;
     }
+
+    public async Task<bool> ExistsInIsApprovedBySettingsPanelAsync(Guid settingsPanelId)
+    {
+        return await _context.Contracts.AnyAsync(x => x.SettingsPanelId == settingsPanelId && x.IsApproved == true);
+    }
+
+    public async Task<bool> ExistsBySettingsPanelAsync(Guid settingsPanelId)
+    {
+        return await _context.Contracts.AnyAsync(x => x.SettingsPanelId == settingsPanelId);
+    }
+
+    public async Task<bool> ExitsByReferenceAsync(string reference)
+    {
+        return await _context.Contracts.AnyAsync(x => x.Reference == reference);
+    }
 }

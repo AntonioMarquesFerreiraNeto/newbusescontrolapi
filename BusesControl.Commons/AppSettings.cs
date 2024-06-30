@@ -15,6 +15,12 @@ public static class AppSettingsJWT
     public static int ExpireHours = 24;
 }
 
+public static class AppSettingsPdfCo 
+{
+    public static string Key = "sua chave da API";
+    public static string Url = "https://api.pdf.co/v1/pdf/convert/from/html";
+}
+
 public static class AppSettingsResetPassword
 {
     public static int ExpireCode = 3;

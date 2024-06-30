@@ -20,18 +20,28 @@ public class Message
         public readonly static string NotInCompliance = "Cliente não está em compliance com outras pendências.";
     }
 
+    public class CustomerContract
+    {
+        public readonly static string NotFound = "Contrato do cliente não encontrado!";
+        public readonly static string NotPdfContract = "Não é possível gerar o pdf do contrato, o mesmo não está aprovado ou aguardando assinaturas.";
+        public readonly static string NotPdfTermination = "Não é possível gerar o pdf da rescisão, o contrato não está em andamento";
+        public readonly static string PdfUnexpected = "Desculpe, não conseguimos gerar seu pdf!";
+    }
+
     public class Contract
     {
         public readonly static string NotFound = "Contrato não encontrado!";
         public readonly static string SuccessfullyApproved = "Contrato aprovado com sucesso.";
         public readonly static string NotIsDenied = "Contrato não está negado!";
         public readonly static string NotIsWaitingReview = "Contrato não está esperando revisão!";
+        public readonly static string NotIsWaitingSignature = "Contrato não está aguardando assinatura!";
         public readonly static string TerminationDateNotInFuture = "A data de término deve ser no futuro.";
         public readonly static string TerminationDateExceedsLimit = "A data de término não deve exceder o limite de anos estabelecido no painel de configurações para contrato a partir da data atual.";
         public readonly static string InvalidEditRequest = "Contrato não pode ser editado. Ele deve estar negado ou aguardando revisão.";
         public readonly static string InvalidRemoveRequest = "Contrato não pode ser removido. Ele já foi aprovado!";
         public readonly static string EmployeeNotDriver = "Funcionário selecionado não é motorista!";
         public readonly static string DuplicateCustomers = "Pelo menos um cliente está duplicado nesta requisição!";
+        public readonly static string SuccessfullyStartContract = "Contrato inicializado com sucesso! Consulte as folhas de pagamento no módulo financeiro.";
     }
 
     public class Color
@@ -66,6 +76,9 @@ public class Message
     {
         public readonly static string NotFound = "Painel de configurações não encontrado!";
         public readonly static string Exists = "Já existe um painel de configurações para o parent especificado!";
+        public readonly static string NotUpdate = "Existe contratos aprovados que usam esse painel de configurações!";
+        public readonly static string NotDestine = "Não é possível realizar essa vinculação!";
+        public readonly static string NotDelete = "Painel de configurações é usado em pelo menos um contrato!";
     }
 
     public class User

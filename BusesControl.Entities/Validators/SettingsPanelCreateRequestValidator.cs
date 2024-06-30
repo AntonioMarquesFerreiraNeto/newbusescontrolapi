@@ -12,6 +12,7 @@ public class SettingsPanelCreateRequestValidator : AbstractValidator<SettingsPan
             .IsInEnum().WithMessage("Parent inválido!");
 
         RuleFor(x => x.TerminationFee)
+            .NotEmpty().WithMessage("Taxa de rescisão é um campo obrigatório")
             .LessThanOrEqualTo(30).WithMessage("Taxa de rescisão não pode ultrapassar 30%");
 
         RuleFor(x => x.LimitDateTermination)

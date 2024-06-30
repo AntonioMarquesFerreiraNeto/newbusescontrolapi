@@ -17,11 +17,6 @@ public class SettingsPanelRepository(
         return await _context.SettingsPanel.AsNoTracking().Include(x => x.Requester).SingleOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<SettingsPanelModel?> GetByParentAsync(SettingsPanelParentEnum parent)
-    {
-        return await _context.SettingsPanel.AsNoTracking().SingleOrDefaultAsync(x => x.Parent == parent);
-    }
-
     public async Task<IEnumerable<SettingsPanelModel>> FindAsync(int page = 0, int pageSize = 0)
     {
         var query = _context.SettingsPanel.AsNoTracking();
@@ -54,8 +49,13 @@ public class SettingsPanelRepository(
         return true;
     }
 
-    public async Task<bool> ExistsByParent(SettingsPanelParentEnum parent, Guid? id = null)
+    public async Task<bool> ExistsByParentExceptionContract(SettingsPanelParentEnum parent, Guid? id = null)
     {
-        return await _context.SettingsPanel.AnyAsync(x => x.Parent == parent && x.Id != id);
+        return await _context.SettingsPanel.AnyAsync(x => x.Parent == parent && x.Id != id && x.Parent != SettingsPanelParentEnum.Contract);
+    }
+
+    public async Task<bool> ExitsByReferenceAsync(string reference)
+    {
+        return await _context.SettingsPanel.AnyAsync(x => x.Reference == reference);
     }
 }

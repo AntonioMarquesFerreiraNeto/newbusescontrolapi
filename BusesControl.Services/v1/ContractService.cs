@@ -1,26 +1,30 @@
-﻿using BusesControl.Business.v1.Interfaces;
+﻿using AutoMapper;
+using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.Enums;
 using BusesControl.Entities.Models;
 using BusesControl.Entities.Requests;
 using BusesControl.Entities.Response;
+using BusesControl.Entities.Responses;
 using BusesControl.Filters.Notification;
 using BusesControl.Persistence.v1.Repositories.Interfaces;
 using BusesControl.Persistence.v1.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace BusesControl.Services.v1;
 
 public class ContractService(
+    IMapper _mapper,
     IUnitOfWork _unitOfWork,
     INotificationApi _notificationApi,
     IUserService _userService,
+    IGenerationPdfService _generationPdfService,
     ICustomerContractService _customerContractService,
     IContractBusiness _contractBusiness,
-    IContractRepository _contractRepository
+    IContractRepository _contractRepository,
+    ISettingsPanelBusiness _settingsPanelBusiness
 ) : IContractService
 {
     private static int CalculateMonths(DateTime startDate, DateTime endDate)
@@ -36,7 +40,26 @@ public class ContractService(
         return monthDifference;
     }
 
-    public async Task<ContractModel?> GetByIdAsync(Guid id)
+    private async Task<string> GenerateReferenceUniqueAsync()
+    {
+        var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        var reference = "#";
+        var random = new Random();
+        var existsReference = true;
+
+        while (existsReference)
+        {
+            for (int c = 0; c < 7; c++)
+            {
+                reference += chars[random.Next(chars.Length)];
+            }
+            existsReference = await _contractRepository.ExitsByReferenceAsync(reference);
+        }
+
+        return reference;
+    }
+
+    public async Task<ContractResponse> GetByIdAsync(Guid id)
     {
         var record = await _contractRepository.GetByIdWithIncludesAsync(id);
         if (record is null)
@@ -49,7 +72,24 @@ public class ContractService(
             return default!;
         }
 
-        return record;
+        return _mapper.Map<ContractResponse>(record);
+    }
+
+    public async Task<PdfCoResponse> GetGeneratedContractForCustomerAsync(Guid id, Guid customerId)
+    {
+        var customerContractRecord = await _contractBusiness.GetForGeneratedContractForCustomerAsync(id, customerId);
+        if (_notificationApi.HasNotification)
+        {
+            return default!;
+        }
+
+        var response = await _generationPdfService.GeneratePdfFromTemplateAsync(customerContractRecord);
+        if (_notificationApi.HasNotification)
+        {
+            return default!;
+        }
+
+        return response;
     }
 
     public async Task<IEnumerable<ContractModel>> FindByOptionalStatusAsync(int page, int pageSize, ContractStatusEnum? status)
@@ -65,8 +105,14 @@ public class ContractService(
         {
             return false;
         }
-        
-        await _contractBusiness.ValidateTerminationDateAsync(request.TerminateDate);
+
+        var settingsPanelRecord = await _settingsPanelBusiness.GetForCreateOrUpdateContractAsync(request.SettingsPanelId);
+        if (_notificationApi.HasNotification)
+        {
+            return false;
+        }
+
+        _contractBusiness.ValidateTerminationDate(settingsPanelRecord, request.TerminateDate);
         if (_notificationApi.HasNotification)
         {
             return false;
@@ -78,16 +124,21 @@ public class ContractService(
             return false;
         }
 
+        var reference = await GenerateReferenceUniqueAsync();
+
         _unitOfWork.BeginTransaction();
 
         var record = new ContractModel
         {
+            Reference = reference,
             BusId = request.BusId,
             DriverId = request.DriverId,
+            SettingsPanelId = request.SettingsPanelId,
             TotalPrice = request.TotalPrice,
             PaymentMethod = request.PaymentMethod,
             Details = request.Details,
-            TerminateDate = request.TerminateDate
+            TerminateDate = request.TerminateDate,
+            CustomersCount = request.CustomersId.Count()
         };
 
         await _contractRepository.CreateAsync(record);
@@ -112,7 +163,13 @@ public class ContractService(
             return false;
         }
 
-        await _contractBusiness.ValidateTerminationDateAsync(request.TerminateDate);
+        var settingsPanelRecord = await _settingsPanelBusiness.GetForCreateOrUpdateContractAsync(request.SettingsPanelId);
+        if (_notificationApi.HasNotification)
+        {
+            return false;
+        }
+
+        _contractBusiness.ValidateTerminationDate(settingsPanelRecord, request.TerminateDate);
         if (_notificationApi.HasNotification)
         {
             return false;
@@ -134,11 +191,13 @@ public class ContractService(
 
         record.BusId = request.BusId;
         record.DriverId = request.DriverId;
+        record.SettingsPanelId = request.SettingsPanelId;
         record.TotalPrice = request.TotalPrice;
         record.PaymentMethod = request.PaymentMethod;
         record.Details = request.Details;
         record.TerminateDate = request.TerminateDate;
         record.UpdatedAt = DateTime.UtcNow;
+        record.CustomersCount = request.CustomersId.Count();
 
         _contractRepository.Update(record);
         await _unitOfWork.CommitAsync();
@@ -194,12 +253,12 @@ public class ContractService(
             return default!;
         }
 
-        var startDate = DateTime.UtcNow;
+        var startDate = DateTime.UtcNow.AddDays(2);
         var installmentsCount = record.PaymentMethod == ContractPaymentMethodEnum.Single ? 1 : CalculateMonths(startDate, record.TerminateDate);
 
         record.UpdatedAt = DateTime.UtcNow;
         record.StartDate = startDate;
-        record.Status = ContractStatusEnum.InProgress;
+        record.Status = ContractStatusEnum.WaitingSignature;
         record.InstallmentsCount = installmentsCount;
         record.IsApproved = true;
         record.ApproverId = _userService.FindAuthenticatedUser().EmployeeId;
@@ -207,9 +266,48 @@ public class ContractService(
         _contractRepository.Update(record);
         await _unitOfWork.CommitAsync();
 
-        //TODO: chamar service de Financial para tratar as questões financeiras do contrato, e gerar as folhas de pagamento em FinancialInstallment.
-
         return new SuccessResponse(Message.Contract.SuccessfullyApproved);
+    }
+
+    public async Task<SuccessResponse> StartProgressAsync(Guid id)
+    {
+        var record = await _contractBusiness.GetForStartProgressAsync(id);
+        if (_notificationApi.HasNotification)
+        {
+            return default!;
+        }
+
+        record.UpdatedAt = DateTime.UtcNow;
+        record.Status = ContractStatusEnum.InProgress;
+        _contractRepository.Update(record);
+        await _unitOfWork.CommitAsync();
+        
+        //TODO: chamar service de Financial para tratar as questões financeiras do contrato, e gerar as folhas de pagamento em FinancialInstallment.
+        
+        return new SuccessResponse(Message.Contract.SuccessfullyStartContract);
+    }
+
+    public async Task<PdfCoResponse> StartProcessTerminationAsync(Guid id, Guid customerId)
+    {
+        var customerContractRecord = await _contractBusiness.GetForGeneratedTerminationForCustomerAsync(id, customerId);
+        if (_notificationApi.HasNotification)
+        {
+            return default!;
+        }
+
+        var response = await _generationPdfService.GeneratePdfTerminationFromTemplateAsync(customerContractRecord);
+        if (_notificationApi.HasNotification)
+        {
+            return default!;
+        }
+
+        await _customerContractService.StartProcessTerminationWithOutValidationAsync(customerContractRecord);
+        if (_notificationApi.HasNotification)
+        {
+            return default!;
+        }
+
+        return response;
     }
 
     public async Task<bool> DeleteAsync(Guid id)

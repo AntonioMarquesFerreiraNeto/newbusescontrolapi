@@ -7,10 +7,14 @@ namespace BusesControl.Entities.Models;
 public class ContractModel
 {
     public Guid Id { get; set; }
+    [MaxLength(8)]
+    public string Reference { get; set; } = default!;
     public Guid BusId { get; set; }
     public BusModel Bus { get; set; } = default!;
     public Guid DriverId { get; set; }
     public EmployeeModel Driver { get; set; } = default!;
+    public Guid SettingsPanelId { get; set; }
+    public SettingsPanelModel SettingsPanel { get; set; } = default!;
     [Precision(10, 2)]
     public decimal TotalPrice { get; set; }
     public ContractPaymentMethodEnum PaymentMethod { get; set; }
@@ -25,5 +29,6 @@ public class ContractModel
     public bool IsApproved { get; set; } = false;
     public Guid? ApproverId { get; set; }
     public EmployeeModel? Approver { get; set; } = default!;
+    public int CustomersCount { get; set; }
     public ICollection<CustomerContractModel> CustomersContract { get; set; } = default!;
 }
