@@ -11,7 +11,9 @@ public interface IContractRepository
     Task<bool> CreateAsync(ContractModel record);
     bool Update(ContractModel record);
     bool Delete(ContractModel record);
-    Task<bool> ExistsInIsApprovedBySettingsPanelAsync(Guid settingsPanelId);
-    Task<bool> ExistsBySettingsPanelAsync(Guid settingsPanelId);
+    Task<bool> ExistsInIsApprovedBySettingPanelAsync(Guid settingPanelId);
+    Task<bool> ExistsBySettingPanelAsync(Guid settingPanelId);
+    Task<bool> ExistsInIsApprovedByContractDescriptionAsync(Guid contractDescriptionId);
+    Task<bool> ExistsByContractDescriptionAsync(Guid contractDescriptionId);
     Task<bool> ExitsByReferenceAsync(string reference);
 }

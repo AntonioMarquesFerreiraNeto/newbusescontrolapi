@@ -26,11 +26,12 @@ public class RegisterServices
         builder.Services.AddScoped<IBusService, BusService>();
         builder.Services.AddScoped<IColorService, ColorService>();
         builder.Services.AddScoped<IContractService, ContractService>();
+        builder.Services.AddScoped<IContractDescriptionService, ContractDescriptionService>();
         builder.Services.AddScoped<ICustomerService, CustomerService>();
         builder.Services.AddScoped<ICustomerContractService, CustomerContractService>();
         builder.Services.AddScoped<IViaCepIntegrationService, ViaCepIntegrationService>();
         builder.Services.AddScoped<IEmployeeService, EmployeeService>();
-        builder.Services.AddScoped<ISettingsPanelService, SettingsPanelService>();
+        builder.Services.AddScoped<ISettingPanelService, SettingPanelService>();
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IUserRegistrationQueueService, UserRegistrationQueueService>();

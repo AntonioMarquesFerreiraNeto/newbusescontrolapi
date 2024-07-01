@@ -6,18 +6,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BusesControl.Persistence.v1.Repositories;
 
-public class SettingsPanelRepository(
+public class SettingPanelRepository(
     AppDbContext context
-) : ISettingsPanelRepository
+) : ISettingPanelRepository
 {
     private readonly AppDbContext _context = context;
 
-    public async Task<SettingsPanelModel?> GetByIdAsync(Guid id)
+    public async Task<SettingPanelModel?> GetByIdAsync(Guid id)
     {
         return await _context.SettingsPanel.AsNoTracking().Include(x => x.Requester).SingleOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<IEnumerable<SettingsPanelModel>> FindAsync(int page = 0, int pageSize = 0)
+    public async Task<IEnumerable<SettingPanelModel>> FindAsync(int page = 0, int pageSize = 0)
     {
         var query = _context.SettingsPanel.AsNoTracking();
 
@@ -31,27 +31,27 @@ public class SettingsPanelRepository(
         return records;
     }
 
-    public async Task<bool> CreateAsync(SettingsPanelModel record)
+    public async Task<bool> CreateAsync(SettingPanelModel record)
     {
         await _context.SettingsPanel.AddAsync(record);
         return true;
     }
 
-    public bool Update(SettingsPanelModel record)
+    public bool Update(SettingPanelModel record)
     {
         _context.SettingsPanel.Update(record);
         return true;
     }
 
-    public bool Delete(SettingsPanelModel record)
+    public bool Delete(SettingPanelModel record)
     {
         _context.SettingsPanel.Remove(record);
         return true;
     }
 
-    public async Task<bool> ExistsByParentExceptionContract(SettingsPanelParentEnum parent, Guid? id = null)
+    public async Task<bool> ExistsByParentExceptionContract(SettingPanelParentEnum parent, Guid? id = null)
     {
-        return await _context.SettingsPanel.AnyAsync(x => x.Parent == parent && x.Id != id && x.Parent != SettingsPanelParentEnum.Contract);
+        return await _context.SettingsPanel.AnyAsync(x => x.Parent == parent && x.Id != id && x.Parent != SettingPanelParentEnum.Contract);
     }
 
     public async Task<bool> ExitsByReferenceAsync(string reference)

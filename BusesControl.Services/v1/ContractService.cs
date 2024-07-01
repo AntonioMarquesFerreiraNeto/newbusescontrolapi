@@ -22,9 +22,10 @@ public class ContractService(
     IUserService _userService,
     IGenerationPdfService _generationPdfService,
     ICustomerContractService _customerContractService,
+    IContractDescriptionService _contractDescriptionService,
     IContractBusiness _contractBusiness,
     IContractRepository _contractRepository,
-    ISettingsPanelBusiness _settingsPanelBusiness
+    ISettingPanelBusiness _settingPanelBusiness
 ) : IContractService
 {
     private static int CalculateMonths(DateTime startDate, DateTime endDate)
@@ -106,13 +107,19 @@ public class ContractService(
             return false;
         }
 
-        var settingsPanelRecord = await _settingsPanelBusiness.GetForCreateOrUpdateContractAsync(request.SettingsPanelId);
+        await _contractDescriptionService.ExistsAsync(request.ContractDescriptionId);
         if (_notificationApi.HasNotification)
         {
             return false;
         }
 
-        _contractBusiness.ValidateTerminationDate(settingsPanelRecord, request.TerminateDate);
+        var settingPanelRecord = await _settingPanelBusiness.GetForCreateOrUpdateContractAsync(request.SettingPanelId);
+        if (_notificationApi.HasNotification)
+        {
+            return false;
+        }
+
+        _contractBusiness.ValidateTerminationDate(settingPanelRecord, request.TerminateDate);
         if (_notificationApi.HasNotification)
         {
             return false;
@@ -133,7 +140,8 @@ public class ContractService(
             Reference = reference,
             BusId = request.BusId,
             DriverId = request.DriverId,
-            SettingsPanelId = request.SettingsPanelId,
+            SettingPanelId = request.SettingPanelId,
+            ContractDescriptionId = request.ContractDescriptionId,
             TotalPrice = request.TotalPrice,
             PaymentMethod = request.PaymentMethod,
             Details = request.Details,
@@ -163,13 +171,19 @@ public class ContractService(
             return false;
         }
 
-        var settingsPanelRecord = await _settingsPanelBusiness.GetForCreateOrUpdateContractAsync(request.SettingsPanelId);
+        await _contractDescriptionService.ExistsAsync(request.ContractDescriptionId);
         if (_notificationApi.HasNotification)
         {
             return false;
         }
 
-        _contractBusiness.ValidateTerminationDate(settingsPanelRecord, request.TerminateDate);
+        var settingPanelRecord = await _settingPanelBusiness.GetForCreateOrUpdateContractAsync(request.SettingPanelId);
+        if (_notificationApi.HasNotification)
+        {
+            return false;
+        }
+
+        _contractBusiness.ValidateTerminationDate(settingPanelRecord, request.TerminateDate);
         if (_notificationApi.HasNotification)
         {
             return false;
@@ -191,7 +205,7 @@ public class ContractService(
 
         record.BusId = request.BusId;
         record.DriverId = request.DriverId;
-        record.SettingsPanelId = request.SettingsPanelId;
+        record.SettingPanelId = request.SettingPanelId;
         record.TotalPrice = request.TotalPrice;
         record.PaymentMethod = request.PaymentMethod;
         record.Details = request.Details;

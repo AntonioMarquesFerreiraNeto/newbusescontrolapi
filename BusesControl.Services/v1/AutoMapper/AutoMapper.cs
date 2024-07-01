@@ -23,6 +23,6 @@ public class AutoMapper : Profile
         CreateMap<CustomerContractModel, CustomerContractResponse>();
         CreateMap<EmployeeModel, EmployeeResponse>();
         CreateMap<BusModel, BusResponse>();
-        CreateMap<SettingsPanelModel, SettingsPanelResponse>();
+        CreateMap<SettingPanelModel, SettingPanelResponse>();
     }
 }

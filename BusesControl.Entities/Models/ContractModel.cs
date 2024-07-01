@@ -13,8 +13,10 @@ public class ContractModel
     public BusModel Bus { get; set; } = default!;
     public Guid DriverId { get; set; }
     public EmployeeModel Driver { get; set; } = default!;
-    public Guid SettingsPanelId { get; set; }
-    public SettingsPanelModel SettingsPanel { get; set; } = default!;
+    public Guid SettingPanelId { get; set; }
+    public SettingPanelModel SettingPanel { get; set; } = default!;
+    public Guid ContractDescriptionId { get; set; }
+    public ContractDescriptionModel ContractDescription { get; set; } = default!;
     [Precision(10, 2)]
     public decimal TotalPrice { get; set; }
     public ContractPaymentMethodEnum PaymentMethod { get; set; }

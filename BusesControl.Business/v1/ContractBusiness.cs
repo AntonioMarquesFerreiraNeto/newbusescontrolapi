@@ -292,7 +292,7 @@ public class ContractBusiness(
         return record;
     }
 
-    public bool ValidateTerminationDate(SettingsPanelModel settingsPanelRecord, DateTime terminateDate)
+    public bool ValidateTerminationDate(SettingPanelModel settingPanelRecord, DateTime terminateDate)
     {
         terminateDate = terminateDate.Date;
         var dateNow = DateTime.UtcNow.Date;
@@ -307,9 +307,9 @@ public class ContractBusiness(
             return false;
         }
 
-        if (settingsPanelRecord.LimitDateTermination is not null)
+        if (settingPanelRecord.LimitDateTermination is not null)
         {
-            var dateLimit = dateNow.AddYears(settingsPanelRecord.LimitDateTermination.Value);
+            var dateLimit = dateNow.AddYears(settingPanelRecord.LimitDateTermination.Value);
 
             if (terminateDate > dateLimit)
             {

@@ -16,9 +16,10 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
     public DbSet<ColorModel> Colors { get; set; }
     public DbSet<CustomerModel> Customers { get; set; }
     public DbSet<ContractModel> Contracts { get; set; }
+    public DbSet<ContractDescriptionModel> ContractDescriptions { get; set; }
     public DbSet<CustomerContractModel> CustomersContract { get; set; }
     public DbSet<EmployeeModel> Employees { get; set; }
-    public DbSet<SettingsPanelModel> SettingsPanel { get; set; }
+    public DbSet<SettingPanelModel> SettingsPanel { get; set; }
     public DbSet<ResetPasswordSecurityCodeModel> ResetPasswordsSecurityCode { get; set; }
     public DbSet<UserRegistrationQueueModel> UsersRegistrationQueue { get; set; }
     public DbSet<UserRegistrationSecurityCodeModel> UsersRegistrationSecurityCode { get; set; }
@@ -64,9 +65,15 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
             .OnDelete(DeleteBehavior.NoAction);
 
         builder.Entity<ContractModel>()
-            .HasOne(x => x.SettingsPanel)
+            .HasOne(x => x.SettingPanel)
             .WithMany()
-            .HasForeignKey(x => x.SettingsPanelId)
+            .HasForeignKey(x => x.SettingPanelId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.Entity<ContractModel>()
+            .HasOne(x => x.ContractDescription)
+            .WithMany()
+            .HasForeignKey(x => x.ContractDescriptionId)
             .OnDelete(DeleteBehavior.NoAction);
     }
 }

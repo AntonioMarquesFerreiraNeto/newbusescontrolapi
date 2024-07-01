@@ -21,7 +21,7 @@ public class GenerationPdfService(
     {
         var totalPriceCustomer = customerContract.Contract.TotalPrice / customerContract.Contract.CustomersCount;
 
-        var terminationFee = customerContract.Contract.SettingsPanel.TerminationFee;
+        var terminationFee = customerContract.Contract.SettingPanel.TerminationFee;
 
         var placeholders = new Dictionary<string, string>
         {
@@ -30,7 +30,7 @@ public class GenerationPdfService(
             { "{Validity}", RenderValidityForContract(customerContract.Contract.StartDate!.Value, customerContract.Contract.TerminateDate, customerContract.Contract.Reference) },
             { "{Termination}", RenderTerminationForContract(terminationFee, totalPriceCustomer) },
             { "{Payments}", RenderPaymentsForContract(customerContract.Contract.InstallmentsCount!.Value, totalPriceCustomer, customerContract.Contract.StartDate.Value.Day) },
-            { "{ContractorsObligations}", RenderContractorsObligationsForContract(customerContract.Contract.SettingsPanel.LateFeeInterestRate) },
+            { "{ContractorsObligations}", RenderContractorsObligationsForContract(customerContract.Contract.SettingPanel.LateFeeInterestRate) },
             { "{GlobalFooter}", RenderGlobalFooter() }
         };
 
@@ -47,7 +47,7 @@ public class GenerationPdfService(
     {
         var totalPriceCustomer = customerContract.Contract.TotalPrice / customerContract.Contract.CustomersCount;
 
-        var terminationFee = customerContract.Contract.SettingsPanel.TerminationFee;
+        var terminationFee = customerContract.Contract.SettingPanel.TerminationFee;
 
         var placeholders = new Dictionary<string, string>
         {
