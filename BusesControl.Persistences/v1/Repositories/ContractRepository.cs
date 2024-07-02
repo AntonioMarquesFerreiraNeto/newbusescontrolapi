@@ -22,7 +22,9 @@ public class ContractRepository(
         var query = _context.Contracts.AsNoTracking();
 
         query = query.Include(x => x.Bus)
-                     .Include( x => x.Driver)
+                     .Include(x => x.Driver)
+                     .Include(x => x.SettingPanel)
+                     .Include(x => x.ContractDescription)
                      .Include(x => x.Approver)
                      .Include(x => x.CustomersContract)
                      .ThenInclude(x => x.Customer);
@@ -65,14 +67,24 @@ public class ContractRepository(
         return true;
     }
 
-    public async Task<bool> ExistsInIsApprovedBySettingsPanelAsync(Guid settingsPanelId)
+    public async Task<bool> ExistsInIsApprovedBySettingPanelAsync(Guid settingPanelId)
     {
-        return await _context.Contracts.AnyAsync(x => x.SettingsPanelId == settingsPanelId && x.IsApproved == true);
+        return await _context.Contracts.AnyAsync(x => x.SettingPanelId == settingPanelId && x.IsApproved == true);
     }
 
-    public async Task<bool> ExistsBySettingsPanelAsync(Guid settingsPanelId)
+    public async Task<bool> ExistsBySettingPanelAsync(Guid settingPanelId)
     {
-        return await _context.Contracts.AnyAsync(x => x.SettingsPanelId == settingsPanelId);
+        return await _context.Contracts.AnyAsync(x => x.SettingPanelId == settingPanelId);
+    }
+
+    public async Task<bool> ExistsInIsApprovedByContractDescriptionAsync(Guid contractDescriptionId)
+    {
+        return await _context.Contracts.AnyAsync(x => x.ContractDescriptionId == contractDescriptionId && x.IsApproved == true);
+    }
+
+    public async Task<bool> ExistsByContractDescriptionAsync(Guid contractDescriptionId)
+    {
+        return await _context.Contracts.AnyAsync(x => x.ContractDescriptionId == contractDescriptionId);
     }
 
     public async Task<bool> ExitsByReferenceAsync(string reference)

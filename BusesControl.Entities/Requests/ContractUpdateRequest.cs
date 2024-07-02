@@ -8,7 +8,8 @@ public class ContractUpdateRequest
 {
     public Guid BusId { get; set; }
     public Guid DriverId { get; set; }
-    public Guid SettingsPanelId { get; set; }
+    public Guid SettingPanelId { get; set; }
+    public Guid ContractDescriptionId { get; set; }
     [Precision(10, 2)]
     public decimal TotalPrice { get; set; }
     public ContractPaymentMethodEnum PaymentMethod { get; set; }

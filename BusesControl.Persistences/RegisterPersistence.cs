@@ -20,11 +20,12 @@ public class RegisterPersistence
         builder.Services.AddScoped<IBusRepository, BusRepository>();
         builder.Services.AddScoped<IColorRepository, ColorRepository>();
         builder.Services.AddScoped<IContractRepository, ContractRepository>();
+        builder.Services.AddScoped<IContractDescriptionRepository, ContractDescriptionRepository>();
         builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
         builder.Services.AddScoped<ICustomerContractRepository, CustomerContractRepository>();
         builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
         builder.Services.AddScoped<IResetPasswordSecurityCodeRepository, ResetPasswordSecurityCodeRepository>();
-        builder.Services.AddScoped<ISettingsPanelRepository, SettingsPanelRepository>();
+        builder.Services.AddScoped<ISettingPanelRepository, SettingPanelRepository>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<IUserRegistrationQueueRepository, UserRegistrationQueueRepository>();
         builder.Services.AddScoped<IUserRegistrationSecurityCodeRepository, UserRegistrationSecurityCodeRepository>();

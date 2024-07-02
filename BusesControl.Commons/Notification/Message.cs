@@ -44,6 +44,13 @@ public class Message
         public readonly static string SuccessfullyStartContract = "Contrato inicializado com sucesso! Consulte as folhas de pagamento no módulo financeiro.";
     }
 
+    public class ContractDescription
+    {
+        public readonly static string NotFound = "Descrição de contrato não encontrado!";
+        public readonly static string NotUpdate = "Descrição de contrato é usado em pelo menos um contrato aprovado!";
+        public readonly static string NotDelete = "Descrição de contrato é usado em pelo menos um contrato!";
+    }
+
     public class Color
     {
         public readonly static string NotFound = "Cor não encontrada!";
@@ -72,7 +79,7 @@ public class Message
         public readonly static string RoleAndProfileChanged = "Papel e perfil do funcionário alterado com sucesso! Agora ele terá novos acessos ao sistema.";
     }
 
-    public class SettingsPanel
+    public class SettingPanel
     {
         public readonly static string NotFound = "Painel de configurações não encontrado!";
         public readonly static string Exists = "Já existe um painel de configurações para o parent especificado!";

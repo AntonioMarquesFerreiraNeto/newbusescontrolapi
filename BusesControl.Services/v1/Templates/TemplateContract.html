@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Contrato de Prestação de Serviços</title>
+    <title>{Title}</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -78,8 +78,8 @@
 </head>
 <body>
     <div class="container">
-        <h1>Contrato de Prestação de Serviços</h1>
-        <h2>Transporte Rodoviário Especial</h2>
+        <h1>{Title}</h1>
+        <h2>{SubTitle}</h2>
 
         <p class="section-title">CONTRATANTE</p>
         <p>
@@ -88,16 +88,12 @@
 
         <p class="section-title">CONTRATADA</p>
         <p>
-            <span class="highlight">Buss Viagens LTDA</span>, pessoa jurídica de direito privado, inscrita no CNPJ sob o nº
-            <span class="highlight">02.116.484/0001-02</span>, com sede na cidade de Goianésia, Estado de Goiás, Brasil,
-            representada neste ato pelo sócio fundador Manoel Hamilton Rodrigues, doravante denominada Contratada.
+            {Owner}
         </p>
 
-        <p class="section-title">CLÁUSULA PRIMEIRA - OBJETO</p>
+        <p class="section-title">CLÁUSULA PRIMEIRA - OBJETIVO</p>
         <p>
-            O presente contrato tem como objeto a prestação de serviço de transporte rodoviário especial, conforme
-            rota definida no registro contratual. O serviço será prestado de acordo com as especificações e condições
-            estabelecidas nas cláusulas seguintes.
+            {Objective}
         </p>
 
         <p class="section-title">CLÁUSULA SEGUNDA - VEÍCULOS</p>
@@ -127,10 +123,7 @@
 
         <p class="section-title">CLÁUSULA SÉTIMA - DISPOSIÇÕES GERAIS</p>
         <p>
-            O Contratante declara estar ciente de que somente será permitido o transporte de passageiros na
-            quantidade limitada à capacidade de assentos do(s) veículo(s) utilizado(s), sendo expressamente
-            proibido o transporte de passageiros em pé ou nos corredores. Todos os passageiros devem constar
-            na lista autorizada pela ANTT.
+            {GeneralProvisions}
         </p>
 
         <div class="signature-section">
@@ -149,7 +142,7 @@
         </div>
 
         <div class="footer">
-            <p class="footer-p">{GlobalFooter}</p>
+            <p class="footer-p">{Copyright}</p>
         </div>
     </div>
 </body>

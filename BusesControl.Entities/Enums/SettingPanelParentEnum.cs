@@ -1,6 +1,6 @@
 ﻿namespace BusesControl.Entities.Enums;
 
-public enum SettingsPanelParentEnum
+public enum SettingPanelParentEnum
 {
     Contract = 1,
     Revenue = 2,

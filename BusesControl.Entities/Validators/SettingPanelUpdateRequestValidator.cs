@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace BusesControl.Entities.Validators;
 
-public class SettingsPanelCreateRequestValidator : AbstractValidator<SettingsPanelCreateRequest>
+public class SettingPanelUpdateRequestValidator : AbstractValidator<SettingPanelUpdateRequest>
 {
-    public SettingsPanelCreateRequestValidator()
+    public SettingPanelUpdateRequestValidator()
     {
         RuleFor(x => x.Parent)
             .NotEmpty().WithMessage("Parent é um campo obrigatório!")

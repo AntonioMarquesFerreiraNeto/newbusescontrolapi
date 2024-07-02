@@ -11,13 +11,13 @@ using Microsoft.AspNetCore.Http;
 
 namespace BusesControl.Services.v1;
 
-public class SettingsPanelService(
+public class SettingPanelService(
     IUnitOfWork _unitOfWork,
     IUserService _userService,
-    ISettingsPanelBusiness _settingsPanelBusiness,
+    ISettingPanelBusiness _settingPanelBusiness,
     INotificationApi _notificationApi,
-    ISettingsPanelRepository _settingsPanelRepository
-) : ISettingsPanelService
+    ISettingPanelRepository _settingPanelRepository
+) : ISettingPanelService
 {
     private async Task<string> GenerateReferenceUniqueAsync()
     {
@@ -32,21 +32,21 @@ public class SettingsPanelService(
             {
                 reference += chars[random.Next(chars.Length)];
             }
-            existsReference = await _settingsPanelRepository.ExitsByReferenceAsync(reference);
+            existsReference = await _settingPanelRepository.ExitsByReferenceAsync(reference);
         }
 
         return reference;
     }
 
-    public async Task<SettingsPanelModel> GetByIdAsync(Guid id)
+    public async Task<SettingPanelModel> GetByIdAsync(Guid id)
     {
-        var record = await _settingsPanelRepository.GetByIdAsync(id);
+        var record = await _settingPanelRepository.GetByIdAsync(id);
         if (record is null)
         {
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
-                details: Message.SettingsPanel.NotFound
+                details: Message.SettingPanel.NotFound
             );
             return default!;
         }
@@ -54,15 +54,15 @@ public class SettingsPanelService(
         return record;
     }
 
-    public async Task<IEnumerable<SettingsPanelModel>> FindAsync(int page, int pageSize)
+    public async Task<IEnumerable<SettingPanelModel>> FindAsync(int page, int pageSize)
     {
-        var records = await _settingsPanelRepository.FindAsync(page, pageSize);
+        var records = await _settingPanelRepository.FindAsync(page, pageSize);
         return records;
     }
 
-    public async Task<bool> CreateAsync(SettingsPanelCreateRequest request)
+    public async Task<bool> CreateAsync(SettingPanelCreateRequest request)
     {
-        await _settingsPanelBusiness.ExistsByParentAsync(request.Parent);
+        await _settingPanelBusiness.ExistsByParentAsync(request.Parent);
         if (_notificationApi.HasNotification)
         {
             return false;
@@ -71,7 +71,7 @@ public class SettingsPanelService(
         var employeeId = _userService.FindAuthenticatedUser().EmployeeId;
         var reference = await GenerateReferenceUniqueAsync();
 
-        var record = new SettingsPanelModel
+        var record = new SettingPanelModel
         {
             Reference = reference,
             RequesterId = employeeId,
@@ -83,15 +83,15 @@ public class SettingsPanelService(
             Active = request.Active
         };
 
-        await _settingsPanelRepository.CreateAsync(record);
+        await _settingPanelRepository.CreateAsync(record);
         await _unitOfWork.CommitAsync();
 
         return true;
     }
 
-    public async Task<bool> UpdateAsync(Guid id, SettingsPanelUpdateRequest request)
+    public async Task<bool> UpdateAsync(Guid id, SettingPanelUpdateRequest request)
     {
-        var record = await _settingsPanelBusiness.GetForUpdateAsync(id, request.Parent);
+        var record = await _settingPanelBusiness.GetForUpdateAsync(id, request.Parent);
         if (_notificationApi.HasNotification)
         {
             return false;
@@ -108,7 +108,7 @@ public class SettingsPanelService(
         record.Active = request.Active;
         record.UpdatedAt = DateTime.UtcNow;
         
-        _settingsPanelRepository.Update(record);
+        _settingPanelRepository.Update(record);
         await _unitOfWork.CommitAsync();
 
         return true;
@@ -116,13 +116,13 @@ public class SettingsPanelService(
 
     public async Task<bool> DeleteAsync(Guid id)
     {
-        var record = await _settingsPanelBusiness.GetForDeleteAsync(id);
+        var record = await _settingPanelBusiness.GetForDeleteAsync(id);
         if (_notificationApi.HasNotification)
         {
             return false;
         }
 
-        _settingsPanelRepository.Delete(record);
+        _settingPanelRepository.Delete(record);
         await _unitOfWork.CommitAsync();
 
         return true;

@@ -9,21 +9,21 @@ using Microsoft.AspNetCore.Http;
 
 namespace BusesControl.Business.v1;
 
-public class SettingsPanelBusiness(
+public class SettingPanelBusiness(
     INotificationApi _notificationApi,
     IContractRepository _contractRepository,
-    ISettingsPanelRepository _settingsPanelRepository
-) : ISettingsPanelBusiness
+    ISettingPanelRepository _settingPanelRepository
+) : ISettingPanelBusiness
 {
-    public async Task<bool> ExistsByParentAsync(SettingsPanelParentEnum parent)
+    public async Task<bool> ExistsByParentAsync(SettingPanelParentEnum parent)
     {
-        var exists = await _settingsPanelRepository.ExistsByParentExceptionContract(parent);
+        var exists = await _settingPanelRepository.ExistsByParentExceptionContract(parent);
         if (exists)
         {
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status409Conflict,
                 title: NotificationTitle.Conflict,
-                details: Message.SettingsPanel.Exists
+                details: Message.SettingPanel.Exists
             );
             return false;
         }
@@ -31,37 +31,37 @@ public class SettingsPanelBusiness(
         return true;
     }
 
-    public async Task<SettingsPanelModel> GetForUpdateAsync(Guid id, SettingsPanelParentEnum parent)
+    public async Task<SettingPanelModel> GetForUpdateAsync(Guid id, SettingPanelParentEnum parent)
     {
-        var record = await _settingsPanelRepository.GetByIdAsync(id);
+        var record = await _settingPanelRepository.GetByIdAsync(id);
         if (record is null)
         {
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
-                details: Message.SettingsPanel.NotFound
+                details: Message.SettingPanel.NotFound
             );
             return default!;
         }
 
-        var exists = await _settingsPanelRepository.ExistsByParentExceptionContract(parent, id);
+        var exists = await _settingPanelRepository.ExistsByParentExceptionContract(parent, id);
         if (exists)
         {
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status409Conflict,
                 title: NotificationTitle.Conflict,
-                details: Message.SettingsPanel.Exists
+                details: Message.SettingPanel.Exists
             );
             return default!;
         }
 
-        var contractInIsApprovedExists = await _contractRepository.ExistsInIsApprovedBySettingsPanelAsync(id);
+        var contractInIsApprovedExists = await _contractRepository.ExistsInIsApprovedBySettingPanelAsync(id);
         if (contractInIsApprovedExists)
         {
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
-                details: Message.SettingsPanel.NotUpdate
+                details: Message.SettingPanel.NotUpdate
             );
             return default!;
         }
@@ -69,26 +69,26 @@ public class SettingsPanelBusiness(
         return record;
     }
 
-    public async Task<SettingsPanelModel> GetForDeleteAsync(Guid id)
+    public async Task<SettingPanelModel> GetForDeleteAsync(Guid id)
     {
-        var record = await _settingsPanelRepository.GetByIdAsync(id);
+        var record = await _settingPanelRepository.GetByIdAsync(id);
         if (record is null)
         {
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
-                details: Message.SettingsPanel.NotFound
+                details: Message.SettingPanel.NotFound
             );
             return default!;
         }
 
-        var existsInContract = await _contractRepository.ExistsBySettingsPanelAsync(id);
+        var existsInContract = await _contractRepository.ExistsBySettingPanelAsync(id);
         if (existsInContract)
         {
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
-                details: Message.SettingsPanel.NotDelete
+                details: Message.SettingPanel.NotDelete
             );
             return default!;
         }
@@ -96,25 +96,25 @@ public class SettingsPanelBusiness(
         return record;
     }
 
-    public async Task<SettingsPanelModel> GetForCreateOrUpdateContractAsync(Guid settingsPanelId)
+    public async Task<SettingPanelModel> GetForCreateOrUpdateContractAsync(Guid settingPanelId)
     {
-        var settingPanelRecord = await _settingsPanelRepository.GetByIdAsync(settingsPanelId);
+        var settingPanelRecord = await _settingPanelRepository.GetByIdAsync(settingPanelId);
         if (settingPanelRecord is null)
         {
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
-                details: Message.SettingsPanel.NotFound
+                details: Message.SettingPanel.NotFound
             );
             return default!;
         }
 
-        if (settingPanelRecord.Parent != SettingsPanelParentEnum.Contract || !settingPanelRecord.Active)
+        if (settingPanelRecord.Parent != SettingPanelParentEnum.Contract || !settingPanelRecord.Active)
         {
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
-                details: Message.SettingsPanel.NotDestine
+                details: Message.SettingPanel.NotDestine
             );
             return default!;
         }

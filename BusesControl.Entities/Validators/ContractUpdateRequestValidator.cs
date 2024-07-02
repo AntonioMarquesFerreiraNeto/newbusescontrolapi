@@ -13,8 +13,11 @@ public class ContractUpdateRequestValidator : AbstractValidator<ContractUpdateRe
         RuleFor(x => x.DriverId)
             .NotEmpty().WithMessage("Motorista é um campo obrigatório");
 
-        RuleFor(x => x.SettingsPanelId)
+        RuleFor(x => x.SettingPanelId)
             .NotEmpty().WithMessage("Painel de configurações é um campo obrigatório");
+
+        RuleFor(x => x.ContractDescriptionId)
+            .NotEmpty().WithMessage("Descrição do contrato é um campo obrigatório");
 
         RuleFor(x => x.PaymentMethod)
             .NotEmpty().WithMessage("Método de pagamento é um campo obrigatório");
