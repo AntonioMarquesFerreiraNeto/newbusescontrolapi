@@ -22,7 +22,9 @@ public class ContractRepository(
         var query = _context.Contracts.AsNoTracking();
 
         query = query.Include(x => x.Bus)
-                     .Include( x => x.Driver)
+                     .Include(x => x.Driver)
+                     .Include(x => x.SettingPanel)
+                     .Include(x => x.ContractDescription)
                      .Include(x => x.Approver)
                      .Include(x => x.CustomersContract)
                      .ThenInclude(x => x.Customer);

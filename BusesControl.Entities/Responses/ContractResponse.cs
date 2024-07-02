@@ -11,6 +11,7 @@ public class ContractResponse
     public EmployeeResponse Driver { get; set; } = default!;
     public Guid SettingPanelId { get; set; }
     public SettingPanelResponse SettingPanel { get; set; } = default!;
+    public ContractDescriptionResponse ContractDescription { get; set; } = default!;
     public decimal TotalPrice { get; set; }
     public ContractPaymentMethodEnum PaymentMethod { get; set; }
     public string? Details { get; set; }

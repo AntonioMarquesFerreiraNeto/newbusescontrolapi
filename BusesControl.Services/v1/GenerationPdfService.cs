@@ -1,7 +1,6 @@
 ﻿using BusesControl.Commons;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.DTOs;
 using BusesControl.Entities.Enums;
 using BusesControl.Entities.Models;
 using BusesControl.Entities.Responses;
@@ -25,13 +24,18 @@ public class GenerationPdfService(
 
         var placeholders = new Dictionary<string, string>
         {
+            { "{Title}", customerContract.Contract.ContractDescription.Title },
+            { "{SubTitle}", customerContract.Contract.ContractDescription.SubTitle },
+            { "{Owner}", customerContract.Contract.ContractDescription.Owner },
+            { "{Objective}", customerContract.Contract.ContractDescription.Objective },
+            { "{GeneralProvisions}", customerContract.Contract.ContractDescription.GeneralProvisions },
+            { "{Copyright}", $"&copy; {DateTime.UtcNow.Year} {customerContract.Contract.ContractDescription.Copyright}" },
             { "{Contractor}", RenderContractorForContractOrTermination(customerContract.Customer) },
             { "{Bus}", RenderBusForContract(customerContract.Contract.Bus) },
             { "{Validity}", RenderValidityForContract(customerContract.Contract.StartDate!.Value, customerContract.Contract.TerminateDate, customerContract.Contract.Reference) },
             { "{Termination}", RenderTerminationForContract(terminationFee, totalPriceCustomer) },
             { "{Payments}", RenderPaymentsForContract(customerContract.Contract.InstallmentsCount!.Value, totalPriceCustomer, customerContract.Contract.StartDate.Value.Day) },
-            { "{ContractorsObligations}", RenderContractorsObligationsForContract(customerContract.Contract.SettingPanel.LateFeeInterestRate) },
-            { "{GlobalFooter}", RenderGlobalFooter() }
+            { "{ContractorsObligations}", RenderContractorsObligationsForContract(customerContract.Contract.SettingPanel.LateFeeInterestRate) }
         };
 
         foreach (var placeholder in placeholders)
@@ -51,10 +55,11 @@ public class GenerationPdfService(
 
         var placeholders = new Dictionary<string, string>
         {
-            { "{ReferenceContract}", RenderSubTitle(customerContract.Contract.Reference)},
+            { "{Owner}", customerContract.Contract.ContractDescription.Owner },
+            { "{Copyright}", $"&copy; {DateTime.UtcNow.Year} {customerContract.Contract.ContractDescription.Copyright}" },
+            { "{ReferenceContract}", RenderSubTitleForTermination(customerContract.Contract.Reference)},
             { "{Contractor}", RenderContractorForContractOrTermination(customerContract.Customer) },
-            { "{Termination}", RenderTerminationForTermination(terminationFee, totalPriceCustomer, customerContract.Contract.Reference) },
-            { "{GlobalFooter}", RenderGlobalFooter() }
+            { "{Termination}", RenderTerminationForTermination(terminationFee, totalPriceCustomer, customerContract.Contract.Reference) }
         };
 
         foreach (var placeholder in placeholders)
@@ -66,7 +71,7 @@ public class GenerationPdfService(
         return template;
     }
 
-    private static string RenderSubTitle(string reference)
+    private static string RenderSubTitleForTermination(string reference)
     {
         return $"{reference}";
     }
@@ -137,11 +142,6 @@ public class GenerationPdfService(
         baseClause += " O serviço prestado poderá ser suspenso em caso de atraso, ficando a critério da prestadora.";
 
         return baseClause;
-    }
-
-    private static string RenderGlobalFooter()
-    {
-        return $"&copy; {DateTime.UtcNow.Year} Buss Viagens LTDA. Todos os direitos reservados.";
     }
 
     public async Task<PdfCoResponse> GeneratePdfFromTemplateAsync(CustomerContractModel customerContract)

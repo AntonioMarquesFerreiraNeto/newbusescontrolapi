@@ -206,6 +206,7 @@ public class ContractService(
         record.BusId = request.BusId;
         record.DriverId = request.DriverId;
         record.SettingPanelId = request.SettingPanelId;
+        record.ContractDescriptionId = request.ContractDescriptionId;
         record.TotalPrice = request.TotalPrice;
         record.PaymentMethod = request.PaymentMethod;
         record.Details = request.Details;

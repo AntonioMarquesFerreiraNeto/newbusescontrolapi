@@ -24,5 +24,6 @@ public class AutoMapper : Profile
         CreateMap<EmployeeModel, EmployeeResponse>();
         CreateMap<BusModel, BusResponse>();
         CreateMap<SettingPanelModel, SettingPanelResponse>();
+        CreateMap<ContractDescriptionModel, ContractDescriptionResponse>();
     }
 }
