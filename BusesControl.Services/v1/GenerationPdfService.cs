@@ -24,18 +24,18 @@ public class GenerationPdfService(
 
         var placeholders = new Dictionary<string, string>
         {
-            { "{Title}", customerContract.Contract.ContractDescription.Title },
-            { "{SubTitle}", customerContract.Contract.ContractDescription.SubTitle },
-            { "{Owner}", customerContract.Contract.ContractDescription.Owner },
-            { "{Objective}", customerContract.Contract.ContractDescription.Objective },
-            { "{GeneralProvisions}", customerContract.Contract.ContractDescription.GeneralProvisions },
-            { "{Copyright}", $"&copy; {DateTime.UtcNow.Year} {customerContract.Contract.ContractDescription.Copyright}" },
-            { "{Contractor}", RenderContractorForContractOrTermination(customerContract.Customer) },
-            { "{Bus}", RenderBusForContract(customerContract.Contract.Bus) },
-            { "{Validity}", RenderValidityForContract(customerContract.Contract.StartDate!.Value, customerContract.Contract.TerminateDate, customerContract.Contract.Reference) },
-            { "{Termination}", RenderTerminationForContract(terminationFee, totalPriceCustomer) },
-            { "{Payments}", RenderPaymentsForContract(customerContract.Contract.InstallmentsCount!.Value, totalPriceCustomer, customerContract.Contract.StartDate.Value.Day) },
-            { "{ContractorsObligations}", RenderContractorsObligationsForContract(customerContract.Contract.SettingPanel.LateFeeInterestRate) }
+            { "{{Title}}", customerContract.Contract.ContractDescription.Title },
+            { "{{SubTitle}}", customerContract.Contract.ContractDescription.SubTitle },
+            { "{{Owner}}", customerContract.Contract.ContractDescription.Owner },
+            { "{{Objective}}", customerContract.Contract.ContractDescription.Objective },
+            { "{{GeneralProvisions}}", customerContract.Contract.ContractDescription.GeneralProvisions },
+            { "{{Copyright}}", $"&copy; {DateTime.UtcNow.Year} {customerContract.Contract.ContractDescription.Copyright}" },
+            { "{{Contractor}}", RenderContractorForContractOrTermination(customerContract.Customer) },
+            { "{{Bus}}", RenderBusForContract(customerContract.Contract.Bus) },
+            { "{{Validity}}", RenderValidityForContract(customerContract.Contract.StartDate!.Value, customerContract.Contract.TerminateDate, customerContract.Contract.Reference) },
+            { "{{Termination}}", RenderTerminationForContract(terminationFee, totalPriceCustomer) },
+            { "{{Payments}}", RenderPaymentsForContract(customerContract.Contract.InstallmentsCount!.Value, totalPriceCustomer, customerContract.Contract.StartDate.Value.Day) },
+            { "{{ContractorsObligations}}", RenderContractorsObligationsForContract(customerContract.Contract.SettingPanel.LateFeeInterestRate) }
         };
 
         foreach (var placeholder in placeholders)
@@ -55,11 +55,11 @@ public class GenerationPdfService(
 
         var placeholders = new Dictionary<string, string>
         {
-            { "{Owner}", customerContract.Contract.ContractDescription.Owner },
-            { "{Copyright}", $"&copy; {DateTime.UtcNow.Year} {customerContract.Contract.ContractDescription.Copyright}" },
-            { "{ReferenceContract}", RenderSubTitleForTermination(customerContract.Contract.Reference)},
-            { "{Contractor}", RenderContractorForContractOrTermination(customerContract.Customer) },
-            { "{Termination}", RenderTerminationForTermination(terminationFee, totalPriceCustomer, customerContract.Contract.Reference) }
+            { "{{Owner}}", customerContract.Contract.ContractDescription.Owner },
+            { "{{Copyright}}", $"&copy; {DateTime.UtcNow.Year} {customerContract.Contract.ContractDescription.Copyright}" },
+            { "{{ReferenceContract}}", RenderSubTitleForTermination(customerContract.Contract.Reference)},
+            { "{{Contractor}}", RenderContractorForContractOrTermination(customerContract.Customer) },
+            { "{{Termination}}", RenderTerminationForTermination(terminationFee, totalPriceCustomer, customerContract.Contract.Reference) }
         };
 
         foreach (var placeholder in placeholders)

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Redefinição de Senha - Buses Control System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: #333;
+        }
+
+        .container {
+            margin: auto;
+            margin-top: 20px;
+            max-width: 600px;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            text-align: left;
+            background-color: rgba(20, 103, 186, 0.035);
+        }
+
+        h1 {
+            font-size: 22pt
+        }
+
+        h2 {
+            font-size: 18pt
+        }
+
+        h1, h2 {
+            font-family: 'Poppins', sans-serif !important;
+            text-align: center;
+            color: rgb(0, 51, 102);
+        }
+
+        p {
+            font-size: 11pt;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            text-align: justify;
+        }
+
+        .highlight {
+            color: rgb(176, 93, 90);
+            font-weight: bold;
+        }
+
+        .footer {
+            color: rgb(119, 119, 119);
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #ccc;
+        }
+
+        .p-center {
+            text-align: center !important;
+        }
+
+        .p-footer {
+            text-align: center !important;
+            font-size: 9pt !important;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Buses Control</h1>
+        <h2>Código de redefinição</h2>
+        <p class="content">
+            Olá, <span class="highlight">{{Name}}</span>. Você solicitou a redefinição de senha. Utilize o código abaixo para concluir o processo com segurança. Não compartilhe este código com ninguém para proteger sua conta.
+        </p>
+        <p class="p-center">Código de Redefinição: <span class="highlight">{{Code}}</span></p>
+        <div class="footer">
+            <p class="p-footer">&copy; {{YearNow}} Buses Control System. Todos os direitos reservados.</p>
+            <p class="p-footer">Endereço: Rua da Empresa, 1234 - Cidade, Estado - CEP: 12345-678</p>
+            <p class="p-footer">Telefone: (62) 98346-7890 | Email: contato@busescontrol.com</p>
+        </div>
+    </div>
+</body>
+</html>
