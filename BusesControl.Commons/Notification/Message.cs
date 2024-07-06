@@ -79,6 +79,11 @@ public class Message
         public readonly static string RoleAndProfileChanged = "Papel e perfil do funcionário alterado com sucesso! Agora ele terá novos acessos ao sistema.";
     }
 
+    public class Email
+    {
+        public readonly static string Unexpected = "Desculpe, ocorreu um erro interno e não conseguimos enviar seu e-mail";
+    }
+
     public class SettingPanel
     {
         public readonly static string NotFound = "Painel de configurações não encontrado!";

@@ -16,7 +16,7 @@ public class UserRegistrationQueueBusiness(
     IUserRegistrationQueueRepository _userRegistrationQueueRepository
 ) : IUserRegistrationQueueBusiness
 {
-    public async Task<bool> ValidateForCreateAsync(Guid employeeId)
+    public async Task<EmployeeModel> GetForValidateForCreateAsync(Guid employeeId)
     {
         var employeeRecord = await _employeeRepository.GetByIdAsync(employeeId);
         if (employeeRecord is null)
@@ -26,7 +26,7 @@ public class UserRegistrationQueueBusiness(
                 title: NotificationTitle.NotFound,
                 details: Message.Employee.NotFound
             );
-            return false;
+            return default!;
         }
 
         if (employeeRecord.Type == EmployeeTypeEnum.Driver || employeeRecord.Status == EmployeeStatusEnum.Inactive)
@@ -36,7 +36,7 @@ public class UserRegistrationQueueBusiness(
                 title: NotificationTitle.BadRequest,
                 details: Message.UserRegistration.RequestDenied
             );
-            return false;
+            return default!;
         }
 
         var exists = await _userRegistrationQueueRepository.ExistsByEmployee(employeeId);
@@ -47,10 +47,10 @@ public class UserRegistrationQueueBusiness(
                 title: NotificationTitle.BadRequest,
                 details: Message.UserRegistration.Exists
             );
-            return false;
+            return default!;
         }
 
-        return true;
+        return employeeRecord;
     }
 
     public async Task<UserRegistrationQueueModel> GetForRegistrationUserStepCodeAsync(UserRegistrationStepCodeRequest request)

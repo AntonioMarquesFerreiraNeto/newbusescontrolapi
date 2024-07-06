@@ -19,6 +19,7 @@ public class UserService(
     IHttpContextAccessor _httpContextAccessor,
     IUnitOfWork _unitOfWork,
     INotificationApi _notificationApi,
+    IEmailService _emailService,
     ITokenService _tokenService,
     IUserRepository _userRepository,
     IResetPasswordSecurityCodeRepository _resetPasswordSecurityCodeRepository,
@@ -139,7 +140,11 @@ public class UserService(
 
         await _resetPasswordSecurityCodeRepository.Create(newResetPasswordCodeRecord);
 
-        //TODO: Enviar código gerado para o e-mail do usuário neste local.
+        _emailService.SendEmailStepCode(request.Email, record.Employee.Name, newResetPasswordCodeRecord.Code);
+        if (_notificationApi.HasNotification)
+        {
+            return default!;
+        }
 
         await _unitOfWork.CommitAsync(true);
 

@@ -5,7 +5,7 @@ namespace BusesControl.Business.v1.Interfaces;
 
 public interface IUserRegistrationQueueBusiness
 {
-    Task<bool> ValidateForCreateAsync(Guid employeeId);
+    Task<EmployeeModel> GetForValidateForCreateAsync(Guid employeeId);
     Task<UserRegistrationQueueModel> GetForRegistrationUserStepCodeAsync(UserRegistrationStepCodeRequest request);
     Task<UserRegistrationQueueModel> GetForRegistrationUserStepPasswordAsync(Guid userId);
     Task<UserRegistrationQueueModel> GetForDeleteAsync(Guid id);

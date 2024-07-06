@@ -36,7 +36,7 @@ public class UserRegistrationQueueController(
     [HttpPatch("step-code")]
     public async Task<IActionResult> RegistrationUserStepCode([FromBody] UserRegistrationStepCodeRequest request)
     {
-        var validation = ValidateModel.CheckIsValid(request, Request.Path, ModelState, _userRegistrationStepCodeRequestValidator);
+        var validation = await ValidateModel.CheckIsValid(request, Request.Path, ModelState, _userRegistrationStepCodeRequestValidator);
         if (validation is not null)
         {
             return BadRequest(validation);
@@ -49,7 +49,7 @@ public class UserRegistrationQueueController(
     [HttpPatch("step-token")]
     public async Task<IActionResult> RegistrationUserStepToken([FromBody] UserRegistrationStepTokenRequest request)
     {
-        var validation = ValidateModel.CheckIsValid(request, Request.Path, ModelState, _userRegistrationStepTokenRequestValidator);
+        var validation = await ValidateModel.CheckIsValid(request, Request.Path, ModelState, _userRegistrationStepTokenRequestValidator);
         if (validation is not null)
         {
             return BadRequest(validation);
@@ -62,7 +62,7 @@ public class UserRegistrationQueueController(
     [HttpPatch("step-password")]
     public async Task<IActionResult> ResetPasswordStepNewPassword([FromBody] UserRegistrationStepPasswordRequest request)
     {
-        var validation = ValidateModel.CheckIsValid(request, Request.Path, ModelState, _userRegistrationStepPasswordRequestValidator);
+        var validation = await ValidateModel.CheckIsValid(request, Request.Path, ModelState, _userRegistrationStepPasswordRequestValidator);
         if (validation is not null)
         {
             return BadRequest(validation);

@@ -19,7 +19,7 @@ public class LoginController(
     [HttpPost]
     [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
-    {
+    {        
         var validation = await ValidateModel.CheckIsValid(request, Request.Path, ModelState, _loginRequestValidator);
         if (validation is not null)
         {

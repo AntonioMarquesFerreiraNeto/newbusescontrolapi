@@ -21,6 +21,15 @@ public static class AppSettingsPdfCo
     public static string Url = "https://api.pdf.co/v1/pdf/convert/from/html";
 }
 
+public static class AppSettingsEmail
+{
+    public static string UserName = "busescontrolmensagens@gmail.com";
+    public static string Name = "Buses Control";
+    public static string Host = "smtp.gmail.com";
+    public static string KeyPassword = "sua senha de aplicativo";
+    public static int Port = 587;
+}
+
 public static class AppSettingsResetPassword
 {
     public static int ExpireCode = 3;
