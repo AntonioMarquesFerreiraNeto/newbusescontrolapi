@@ -338,8 +338,6 @@ public class UserService(
             return default!;
         }
 
-        //TODO: enviar e-mail para o usuário informando sobre os passos de configuração de login para ele.
-
         return record;
     }
 
@@ -483,5 +481,38 @@ public class UserService(
         }
 
         return new SuccessResponse(Message.Employee.RoleAndProfileChanged);
+    }
+
+    public async Task<bool> UpdateEmailForEmployeeAsync(string newEmail, string oldEmail)
+    {
+        if (newEmail.Equals(oldEmail))
+        {
+            return false;
+        }
+        
+        var userRecord = await _userManager.FindByEmailAsync(oldEmail);
+        if (userRecord is null)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status404NotFound,
+                title: NotificationTitle.NotFound,
+                details: Message.User.NotFound
+            );
+            return false;
+        }
+
+        userRecord.Email = newEmail;
+        var result = await _userManager.UpdateAsync(userRecord);
+        if (!result.Succeeded)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status404NotFound,
+                title: NotificationTitle.NotFound,
+                details: Message.User.Unexpected
+            );
+            return false;
+        }
+
+        return true;
     }
 }

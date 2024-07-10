@@ -113,7 +113,7 @@ public class EmailService(
     public bool SendEmailForWelcomeUserRegistration(string email, string name)
     {
         var basePath = AppContext.BaseDirectory;
-        var templatePath = Path.Combine(basePath, "..", "..", "..", "..", "BusesControl.Services", "v1", "Templates", "TemplateWelcomeAndUserRegistration.html");
+        var templatePath = Path.Combine(basePath, "..", "..", "..", "..", "BusesControl.Services", "v1", "Templates", "TemplateWelcomeUserRegistration.html");
         var template = File.ReadAllText(templatePath);
 
         var sendEmail = new SendEmail

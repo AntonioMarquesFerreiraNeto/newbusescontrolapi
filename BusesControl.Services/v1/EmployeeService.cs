@@ -99,6 +99,14 @@ public class EmployeeService(
             return false;
         }
 
+        _unitOfWork.BeginTransaction();
+
+        await _userService.UpdateEmailForEmployeeAsync(request.Email, record.Email);
+        if (_notificationApi.HasNotification)
+        {
+            return false;
+        }
+
         record.Name = request.Name;
         record.Cpf = request.Cpf;
         record.BirthDate = request.BirthDate;
@@ -113,6 +121,8 @@ public class EmployeeService(
 
         _employeeRepository.Update(record);
         await _unitOfWork.CommitAsync();
+
+        await _unitOfWork.CommitAsync(true);
 
         return true;
     }

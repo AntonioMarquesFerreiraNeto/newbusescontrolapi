@@ -19,4 +19,5 @@ public interface IUserService
     Task<bool> DeleteForUserRegistrationAsync(Guid id);
     Task<bool> ActiveForAprrovedUserRegistrationAsync(Guid id);
     Task<SuccessResponse> ToggleRoleForEmployeeAsync(string email, EmployeeTypeEnum employeeType);
+    Task<bool> UpdateEmailForEmployeeAsync(string newEmail, string oldEmail);
 }
