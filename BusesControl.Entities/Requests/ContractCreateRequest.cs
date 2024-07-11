@@ -12,9 +12,9 @@ public class ContractCreateRequest
     public Guid ContractDescriptionId { get; set; }
     [Precision(10, 2)]
     public decimal TotalPrice { get; set; }
-    public ContractPaymentMethodEnum PaymentMethod { get; set; }
+    public PaymentTypeEnum PaymentType { get; set; }
     [MaxLength(2500)]
     public string? Details { get; set; }
-    public DateTime TerminateDate { get; set; }
+    public DateOnly TerminateDate { get; set; }
     public IEnumerable<Guid> CustomersId { get; set; } = default!;
 }

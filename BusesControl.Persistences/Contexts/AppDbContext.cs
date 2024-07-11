@@ -23,6 +23,8 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
     public DbSet<ResetPasswordSecurityCodeModel> ResetPasswordsSecurityCode { get; set; }
     public DbSet<UserRegistrationQueueModel> UsersRegistrationQueue { get; set; }
     public DbSet<UserRegistrationSecurityCodeModel> UsersRegistrationSecurityCode { get; set; }
+    public DbSet<FinancialModel> Financials { get; set; }
+    public DbSet<InvoiceModel> Invoices { get; set; }
 
     public override DbSet<UserModel> Users { get; set; }
 

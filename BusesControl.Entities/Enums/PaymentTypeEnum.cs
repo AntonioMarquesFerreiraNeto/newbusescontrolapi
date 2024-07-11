@@ -1,6 +1,6 @@
 ﻿namespace BusesControl.Entities.Enums;
 
-public enum ContractPaymentMethodEnum
+public enum PaymentTypeEnum
 {
      Single = 1,
      Multiple = 2

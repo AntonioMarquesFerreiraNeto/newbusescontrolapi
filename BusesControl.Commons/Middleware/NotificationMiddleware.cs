@@ -28,7 +28,7 @@ public class NotificationMiddleware(RequestDelegate _next)
         return context.Response.WriteAsync(JsonSerializer.Serialize(new ProblemDetails
         {
             Title = NotificationTitle.InternalError,
-            Detail = SupportMessage.Commons.Unexpected,
+            Detail = exception.Message,
             Status = code,
             Instance = context.Request.Path
         }));

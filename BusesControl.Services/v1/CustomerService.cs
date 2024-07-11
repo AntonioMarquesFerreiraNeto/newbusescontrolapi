@@ -3,6 +3,7 @@ using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
+using BusesControl.Entities.DTOs;
 using BusesControl.Entities.Enums;
 using BusesControl.Entities.Models;
 using BusesControl.Entities.Requests;
@@ -11,6 +12,9 @@ using BusesControl.Persistence.v1.Repositories.Interfaces;
 using BusesControl.Persistence.v1.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Http;
+using System.Net.Http.Json;
+using System.Text;
+using System.Text.Json;
 
 namespace BusesControl.Services.v1;
 
@@ -31,6 +35,44 @@ public class CustomerService(
         request.PhoneNumber = OnlyNumbers.ClearValue(request.PhoneNumber);
 
         return request;
+    }
+
+    private async Task<string> CreateInAssasAsync(CustomerModel customer)
+    {
+        var httpClient = new HttpClient();
+        httpClient.DefaultRequestHeaders.Add("access_token", AppSettingsAssas.Key);
+
+        var createCustomerInAssas = new
+        {
+            name = customer.Name,
+            cpfCnpj = customer.Cpf ?? customer.Cnpj,
+            mobilePhone = customer.PhoneNumber,
+            email = customer.Email
+        };
+
+        var httpResult = await httpClient.PostAsJsonAsync($"{AppSettingsAssas.Url}/customers", createCustomerInAssas);
+        if (!httpResult.IsSuccessStatusCode)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.Customer.Unexpected
+            );
+            return default!;
+        }
+
+        var customerExternal = await httpResult.Content.ReadFromJsonAsync<CreateCustomerInAssasDTO>();
+        if (customerExternal is null)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.Customer.Unexpected
+            );
+            return default!;
+        }
+
+        return customerExternal.Id;
     }
 
     public async Task<IEnumerable<CustomerModel>> FindBySearchAsync(int page, int pageSize, string? search = null)
@@ -83,6 +125,13 @@ public class CustomerService(
             Type = request.Type
         };
 
+        var externalId = await CreateInAssasAsync(record);
+        if (_notificationApi.HasNotification)
+        {
+            return false;
+        }
+
+        record.ExternalId = externalId;
         await _customerRepository.CreateAsync(record);
         await _unitOfWork.CommitAsync();
 
@@ -110,6 +159,8 @@ public class CustomerService(
         {
             return false;
         }
+
+        //TODO: ANALISAR A NECESSIDADE DE IMPLEMENTAR O UPDATE DO CLIENTE NO ASSAS TAMBÉM.
 
         record.Name = request.Name;
         record.Cpf = request.Cpf;

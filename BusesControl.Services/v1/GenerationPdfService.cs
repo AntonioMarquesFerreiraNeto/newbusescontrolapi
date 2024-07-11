@@ -108,7 +108,7 @@ public class GenerationPdfService(
                $"com capacidade para {bus.SeatingCapacity} passageiros.";
     }
 
-    private static string RenderValidityForContract(DateTime initialDate, DateTime terminationDate, string reference)
+    private static string RenderValidityForContract(DateOnly initialDate, DateOnly terminationDate, string reference)
     {
         return $"O presente contrato nº <span class=\"highlight\">{reference}</span> vigorará pelo período de <span class=\"highlight\">{initialDate.ToString("dd 'de' MMMM 'de' yyyy")}</span> a <span class=\"highlight\">{terminationDate.ToString("dd 'de' MMMM 'de' yyyy")}</span>, conforme acordado entre as partes.";
     }

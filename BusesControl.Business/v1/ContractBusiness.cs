@@ -242,13 +242,23 @@ public class ContractBusiness(
 
     public async Task<ContractModel> GetForStartProgressAsync(Guid id)
     {
-        var record = await _contractRepository.GetByIdAsync(id);
+        var record = await _contractRepository.GetByIdWithCustomersContractAsync(id);
         if (record is null)
         {
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Contract.NotFound
+            );
+            return default!;
+        }
+
+        if (!record.IsApproved)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.Contract.NotIsApproved
             );
             return default!;
         }
@@ -292,10 +302,9 @@ public class ContractBusiness(
         return record;
     }
 
-    public bool ValidateTerminationDate(SettingPanelModel settingPanelRecord, DateTime terminateDate)
+    public bool ValidateTerminationDate(SettingPanelModel settingPanelRecord, DateOnly terminateDate)
     {
-        terminateDate = terminateDate.Date;
-        var dateNow = DateTime.UtcNow.Date;
+        var dateNow = DateOnly.FromDateTime(DateTime.UtcNow.Date);
 
         if (dateNow >= terminateDate)
         {
