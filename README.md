@@ -45,9 +45,9 @@ O projeto utiliza diversas tecnologias, algumas das quais foram definidas e reut
 - **Azure**: Utilizado para hospedagem do servidor e serviços adicionais como envio de emails.
 - **Azure Key Vault**: Planejado para uso futuro para gerenciamento de segredos.
 - **Zenvia**: Para envio de SMS.
-- **Assas**: Para possíveis transações bancárias.
+- **Assas**: Para criação de faturas, pagamentos e notificações para nossa API através de webhook.
 - **Entity Framework**: Para acesso e manipulação de dados.
-- **iTextSharp**: Para geração de PDFs de contratos de locação de frotas.
+- **PdfCO**: Para geração de PDFs de contratos e rescisões.
 - **ClosedXML**: Para geração de relatórios em Excel.
 - **SQL Server com Docker**: Utilizado como banco de dados, facilitando o ambiente de desenvolvimento e deploy.
 - **Docker**: Possivelmente utilizado também para a API em futuras atualizações.
