@@ -39,6 +39,7 @@ public class RegisterServices
         builder.Services.AddScoped<IEmailService, EmailService>();
         builder.Services.AddScoped<IFinancialService, FinancialService>();
         builder.Services.AddScoped<IInvoiceService, InvoiceService>();
+        builder.Services.AddScoped<ISavedCardService, SavedCardService>();
 
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
     }

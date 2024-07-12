@@ -11,6 +11,11 @@ public class InvoiceRepository(
 {
     private readonly AppDbContext _context = context;
 
+    public async Task<InvoiceModel?> GetByIdWithFinancialAsync(Guid id)
+    {
+        return await _context.Invoices.AsNoTracking().Include(x => x.Financial).SingleOrDefaultAsync(x => x.Id == id);
+    }
+
     public async Task<bool> CreateAsync(InvoiceModel record)
     {
         await _context.Invoices.AddAsync(record);

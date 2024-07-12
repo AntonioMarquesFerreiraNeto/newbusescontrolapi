@@ -138,6 +138,13 @@ public class Message
 
     public class Invoice
     {
-        public readonly static string Unexpected = "Desculpe, não conseguimos gerar a fatura do cliente!";
+        public readonly static string NotFound = "Fatura não encontrada!";
+        public readonly static string UnexpectedCreate = "Desculpe, não conseguimos gerar a fatura do cliente!";
+        public readonly static string UnexpectedPay = "Desculpe, não conseguimos realizar seu pagamento!";
+        public readonly static string UnexpectedPix = "Desculpe, não conseguimos gerar seu pix!";
+        public readonly static string NotPendingOrOverdue = "Fatura não está pendente ou atrasada!";
+        public readonly static string SuccessPay = "Pagamento realizado com sucesso!";
+        public readonly static string SuccessPix = "Use o QR code para realizar o pagamento de sua fatura.";
+        public readonly static string NotCreditCard = "Cartão de crédito não informado";
     }
 }

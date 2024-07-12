@@ -4,5 +4,6 @@ public enum InvoiceStatusEnum
 {
     Pending = 1,
     Paid = 2,
-    OverDue = 3
+    OverDue = 3,
+    Canceled = 4
 }

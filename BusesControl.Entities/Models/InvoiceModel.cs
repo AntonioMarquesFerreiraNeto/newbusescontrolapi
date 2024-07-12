@@ -23,5 +23,6 @@ public class InvoiceModel
     public DateOnly DueDate { get; set; }
     public string? ExternalId { get; set; } = default!;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateOnly? PaymentDate { get; set; }
     public DateTime? UpdatedAt { get; set; }
 }
