@@ -2,7 +2,6 @@
 
 public class InvoicePayWithCardInAssasDTO
 {
-    public string Id { get; set; } = default!;
     public string Status { get; set; } = default!;
     public DateOnly ConfirmedDate { get; set; } = default!;
     public CreditCardInAssasDTO CreditCard { get; set;} = default!;

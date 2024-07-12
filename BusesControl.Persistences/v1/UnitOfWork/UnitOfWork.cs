@@ -1,4 +1,5 @@
 ﻿using BusesControl.Persistence.Contexts;
+using Microsoft.EntityFrameworkCore;
 
 namespace BusesControl.Persistence.v1.UnitOfWork;
 
@@ -23,5 +24,6 @@ public class UnitOfWork(
     public void Rollback()
     {
         _context.Database.CurrentTransaction?.Rollback();
+        _context.ChangeTracker.Entries().ToList().ForEach(entry => entry.State = EntityState.Detached);
     }
 }

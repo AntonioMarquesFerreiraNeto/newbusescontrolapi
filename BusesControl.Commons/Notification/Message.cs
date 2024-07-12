@@ -11,6 +11,7 @@ public class Message
     public class Commons
     {
         public readonly static string Unexpected = "Desculpe, ocorreu um erro interno no servidor.";
+        public readonly static string NoOperation = "Nenhuma operação foi necessária para a data especificada ou a atual.";
     }
 
     public class Customer
@@ -145,6 +146,8 @@ public class Message
         public readonly static string NotPendingOrOverdue = "Fatura não está pendente ou atrasada!";
         public readonly static string SuccessPay = "Pagamento realizado com sucesso!";
         public readonly static string SuccessPix = "Use o QR code para realizar o pagamento de sua fatura.";
-        public readonly static string NotCreditCard = "Cartão de crédito não informado";
+        public readonly static string NotCreditCard = "Cartão de crédito não informado.";
+        public readonly static string FailureAutomatedPay = "Fatura não está confirmada ou recebida no assas.";
+        public readonly static string FailureOverDue = "Fatura não pode estar pendente.";
     }
 }

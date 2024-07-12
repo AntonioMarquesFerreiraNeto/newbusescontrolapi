@@ -1,4 +1,5 @@
-﻿using BusesControl.Business.v1.Interfaces;
+﻿using Azure;
+using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
@@ -262,5 +263,52 @@ public class InvoiceService(
         await _unitOfWork.CommitAsync(true);
 
         return invoicePaymentResponse;
+    }
+
+    public async Task<AutomatedPaymentResponse> AutomatedPaymentAsync(InvoiceModel record, Guid creditCardToken)
+    {
+        var httpCliente = new HttpClient();
+        httpCliente.DefaultRequestHeaders.Add("access_token", AppSettingsAssas.Key);
+
+        var automatedPayment = new 
+        {
+            creditCardToken,
+        };
+
+        var httpResult = await httpCliente.PostAsJsonAsync($"{AppSettingsAssas.Url}/payments/{record.ExternalId}/payWithCreditCard", automatedPayment);
+        if (!httpResult.IsSuccessStatusCode)
+        {
+            var assasErrorResponse = await httpResult.Content.ReadFromJsonAsync<AssasErrorResponseDTO>();
+            return new AutomatedPaymentResponse(messageFailure: assasErrorResponse?.Errors.First().Description);
+        }
+
+        var response = await httpResult.Content.ReadFromJsonAsync<InvoicePayWithCardInAssasDTO>();
+        if (response!.Status != "CONFIRMED" && response.Status != "RECEIVED")
+        {
+            return new AutomatedPaymentResponse(messageFailure: Message.Invoice.FailureAutomatedPay);
+        }
+
+        record.PaymentDate = response.ConfirmedDate;
+        record.UpdatedAt = DateTime.UtcNow;
+        record.Status = InvoiceStatusEnum.Paid;
+        _invoiceRepository.Update(record);
+        await _unitOfWork.CommitAsync();
+
+        return new AutomatedPaymentResponse(sucess: true);
+    }
+
+    public async Task<(bool success, string? errorMessage)> ChangeOverDueForSystemAsync(InvoiceModel record)
+    {
+        if (record.Status != InvoiceStatusEnum.Pending)
+        {
+            return (false, Message.Invoice.FailureOverDue);
+        }
+
+        record.UpdatedAt = DateTime.UtcNow;
+        record.Status = InvoiceStatusEnum.OverDue;
+        _invoiceRepository.Update(record);
+        await _unitOfWork.CommitAsync();
+
+        return (true, null);
     }
 }
