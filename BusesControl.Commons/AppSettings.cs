@@ -21,6 +21,12 @@ public static class AppSettingsPdfCo
     public static string Url = "https://api.pdf.co/v1/pdf/convert/from/html";
 }
 
+public static class AppSettingsAssas
+{
+    public static string Key = "sua chave da API do assas";
+    public static string Url = "https://sandbox.asaas.com/api/v3";
+}
+
 public static class AppSettingsEmail
 {
     public static string UserName = "busescontrolmensagens@gmail.com";

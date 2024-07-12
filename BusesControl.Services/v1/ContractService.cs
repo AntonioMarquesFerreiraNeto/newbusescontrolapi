@@ -23,12 +23,13 @@ public class ContractService(
     IGenerationPdfService _generationPdfService,
     ICustomerContractService _customerContractService,
     IContractDescriptionService _contractDescriptionService,
+    IFinancialService _financialService,
     IContractBusiness _contractBusiness,
     IContractRepository _contractRepository,
     ISettingPanelBusiness _settingPanelBusiness
 ) : IContractService
 {
-    private static int CalculateMonths(DateTime startDate, DateTime endDate)
+    private static int CalculateMonths(DateOnly startDate, DateOnly endDate)
     {
         int startYear = startDate.Year;
         int startMonth = startDate.Month;
@@ -54,7 +55,7 @@ public class ContractService(
             {
                 reference += chars[random.Next(chars.Length)];
             }
-            existsReference = await _contractRepository.ExitsByReferenceAsync(reference);
+            existsReference = await _contractRepository.ExistsByReferenceAsync(reference);
         }
 
         return reference;
@@ -143,7 +144,7 @@ public class ContractService(
             SettingPanelId = request.SettingPanelId,
             ContractDescriptionId = request.ContractDescriptionId,
             TotalPrice = request.TotalPrice,
-            PaymentMethod = request.PaymentMethod,
+            PaymentType = request.PaymentType,
             Details = request.Details,
             TerminateDate = request.TerminateDate,
             CustomersCount = request.CustomersId.Count()
@@ -208,7 +209,7 @@ public class ContractService(
         record.SettingPanelId = request.SettingPanelId;
         record.ContractDescriptionId = request.ContractDescriptionId;
         record.TotalPrice = request.TotalPrice;
-        record.PaymentMethod = request.PaymentMethod;
+        record.PaymentType = request.PaymentType;
         record.Details = request.Details;
         record.TerminateDate = request.TerminateDate;
         record.UpdatedAt = DateTime.UtcNow;
@@ -269,10 +270,10 @@ public class ContractService(
         }
 
         var startDate = DateTime.UtcNow.AddDays(2);
-        var installmentsCount = record.PaymentMethod == ContractPaymentMethodEnum.Single ? 1 : CalculateMonths(startDate, record.TerminateDate);
+        var installmentsCount = record.PaymentType == PaymentTypeEnum.Single ? 1 : CalculateMonths(DateOnly.FromDateTime(startDate), record.TerminateDate);
 
         record.UpdatedAt = DateTime.UtcNow;
-        record.StartDate = startDate;
+        record.StartDate = DateOnly.FromDateTime(startDate);
         record.Status = ContractStatusEnum.WaitingSignature;
         record.InstallmentsCount = installmentsCount;
         record.IsApproved = true;
@@ -292,13 +293,21 @@ public class ContractService(
             return default!;
         }
 
+        _unitOfWork.BeginTransaction();
+
+        await _financialService.CreateForContractAsync(record);
+        if (_notificationApi.HasNotification)
+        {
+            return default!;
+        }
+
         record.UpdatedAt = DateTime.UtcNow;
         record.Status = ContractStatusEnum.InProgress;
         _contractRepository.Update(record);
         await _unitOfWork.CommitAsync();
-        
-        //TODO: chamar service de Financial para tratar as questões financeiras do contrato, e gerar as folhas de pagamento em FinancialInstallment.
-        
+
+        await _unitOfWork.CommitAsync(true);
+
         return new SuccessResponse(Message.Contract.SuccessfullyStartContract);
     }
 

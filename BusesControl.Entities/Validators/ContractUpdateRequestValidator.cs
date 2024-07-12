@@ -19,8 +19,8 @@ public class ContractUpdateRequestValidator : AbstractValidator<ContractUpdateRe
         RuleFor(x => x.ContractDescriptionId)
             .NotEmpty().WithMessage("Descrição do contrato é um campo obrigatório");
 
-        RuleFor(x => x.PaymentMethod)
-            .NotEmpty().WithMessage("Método de pagamento é um campo obrigatório");
+        RuleFor(x => x.PaymentType)
+            .NotEmpty().WithMessage("Tipo de pagamento é um campo obrigatório");
 
         RuleFor(x => x.TotalPrice)
             .NotEmpty().WithMessage("Preço total é um campo obrigatório")

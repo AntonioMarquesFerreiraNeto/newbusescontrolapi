@@ -17,6 +17,11 @@ public class ContractRepository(
         return await _context.Contracts.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
     }
 
+    public async Task<ContractModel?> GetByIdWithCustomersContractAsync(Guid id)
+    {
+        return await _context.Contracts.AsNoTracking().Include(x => x.CustomersContract).ThenInclude(x => x.Customer).SingleOrDefaultAsync(x => x.Id == id);
+    }
+
     public async Task<ContractModel?> GetByIdWithIncludesAsync(Guid id)
     {
         var query = _context.Contracts.AsNoTracking();
@@ -87,7 +92,7 @@ public class ContractRepository(
         return await _context.Contracts.AnyAsync(x => x.ContractDescriptionId == contractDescriptionId);
     }
 
-    public async Task<bool> ExitsByReferenceAsync(string reference)
+    public async Task<bool> ExistsByReferenceAsync(string reference)
     {
         return await _context.Contracts.AnyAsync(x => x.Reference == reference);
     }

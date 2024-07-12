@@ -101,7 +101,8 @@ namespace BusesControl.Persistence.Migrations
 
                     b.Property<string>("Copyright")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(70)
+                        .HasColumnType("nvarchar(70)");
 
                     b.Property<string>("GeneralProvisions")
                         .IsRequired()
@@ -125,7 +126,8 @@ namespace BusesControl.Persistence.Migrations
 
                     b.Property<string>("SubTitle")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(70)
+                        .HasColumnType("nvarchar(70)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -171,7 +173,7 @@ namespace BusesControl.Persistence.Migrations
                     b.Property<bool>("IsApproved")
                         .HasColumnType("bit");
 
-                    b.Property<int>("PaymentMethod")
+                    b.Property<int>("PaymentType")
                         .HasColumnType("int");
 
                     b.Property<string>("Reference")
@@ -182,14 +184,14 @@ namespace BusesControl.Persistence.Migrations
                     b.Property<Guid>("SettingPanelId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("StartDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly?>("StartDate")
+                        .HasColumnType("date");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("TerminateDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("TerminateDate")
+                        .HasColumnType("date");
 
                     b.Property<decimal>("TotalPrice")
                         .HasPrecision(10, 2)
@@ -274,6 +276,10 @@ namespace BusesControl.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(80)
                         .HasColumnType("nvarchar(80)");
+
+                    b.Property<string>("ExternalId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HomeNumber")
                         .IsRequired()
@@ -389,6 +395,130 @@ namespace BusesControl.Persistence.Migrations
                     b.ToTable("Employees");
                 });
 
+            modelBuilder.Entity("BusesControl.Entities.Models.FinancialModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("ContractId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("InstallmentsCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PaymentType")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<DateOnly>("StartDate")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly>("TerminateDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("TotalInterestRate")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContractId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("Financials");
+                });
+
+            modelBuilder.Entity("BusesControl.Entities.Models.InvoiceModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateOnly>("DueDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("ExternalId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("FinancialId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("InterestRate")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<DateOnly?>("PaymentDate")
+                        .HasColumnType("date");
+
+                    b.Property<decimal>("Price")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<string>("Reference")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FinancialId");
+
+                    b.ToTable("Invoices");
+                });
+
             modelBuilder.Entity("BusesControl.Entities.Models.ResetPasswordSecurityCodeModel", b =>
                 {
                     b.Property<Guid>("Id")
@@ -410,6 +540,36 @@ namespace BusesControl.Persistence.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("ResetPasswordsSecurityCode");
+                });
+
+            modelBuilder.Entity("BusesControl.Entities.Models.SavedCardModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreditCardBrand")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreditCardNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("CreditCardToken")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("SavedCards");
                 });
 
             modelBuilder.Entity("BusesControl.Entities.Models.SettingPanelModel", b =>
@@ -800,6 +960,32 @@ namespace BusesControl.Persistence.Migrations
                     b.Navigation("Customer");
                 });
 
+            modelBuilder.Entity("BusesControl.Entities.Models.FinancialModel", b =>
+                {
+                    b.HasOne("BusesControl.Entities.Models.ContractModel", "Contract")
+                        .WithMany()
+                        .HasForeignKey("ContractId");
+
+                    b.HasOne("BusesControl.Entities.Models.CustomerModel", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId");
+
+                    b.Navigation("Contract");
+
+                    b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("BusesControl.Entities.Models.InvoiceModel", b =>
+                {
+                    b.HasOne("BusesControl.Entities.Models.FinancialModel", "Financial")
+                        .WithMany("Invoices")
+                        .HasForeignKey("FinancialId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Financial");
+                });
+
             modelBuilder.Entity("BusesControl.Entities.Models.ResetPasswordSecurityCodeModel", b =>
                 {
                     b.HasOne("BusesControl.Entities.Models.UserModel", "User")
@@ -809,6 +995,17 @@ namespace BusesControl.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BusesControl.Entities.Models.SavedCardModel", b =>
+                {
+                    b.HasOne("BusesControl.Entities.Models.CustomerModel", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("BusesControl.Entities.Models.SettingPanelModel", b =>
@@ -909,6 +1106,11 @@ namespace BusesControl.Persistence.Migrations
             modelBuilder.Entity("BusesControl.Entities.Models.ContractModel", b =>
                 {
                     b.Navigation("CustomersContract");
+                });
+
+            modelBuilder.Entity("BusesControl.Entities.Models.FinancialModel", b =>
+                {
+                    b.Navigation("Invoices");
                 });
 #pragma warning restore 612, 618
         }

@@ -18,5 +18,6 @@ public class RegisterBusiness
         builder.Services.AddScoped<IEmployeeBusiness, EmployeeBusiness>();
         builder.Services.AddScoped<ISettingPanelBusiness, SettingPanelBusiness>();
         builder.Services.AddScoped<IUserRegistrationQueueBusiness, UserRegistrationQueueBusiness>();
+        builder.Services.AddScoped<IInvoiceBusiness, InvoiceBusiness>();
     }
 }

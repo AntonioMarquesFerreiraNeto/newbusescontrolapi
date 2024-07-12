@@ -11,6 +11,7 @@ public class Message
     public class Commons
     {
         public readonly static string Unexpected = "Desculpe, ocorreu um erro interno no servidor.";
+        public readonly static string NoOperation = "Nenhuma operação foi necessária para a data especificada ou a atual.";
     }
 
     public class Customer
@@ -18,6 +19,7 @@ public class Message
         public readonly static string Exists = "Cliente já se encontra registrado!";
         public readonly static string NotFound = "Cliente não encontrado!";
         public readonly static string NotInCompliance = "Cliente não está em compliance com outras pendências.";
+        public readonly static string Unexpected = "Desculpe, ocorreu um erro interno na criação do cliente.";
     }
 
     public class CustomerContract
@@ -31,17 +33,18 @@ public class Message
     public class Contract
     {
         public readonly static string NotFound = "Contrato não encontrado!";
+        public readonly static string NotIsApproved = "Contrato não está aprovado!";
         public readonly static string SuccessfullyApproved = "Contrato aprovado com sucesso.";
         public readonly static string NotIsDenied = "Contrato não está negado!";
         public readonly static string NotIsWaitingReview = "Contrato não está esperando revisão!";
         public readonly static string NotIsWaitingSignature = "Contrato não está aguardando assinatura!";
-        public readonly static string TerminationDateNotInFuture = "A data de término deve ser no futuro.";
+        public readonly static string TerminationDateNotInFuture = "A data de término não pode ser menor que a atual.";
         public readonly static string TerminationDateExceedsLimit = "A data de término não deve exceder o limite de anos estabelecido no painel de configurações para contrato a partir da data atual.";
         public readonly static string InvalidEditRequest = "Contrato não pode ser editado. Ele deve estar negado ou aguardando revisão.";
         public readonly static string InvalidRemoveRequest = "Contrato não pode ser removido. Ele já foi aprovado!";
         public readonly static string EmployeeNotDriver = "Funcionário selecionado não é motorista!";
         public readonly static string DuplicateCustomers = "Pelo menos um cliente está duplicado nesta requisição!";
-        public readonly static string SuccessfullyStartContract = "Contrato inicializado com sucesso! Consulte as folhas de pagamento no módulo financeiro.";
+        public readonly static string SuccessfullyStartContract = "Contrato inicializado com sucesso! Consulte as faturas dos clientes no módulo financeiro.";
     }
 
     public class ContractDescription
@@ -132,5 +135,19 @@ public class Message
         public readonly static string InvalidPassword = "Nova senha e confirmar senha devem ser iguais!";
         public readonly static string Unexpected = "Desculpe, não conseguimos gerar seu token!";
         public readonly static string Success = "Senha redefinida com sucesso!";
+    }
+
+    public class Invoice
+    {
+        public readonly static string NotFound = "Fatura não encontrada!";
+        public readonly static string UnexpectedCreate = "Desculpe, não conseguimos gerar a fatura do cliente!";
+        public readonly static string UnexpectedPay = "Desculpe, não conseguimos realizar seu pagamento!";
+        public readonly static string UnexpectedPix = "Desculpe, não conseguimos gerar seu pix!";
+        public readonly static string NotPendingOrOverdue = "Fatura não está pendente ou atrasada!";
+        public readonly static string SuccessPay = "Pagamento realizado com sucesso!";
+        public readonly static string SuccessPix = "Use o QR code para realizar o pagamento de sua fatura.";
+        public readonly static string NotCreditCard = "Cartão de crédito não informado.";
+        public readonly static string FailureAutomatedPay = "Fatura não está confirmada ou recebida no assas.";
+        public readonly static string FailureOverDue = "Fatura não pode estar pendente.";
     }
 }

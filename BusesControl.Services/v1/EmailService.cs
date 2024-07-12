@@ -15,7 +15,7 @@ public class EmailService(
     INotificationApi _notificationApi
 ) : IEmailService
 {
-    private bool SendEmail(SendEmail sendEmail)
+    private bool SendEmail(SendEmailDTO sendEmail)
     {
         try
         {
@@ -94,7 +94,7 @@ public class EmailService(
         var templatePath = Path.Combine(basePath, "..", "..", "..", "..", "BusesControl.Services", "v1", "Templates", "TemplateCode.html");
         var template = File.ReadAllText(templatePath);
 
-        var sendEmail = new SendEmail
+        var sendEmail = new SendEmailDTO
         {
             Subject = "Buses Control - Código de redefinição",
             Recipient = email,
@@ -116,7 +116,7 @@ public class EmailService(
         var templatePath = Path.Combine(basePath, "..", "..", "..", "..", "BusesControl.Services", "v1", "Templates", "TemplateWelcomeUserRegistration.html");
         var template = File.ReadAllText(templatePath);
 
-        var sendEmail = new SendEmail
+        var sendEmail = new SendEmailDTO
         {
             Subject = "Buses Control - Boas vindas",
             Recipient = email,

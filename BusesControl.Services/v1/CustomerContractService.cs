@@ -24,23 +24,15 @@ public class CustomerContractService(
 
     public async Task<bool> CreateForContractAsync(IEnumerable<Guid> customersId, Guid contractId)
     {
-        var records = new List<CustomerContractModel>();
-
-        foreach (var customer in customersId)
+        var records = customersId.Select(customer => 
         {
-            await _customerContractBusiness.ValidateForCreateAsync(customer);
-            if (_notificationApi.HasNotification)
-            {
-                return false;
-            }
-
-            var record = new CustomerContractModel
-            {
+            var record = new CustomerContractModel 
+            {  
                 ContractId = contractId,
-                CustomerId = customer,
+                CustomerId = customer
             };
-            records.Add(record);
-        }
+            return record;
+        });
 
         await _customerContractRepository.CreateRangeAsync(records);
         await _unitOfWork.CommitAsync();
