@@ -40,6 +40,11 @@ public class InvoiceRepository(
         return await _context.Invoices.AsNoTracking().Include(x => x.Financial).SingleOrDefaultAsync(x => x.Id == id);
     }
 
+    public async Task<InvoiceModel?> GetByIdAndExternalAsync(Guid id, string externalId)
+    {
+        return await _context.Invoices.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id && x.ExternalId == externalId);
+    }
+
     public async Task<bool> CreateAsync(InvoiceModel record)
     {
         await _context.Invoices.AddAsync(record);

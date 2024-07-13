@@ -150,4 +150,12 @@ public class Message
         public readonly static string FailureAutomatedPay = "Fatura não está confirmada ou recebida no assas.";
         public readonly static string FailureOverDue = "Fatura não pode estar pendente.";
     }
+
+    public class Webhook
+    {
+        public readonly static string RequestRequired = "Corpo da requisição é obrigatório!";
+        public readonly static string Unauthorized = "Requisição não autorizada!";
+        public readonly static string EventNotAccepted = "O evento recebido não corresponde a nenhum evento conhecido para esse método.";
+    }
+
 }
