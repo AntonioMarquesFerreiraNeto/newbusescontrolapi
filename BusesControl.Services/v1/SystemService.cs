@@ -14,8 +14,6 @@ public class SystemService(
     IInvoiceRepository _invoiceRepository
 ) : ISystemService
 {
-    //TODO: Implementar método que recebe a notificação do assas do pagamento via PIX realizado.
-
     public async Task<SystemResponse> AutomatedPaymentAsync(DateTime? date = null)
     {
         var systemResponse = new SystemResponse();

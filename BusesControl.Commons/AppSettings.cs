@@ -27,6 +27,11 @@ public static class AppSettingsAssas
     public static string Url = "https://sandbox.asaas.com/api/v3";
 }
 
+public static class AppSettingsWebhookAssas
+{
+    public static string AccessToken = "seu token de acesso para webhook do assas usar ao comunicar com a API";
+}
+
 public static class AppSettingsEmail
 {
     public static string UserName = "busescontrolmensagens@gmail.com";
