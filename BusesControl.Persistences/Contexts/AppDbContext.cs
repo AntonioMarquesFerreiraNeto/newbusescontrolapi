@@ -26,6 +26,7 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
     public DbSet<FinancialModel> Financials { get; set; }
     public DbSet<InvoiceModel> Invoices { get; set; }
     public DbSet<SavedCardModel> SavedCards { get; set; }
+    public DbSet<TerminationModel> Terminations { get; set; }
 
     public override DbSet<UserModel> Users { get; set; }
 

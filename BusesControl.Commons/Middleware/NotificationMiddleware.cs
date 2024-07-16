@@ -1,4 +1,5 @@
-﻿using BusesControl.Filters.Notification;
+﻿using BusesControl.Commons.Notification;
+using BusesControl.Filters.Notification;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
@@ -27,7 +28,7 @@ public class NotificationMiddleware(RequestDelegate _next)
         return context.Response.WriteAsync(JsonSerializer.Serialize(new ProblemDetails
         {
             Title = NotificationTitle.InternalError,
-            Detail = exception.Message,
+            Detail = Message.Commons.Unexpected,
             Status = code,
             Instance = context.Request.Path
         }));

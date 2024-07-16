@@ -316,9 +316,9 @@ public class ContractBusiness(
             return false;
         }
 
-        if (settingPanelRecord.LimitDateTermination is not null)
+        if (settingPanelRecord.LimitDateTerminate is not null)
         {
-            var dateLimit = dateNow.AddYears(settingPanelRecord.LimitDateTermination.Value);
+            var dateLimit = dateNow.AddYears(settingPanelRecord.LimitDateTerminate.Value);
 
             if (terminateDate > dateLimit)
             {

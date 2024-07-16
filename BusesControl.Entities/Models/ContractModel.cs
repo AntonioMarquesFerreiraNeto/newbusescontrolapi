@@ -33,4 +33,5 @@ public class ContractModel
     public EmployeeModel? Approver { get; set; } = default!;
     public int CustomersCount { get; set; }
     public ICollection<CustomerContractModel> CustomersContract { get; set; } = default!;
+    public ICollection<TerminationModel> Terminations { get; set; } = default!;
 }

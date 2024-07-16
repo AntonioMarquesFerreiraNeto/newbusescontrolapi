@@ -35,7 +35,7 @@ public class EmailService(
             smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
             smtp.UseDefaultCredentials = false;
             smtp.EnableSsl = true;
-            smtp.Credentials = new NetworkCredential(AppSettingsEmail.UserName, AppSettingsEmail.KeyPassword);
+            smtp.Credentials = new NetworkCredential(AppSettingsEmail.UserName, AppSettingsEmail.Key);
             smtp.Send(mail);
 
             return true;

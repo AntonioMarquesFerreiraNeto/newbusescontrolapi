@@ -4,6 +4,7 @@ using BusesControl.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BusesControl.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240716015902_Update-SettingPanel")]
+    partial class UpdateSettingPanel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -628,21 +631,37 @@ namespace BusesControl.Persistence.Migrations
                     b.Property<Guid>("ContractId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("ContractModelId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("FinancialId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<decimal>("Price")
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ContractId");
 
+                    b.HasIndex("ContractModelId");
+
                     b.HasIndex("CustomerId");
+
+                    b.HasIndex("FinancialId");
 
                     b.ToTable("Terminations");
                 });
@@ -1050,10 +1069,14 @@ namespace BusesControl.Persistence.Migrations
             modelBuilder.Entity("BusesControl.Entities.Models.TerminationModel", b =>
                 {
                     b.HasOne("BusesControl.Entities.Models.ContractModel", "Contract")
-                        .WithMany("Terminations")
+                        .WithMany()
                         .HasForeignKey("ContractId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.HasOne("BusesControl.Entities.Models.ContractModel", null)
+                        .WithMany("Terminations")
+                        .HasForeignKey("ContractModelId");
 
                     b.HasOne("BusesControl.Entities.Models.CustomerModel", "Customer")
                         .WithMany()
@@ -1061,9 +1084,17 @@ namespace BusesControl.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BusesControl.Entities.Models.FinancialModel", "Financial")
+                        .WithMany()
+                        .HasForeignKey("FinancialId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Contract");
 
                     b.Navigation("Customer");
+
+                    b.Navigation("Financial");
                 });
 
             modelBuilder.Entity("BusesControl.Entities.Models.UserModel", b =>
