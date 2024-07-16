@@ -180,17 +180,47 @@ public class InvoiceService(
         return response;
     }
 
+    private async Task<bool> RemoveInAssasAsync(string externalId)
+    {
+        var httpClient = new HttpClient();
+
+        httpClient.DefaultRequestHeaders.Add("access_token", AppSettingsAssas.Key);
+
+        var httpResult = await httpClient.DeleteAsync($"{AppSettingsAssas.Url}/payments/{externalId}");
+        if (!httpResult.IsSuccessStatusCode)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.Invoice.UnexpectedRemove
+            );
+            return false;
+        }
+
+        var response = await httpResult.Content.ReadAsStringAsync();
+        if (response is null)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.Invoice.UnexpectedRemove
+            );
+            return false;
+        }
+
+        return true;
+    }
+
     public async Task<bool> CreateForFinancialAsync(CreateInvoiceDTO createInvoice)
     {
-        var title = createInvoice.PaymentType == PaymentTypeEnum.Single ? "Fatura única" : $"{createInvoice.Index}º fatura";
-        var initialDescription = createInvoice.PaymentType == PaymentTypeEnum.Single ? "Fatura única" : $"{createInvoice.Index}º fatura";
+        createInvoice.SetTitleAndDescription();
 
         var record = new InvoiceModel
         {
             Reference = await GenerateReferenceUniqueAsync(),
             FinancialId = createInvoice.FinancialId,
-            Title = title,
-            Description = $"{initialDescription} referente ao módulo financeiro do contrato Nº {createInvoice.ContractReference}",
+            Title = createInvoice.Title,
+            Description = createInvoice.Description,
             TotalPrice = createInvoice.Price,
             Price = createInvoice.Price,
             DueDate = createInvoice.DueDate
@@ -310,5 +340,21 @@ public class InvoiceService(
         await _unitOfWork.CommitAsync();
 
         return (true, null);
+    }
+
+    public async Task<bool> CancelForFinancialAsync(InvoiceModel record)
+    {
+        await RemoveInAssasAsync(record.ExternalId!);
+        if (_notificationApi.HasNotification)
+        {
+            return false;
+        }
+
+        record.UpdatedAt = DateTime.UtcNow;
+        record.Status = InvoiceStatusEnum.Canceled;
+        _invoiceRepository.Update(record);
+        await _unitOfWork.CommitAsync();
+
+        return true;
     }
 }

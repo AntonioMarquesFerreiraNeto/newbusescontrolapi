@@ -79,11 +79,5 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
             .WithMany()
             .HasForeignKey(x => x.ContractDescriptionId)
             .OnDelete(DeleteBehavior.NoAction);
-
-        builder.Entity<TerminationModel>()
-            .HasOne(x => x.Contract)
-            .WithMany()
-            .HasForeignKey(x => x.ContractId)
-            .OnDelete(DeleteBehavior.NoAction);
     }
 }

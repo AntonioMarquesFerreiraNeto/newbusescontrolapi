@@ -141,7 +141,9 @@ public class Message
     public class Invoice
     {
         public readonly static string NotFound = "Fatura não encontrada!";
+        public readonly static string NotPending = "Fatura não está pendente!";
         public readonly static string UnexpectedCreate = "Desculpe, não conseguimos gerar a fatura do cliente!";
+        public readonly static string UnexpectedRemove = "Desculpe, não conseguimos tratar a fatura do cliente!";
         public readonly static string UnexpectedPay = "Desculpe, não conseguimos realizar seu pagamento!";
         public readonly static string UnexpectedPix = "Desculpe, não conseguimos gerar seu pix!";
         public readonly static string NotPendingOrOverdue = "Fatura não está pendente ou atrasada!";
@@ -161,6 +163,11 @@ public class Message
 
     public class Termination 
     {
-        public readonly static string CreateOk = "Rescisão concluída com sucesso. Após o pagamento, não há possibilidade de reversão.";
+        public readonly static string Success = "Rescisão concluída com sucesso. Esta ação não pode ser revertida e não isenta o pagamento de faturas que estão em atraso.";
+    }
+
+    public class Financial
+    {
+        public readonly static string NotFound = "Financeiro não encontrado!";
     }
 }

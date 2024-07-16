@@ -4,6 +4,7 @@ using BusesControl.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BusesControl.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240716194234_Update-Termination-Migration")]
+    partial class UpdateTerminationMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -628,6 +631,9 @@ namespace BusesControl.Persistence.Migrations
                     b.Property<Guid>("ContractId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("ContractModelId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -638,9 +644,14 @@ namespace BusesControl.Persistence.Migrations
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
 
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ContractId");
+
+                    b.HasIndex("ContractModelId");
 
                     b.HasIndex("CustomerId");
 
@@ -1050,10 +1061,14 @@ namespace BusesControl.Persistence.Migrations
             modelBuilder.Entity("BusesControl.Entities.Models.TerminationModel", b =>
                 {
                     b.HasOne("BusesControl.Entities.Models.ContractModel", "Contract")
-                        .WithMany("Terminations")
+                        .WithMany()
                         .HasForeignKey("ContractId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.HasOne("BusesControl.Entities.Models.ContractModel", null)
+                        .WithMany("Terminations")
+                        .HasForeignKey("ContractModelId");
 
                     b.HasOne("BusesControl.Entities.Models.CustomerModel", "Customer")
                         .WithMany()

@@ -1,6 +1,7 @@
 ﻿using BusesControl.Entities.Models;
 using BusesControl.Persistence.Contexts;
 using BusesControl.Persistence.v1.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace BusesControl.Persistence.v1.Repositories;
 
@@ -9,6 +10,11 @@ public class FinancialRepository(
 ) : IFinancialRepository
 {
     private readonly AppDbContext _context = context;
+
+    public async Task<FinancialModel?> GetByContractAndCustomerWithInvoicesAsync(Guid contractId, Guid customerId)
+    {
+        return await _context.Financials.Include(x => x.Invoices).AsNoTracking().SingleOrDefaultAsync(x => x.ContractId == contractId && x.CustomerId == customerId);
+    }
 
     public async Task<bool> CreateAsync(FinancialModel record)
     {

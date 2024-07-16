@@ -29,7 +29,7 @@ public static class AppSettingsAssas
 
 public static class AppSettingsWebhookAssas
 {
-    public static string AccessToken = "seu token de acesso para webhook do assas usar ao comunicar com a API";
+    public static string AccessToken = "seu token de acesso para webhook do assas comunicar com nossa API";
 }
 
 public static class AppSettingsEmail
@@ -52,4 +52,9 @@ public static class AppSettingsSecurityCode
 {
     public static int ExpireCode = 3;
     public static int CodeLenght = 6;
+}
+
+public static class AppSettingsTermination
+{
+    public static int AddTerminateDays = 3;
 }
