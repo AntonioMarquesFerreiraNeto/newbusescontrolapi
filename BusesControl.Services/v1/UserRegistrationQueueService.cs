@@ -31,7 +31,7 @@ public class UserRegistrationQueueService(
     private async Task<string> GenerateUniqueCode()
     {
         var random = new Random();
-        var chars = "abcdefghijklnopqyz0123456789";
+        var chars = "0123456789";
         var code = "";
 
         var existsCode = true;

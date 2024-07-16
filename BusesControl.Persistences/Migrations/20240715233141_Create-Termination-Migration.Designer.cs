@@ -4,6 +4,7 @@ using BusesControl.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BusesControl.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240715233141_Create-Termination-Migration")]
+    partial class CreateTerminationMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -591,7 +594,7 @@ namespace BusesControl.Persistence.Migrations
                         .HasPrecision(5, 2)
                         .HasColumnType("decimal(5,2)");
 
-                    b.Property<int?>("LimitDateTerminate")
+                    b.Property<int?>("LimitDateTermination")
                         .HasColumnType("int");
 
                     b.Property<int>("Parent")
@@ -628,9 +631,6 @@ namespace BusesControl.Persistence.Migrations
                     b.Property<Guid>("ContractId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ContractModelId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -653,8 +653,6 @@ namespace BusesControl.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ContractId");
-
-                    b.HasIndex("ContractModelId");
 
                     b.HasIndex("CustomerId");
 
@@ -1071,10 +1069,6 @@ namespace BusesControl.Persistence.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("BusesControl.Entities.Models.ContractModel", null)
-                        .WithMany("Terminations")
-                        .HasForeignKey("ContractModelId");
-
                     b.HasOne("BusesControl.Entities.Models.CustomerModel", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
@@ -1181,8 +1175,6 @@ namespace BusesControl.Persistence.Migrations
             modelBuilder.Entity("BusesControl.Entities.Models.ContractModel", b =>
                 {
                     b.Navigation("CustomersContract");
-
-                    b.Navigation("Terminations");
                 });
 
             modelBuilder.Entity("BusesControl.Entities.Models.FinancialModel", b =>

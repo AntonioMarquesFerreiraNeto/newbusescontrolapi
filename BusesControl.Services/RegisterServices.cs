@@ -42,6 +42,7 @@ public class RegisterServices
         builder.Services.AddScoped<ISavedCardService, SavedCardService>();
         builder.Services.AddScoped<ISystemService, SystemService>();
         builder.Services.AddScoped<IWebhookService, WebhookService>();
+        builder.Services.AddScoped<ITerminationService, TerminationService>();
 
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
     }

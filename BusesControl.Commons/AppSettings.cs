@@ -23,7 +23,7 @@ public static class AppSettingsPdfCo
 
 public static class AppSettingsAssas
 {
-    public static string Key = "sua chave da API do assas";
+    public static string Key = "sua key do assas";
     public static string Url = "https://sandbox.asaas.com/api/v3";
 }
 
@@ -37,7 +37,7 @@ public static class AppSettingsEmail
     public static string UserName = "busescontrolmensagens@gmail.com";
     public static string Name = "Buses Control";
     public static string Host = "smtp.gmail.com";
-    public static string KeyPassword = "sua senha de aplicativo";
+    public static string Key = "sua key do email";
     public static int Port = 587;
 }
 
@@ -45,11 +45,11 @@ public static class AppSettingsResetPassword
 {
     public static int ExpireCode = 3;
     public static int ExpireResetToken = 15;
-    public static int CodeLenght = 10;
+    public static int CodeLenght = 6;
 }
 
 public static class AppSettingsSecurityCode 
 {
     public static int ExpireCode = 3;
-    public static int CodeLenght = 15;
+    public static int CodeLenght = 6;
 }

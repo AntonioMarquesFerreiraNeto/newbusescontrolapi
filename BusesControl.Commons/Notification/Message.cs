@@ -44,6 +44,7 @@ public class Message
         public readonly static string InvalidRemoveRequest = "Contrato não pode ser removido. Ele já foi aprovado!";
         public readonly static string EmployeeNotDriver = "Funcionário selecionado não é motorista!";
         public readonly static string DuplicateCustomers = "Pelo menos um cliente está duplicado nesta requisição!";
+        public readonly static string NotInProgress = "Contrato não está em andamento!";
         public readonly static string SuccessfullyStartContract = "Contrato inicializado com sucesso! Consulte as faturas dos clientes no módulo financeiro.";
     }
 
@@ -158,4 +159,8 @@ public class Message
         public readonly static string EventNotAccepted = "O evento recebido não corresponde a nenhum evento conhecido para esse método.";
     }
 
+    public class Termination 
+    {
+        public readonly static string CreateOk = "Rescisão concluída com sucesso. Após o pagamento, não há possibilidade de reversão.";
+    }
 }
