@@ -22,9 +22,9 @@ public class ContractRepository(
         return await _context.Contracts.AsNoTracking().Include(x => x.CustomersContract).ThenInclude(x => x.Customer).SingleOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<ContractModel?> GetByIdAndCustomerWithSettingPanelAsync(Guid contractId, Guid customerId)
+    public async Task<ContractModel?> GetByIdWithSettingPanelAsync(Guid id)
     {
-        return await _context.Contracts.Include(x => x.SettingPanel).AsNoTracking().SingleOrDefaultAsync(x => x.Id == contractId && x.CustomersContract.Any(x => x.CustomerId == customerId));
+        return await _context.Contracts.Include(x => x.SettingPanel).AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
     }
 
     public async Task<ContractModel?> GetByIdWithIncludesAsync(Guid id)

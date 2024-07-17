@@ -76,4 +76,13 @@ public class CustomerContractService(
 
         return true;
     }
+
+    public async Task<bool> ToggleActiveForTerminationAsync(CustomerContractModel record)
+    {
+        record.Active = false;
+        _customerContractRepository.Update(record);
+        await _unitOfWork.CommitAsync();
+
+        return true;
+    }
 }

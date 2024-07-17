@@ -163,6 +163,8 @@ public class Message
 
     public class Termination 
     {
+        public readonly static string NotProcess = "É necessário iniciar o processo de rescisão!";
+        public readonly static string NotActive = "Cliente não está mais ativo neste contrato!";
         public readonly static string Success = "Rescisão concluída com sucesso. Esta ação não pode ser revertida e não isenta o pagamento de faturas que estão em atraso.";
     }
 

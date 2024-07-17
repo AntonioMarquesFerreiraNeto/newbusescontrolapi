@@ -9,4 +9,5 @@ public class CustomerContractModel
     public CustomerModel Customer { get; set; } = default!;
     public bool ProcessTermination { get; set; }
     public DateTime? ProcessTerminationDate { get; set; }
+    public bool Active { get; set; } = true;
 }

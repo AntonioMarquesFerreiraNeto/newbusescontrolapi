@@ -1,5 +1,5 @@
 ﻿using BusesControl.Commons;
-using BusesControl.Commons.Message;
+using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.Response;
 using BusesControl.Filters.Notification;
@@ -20,7 +20,7 @@ public class ViaCepIntegrationService(
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
-                details: SupportMessage.Address.NotFoundOrInvalid
+                details: Message.Address.NotFoundOrInvalid
             );
             return default!;
         }
@@ -33,7 +33,7 @@ public class ViaCepIntegrationService(
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
-                details: SupportMessage.Address.Invalid
+                details: Message.Address.Invalid
             );
             return default!;
         }
@@ -44,7 +44,7 @@ public class ViaCepIntegrationService(
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
-                details: SupportMessage.Address.Invalid
+                details: Message.Address.Invalid
             );
             return default!;
         }

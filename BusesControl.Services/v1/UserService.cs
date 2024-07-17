@@ -4,6 +4,7 @@ using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.Enums;
 using BusesControl.Entities.Models;
 using BusesControl.Entities.Request;
+using BusesControl.Entities.Requests;
 using BusesControl.Entities.Response;
 using BusesControl.Filters.Notification;
 using BusesControl.Persistence.v1.Repositories.Interfaces;
@@ -37,7 +38,7 @@ public class UserService(
     private async Task<string> GenerateUniqueCode()
     {
         var random = new Random();
-        var chars = "0123456789";
+        var chars = "ABCDEFG0123456789";
         var code = "";
 
         var existsCode = true;
@@ -65,14 +66,14 @@ public class UserService(
         var roleClaim = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role);
         var employeeIdClaim = _httpContextAccessor.HttpContext.User.FindFirst("EmployeeId");
 
-        if (userIdClaim is null || roleClaim is null || employeeIdClaim is null)
+        if (userIdClaim is null || roleClaim is null)
         {
             throw new Exception("User ID or role claims are not present in the token.");
         }
 
         var id = Guid.Parse(userIdClaim.Value.ToString());
         var role = roleClaim.ToString();
-        var employeeId = Guid.Parse(employeeIdClaim.Value.ToString());
+        Guid? employeeId = employeeIdClaim is not null ? Guid.Parse(employeeIdClaim.Value.ToString()) : null;
 
         return new UserAuthResponse(id, role, employeeId);
     }
@@ -101,7 +102,12 @@ public class UserService(
             return default!;
         }
 
-        var token = _tokenService.GeneratedTokenAcess(record);
+        var token = await _tokenService.GenerateTokenAcess(record);
+        if (_notificationApi.HasNotification)
+        {
+            return default!;
+        }
+
         var expires = DateTime.UtcNow.AddHours(AppSettingsJWT.ExpireHours);
 
         return new LoginResponse(token, expires);
@@ -140,7 +146,7 @@ public class UserService(
 
         await _resetPasswordSecurityCodeRepository.Create(newResetPasswordCodeRecord);
 
-        _emailService.SendEmailStepCode(request.Email, record.Employee.Name, newResetPasswordCodeRecord.Code);
+        _emailService.SendEmailStepCode(request.Email, record.Employee!.Name, newResetPasswordCodeRecord.Code);
         if (_notificationApi.HasNotification)
         {
             return default!;
@@ -321,14 +327,24 @@ public class UserService(
             EmployeeId = request.EmployeeId,
             UserName = request.Email,
             Email = request.Email,
-            PhoneNumber = request.PhoneNumber,
-            Role = request.Role
+            PhoneNumber = request.PhoneNumber
         };
 
         var passwordDefault = GeneratePassword();
 
         var result = await _userManager.CreateAsync(record, passwordDefault);
         if (!result.Succeeded)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status500InternalServerError,
+                title: NotificationTitle.InternalError,
+                details: Message.User.Unexpected
+            );
+            return default!;
+        }
+
+        var role = await _userManager.AddToRoleAsync(record, request.Role);
+        if (!role.Succeeded)
         {
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status500InternalServerError,
@@ -468,9 +484,33 @@ public class UserService(
             return new SuccessResponse(Message.Employee.RoleChangedRegisterInQueue);
         }
 
-        user.Role = employeeType.ToString();
-        var result = await _userManager.UpdateAsync(user);
-        if (!result.Succeeded)
+        var roles = await _userManager.GetRolesAsync(user);
+        if (roles is null || roles.Count == 0)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status500InternalServerError,
+                title: NotificationTitle.InternalError,
+                details: Message.User.Unexpected
+            );
+            return default!;
+        }
+
+        var oldRole = roles.First();
+        var newRole = employeeType.ToString();
+
+        var roleRemoveResult = await _userManager.RemoveFromRoleAsync(user, oldRole);
+        if (!roleRemoveResult.Succeeded)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status500InternalServerError,
+                title: NotificationTitle.InternalError,
+                details: Message.User.Unexpected
+            );
+            return default!;
+        }
+
+        var roleAddResult = await _userManager.AddToRoleAsync(user, newRole);
+        if (!roleAddResult.Succeeded)
         {
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status500InternalServerError,
@@ -483,25 +523,18 @@ public class UserService(
         return new SuccessResponse(Message.Employee.RoleAndProfileChanged);
     }
 
-    public async Task<bool> UpdateEmailForEmployeeAsync(string newEmail, string oldEmail)
-    {
-        if (newEmail.Equals(oldEmail))
-        {
-            return false;
-        }
-        
-        var userRecord = await _userManager.FindByEmailAsync(oldEmail);
+    public async Task<bool> UpdateForEmployeeAsync(UserUpdateRequest request)
+    {        
+        var userRecord = await _userManager.FindByEmailAsync(request.OldEmail);
         if (userRecord is null)
         {
-            _notificationApi.SetNotification(
-                statusCode: StatusCodes.Status404NotFound,
-                title: NotificationTitle.NotFound,
-                details: Message.User.NotFound
-            );
             return false;
         }
 
-        userRecord.Email = newEmail;
+        userRecord.UserName = request.NewEmail;
+        userRecord.Email = request.NewEmail;
+        userRecord.PhoneNumber = request.NewPhoneNumber;
+
         var result = await _userManager.UpdateAsync(userRecord);
         if (!result.Succeeded)
         {

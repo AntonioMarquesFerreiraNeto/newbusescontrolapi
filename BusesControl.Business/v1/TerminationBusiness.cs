@@ -11,12 +11,13 @@ namespace BusesControl.Business.v1;
 
 public class TerminationBusiness(
     INotificationApi _notificationApi,
-    IContractRepository _contractRepository
+    IContractRepository _contractRepository,
+    ICustomerContractRepository _customerContractRepository
 ) : ITerminationBusiness
 {
-    public async Task<ContractModel> GetForCreateAsync(Guid contractId, Guid customerId)
+    public async Task<ContractModel> GetContractForCreateAsync(Guid contractId)
     {
-        var contractRecord = await _contractRepository.GetByIdAndCustomerWithSettingPanelAsync(contractId, customerId);
+        var contractRecord = await _contractRepository.GetByIdWithSettingPanelAsync(contractId);
         if (contractRecord is null)
         {
             _notificationApi.SetNotification(
@@ -38,5 +39,41 @@ public class TerminationBusiness(
         }
 
         return contractRecord;
+    }
+
+    public async Task<CustomerContractModel> GetCustomerContractForCreateAsync(Guid contractId, Guid customerId)
+    {
+        var customerContractRecord = await _customerContractRepository.GetByContractAndCustomerAsync(contractId, customerId);
+        if (customerContractRecord is null)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status404NotFound,
+                title: NotificationTitle.NotFound,
+                details: Message.CustomerContract.NotFound
+            );
+            return default!;
+        }
+
+        if (!customerContractRecord.ProcessTermination)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.Termination.NotProcess
+            );
+            return default!;
+        }
+
+        if (!customerContractRecord.Active)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.Termination.NotActive
+            );
+            return default!;
+        }
+
+        return customerContractRecord;
     }
 }

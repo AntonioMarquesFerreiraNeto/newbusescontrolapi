@@ -15,7 +15,7 @@ public class UserRepository(
     public async Task<UserModel?> GetByEmailAndCpfAndBirthDateAsync(string email, string cpf, DateOnly birthDate)
     {
         Expression<Func<UserModel, bool>> criteria = x => x.Email == email && 
-                                                          x.Employee.Cpf == cpf && 
+                                                          x.Employee!.Cpf == cpf && 
                                                           x.Employee.BirthDate == birthDate;
         
         return await _context.Users.AsNoTracking().Include(x => x.Employee).SingleOrDefaultAsync(criteria); 

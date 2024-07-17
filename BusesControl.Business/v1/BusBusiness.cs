@@ -1,5 +1,5 @@
 ﻿using BusesControl.Business.v1.Interfaces;
-using BusesControl.Commons.Message;
+using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Filters.Notification;
 using BusesControl.Persistence.v1.Repositories.Interfaces;
@@ -20,7 +20,7 @@ public class BusBusiness(
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status409Conflict,
                 title: NotificationTitle.Conflict,
-                details: SupportMessage.Bus.Exists
+                details: Message.Bus.Exists
             );
             return false;
         }

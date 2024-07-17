@@ -1,5 +1,5 @@
 ﻿using BusesControl.Business.v1.Interfaces;
-using BusesControl.Commons.Message;
+using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.Enums;
 using BusesControl.Entities.Models;
@@ -34,7 +34,7 @@ public class BusService(
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
-                details: SupportMessage.Bus.NotFound
+                details: Message.Bus.NotFound
             );
             return default!;
         }
@@ -86,7 +86,7 @@ public class BusService(
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
-                details: SupportMessage.Bus.NotFound
+                details: Message.Bus.NotFound
             );
             return false;
         }
@@ -126,7 +126,7 @@ public class BusService(
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
-                details: SupportMessage.Bus.NotFound
+                details: Message.Bus.NotFound
             );
             return false;
         }
@@ -146,7 +146,7 @@ public class BusService(
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
-                details: SupportMessage.Bus.NotFound
+                details: Message.Bus.NotFound
             );
             return false;
         }

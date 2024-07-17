@@ -5,6 +5,7 @@ using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.Enums;
 using BusesControl.Entities.Models;
 using BusesControl.Entities.Request;
+using BusesControl.Entities.Requests;
 using BusesControl.Entities.Response;
 using BusesControl.Filters.Notification;
 using BusesControl.Persistence.v1.Repositories.Interfaces;
@@ -101,10 +102,20 @@ public class EmployeeService(
 
         _unitOfWork.BeginTransaction();
 
-        await _userService.UpdateEmailForEmployeeAsync(request.Email, record.Email);
-        if (_notificationApi.HasNotification)
+        if (record.Type != EmployeeTypeEnum.Driver)
         {
-            return false;
+            var userUpdateRequest = new UserUpdateRequest
+            {
+                NewEmail = request.Email,
+                NewPhoneNumber = request.PhoneNumber,
+                OldEmail = record.Email
+            };
+
+            await _userService.UpdateForEmployeeAsync(userUpdateRequest);
+            if (_notificationApi.HasNotification)
+            {
+                return false;
+            }
         }
 
         record.Name = request.Name;
