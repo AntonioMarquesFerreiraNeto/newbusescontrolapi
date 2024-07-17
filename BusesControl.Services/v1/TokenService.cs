@@ -1,6 +1,11 @@
 ﻿using BusesControl.Commons;
+using BusesControl.Commons.Notification;
+using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.Models;
+using BusesControl.Filters.Notification;
 using BusesControl.Services.v1.Interfaces;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -8,20 +13,43 @@ using System.Text;
 
 namespace BusesControl.Services.v1;
 
-public class TokenService : ITokenService
+public class TokenService(
+    INotificationApi _notificationApi,
+    UserManager<UserModel> _userManager
+) : ITokenService
 {
-    public string GeneratedTokenAcess(UserModel user)
+    public async Task<string> GenerateTokenAcess(UserModel user)
     {
+        var roles = await _userManager.GetRolesAsync(user);
+        if (roles is null || roles.Count == 0)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status401Unauthorized,
+                title: NotificationTitle.Unauthorized,
+                details: Message.User.CredentialsInvalid
+            );
+            return default!;
+        }
+
+        var userRole = roles.First();
+
+        var claims = new List<Claim>
+        {
+            new("UserId", user.Id.ToString()),
+            new(ClaimTypes.Role, userRole),
+            new(ClaimTypes.Email, user.Email!),
+        };
+
+        if (user.EmployeeId is not null)
+        {
+            claims.Add(new("EmployeeId", user.EmployeeId.Value.ToString()));
+        }
+
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(AppSettingsJWT.Key);
         var tokenDescricao = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(new[] {
-                    new Claim("UserId", user.Id.ToString()),
-                    new Claim("EmployeeId", user.EmployeeId.ToString()),
-                    new Claim(ClaimTypes.Role, user.Role),
-                    new Claim(ClaimTypes.Email, user.Email!)
-            }),
+            Subject = new ClaimsIdentity(claims),
             Expires = DateTime.UtcNow.AddHours(AppSettingsJWT.ExpireHours),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
@@ -30,4 +58,5 @@ public class TokenService : ITokenService
 
         return tokenHandler.WriteToken(token);
     }
+
 }

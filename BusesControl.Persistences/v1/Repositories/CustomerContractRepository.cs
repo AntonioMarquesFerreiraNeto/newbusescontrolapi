@@ -16,6 +16,11 @@ public class CustomerContractRepository(
         return await _context.CustomersContract.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
     }
 
+    public async Task<CustomerContractModel?> GetByContractAndCustomerAsync(Guid contractId, Guid customerId)
+    {
+        return await _context.CustomersContract.AsNoTracking().SingleOrDefaultAsync(x => x.ContractId == contractId && x.CustomerId == customerId);
+    }
+
     public async Task<CustomerContractModel?> GetByContractAndCustomerWithIncludesAsync(Guid contractId, Guid customerId)
     {
         return await _context.CustomersContract.AsNoTracking()

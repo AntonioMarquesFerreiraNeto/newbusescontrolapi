@@ -68,7 +68,7 @@ public class SettingPanelService(
             return false;
         }
 
-        var employeeId = _userService.FindAuthenticatedUser().EmployeeId;
+        var employeeId = _userService.FindAuthenticatedUser().EmployeeId!.Value;
         var reference = await GenerateReferenceUniqueAsync();
 
         var record = new SettingPanelModel
@@ -97,7 +97,7 @@ public class SettingPanelService(
             return false;
         }
 
-        var employeeId = _userService.FindAuthenticatedUser().EmployeeId;
+        var employeeId = _userService.FindAuthenticatedUser().EmployeeId!.Value;
 
         record.RequesterId = employeeId;
         record.TerminationFee = request.TerminationFee;

@@ -56,7 +56,7 @@ public class EmailService(
         var placeholders = new Dictionary<string, string>
         {
             { "{{Name}}", name },
-            { "{{Code}}", code },
+            { "{{Code}}", string.Concat(code.Select(x => x + " ")) },
             { "{{YearNow}}", DateTime.UtcNow.Year.ToString() }
         };
 

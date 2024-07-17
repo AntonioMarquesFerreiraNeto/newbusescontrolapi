@@ -13,6 +13,7 @@ namespace BusesControl.Services.v1;
 public class TerminationService(
     IUnitOfWork _unitOfWork,
     INotificationApi _notificationApi,
+    ICustomerContractService _customerContractService,
     IFinancialService _financialService,
     ITerminationBusiness _terminationBusiness,
     ITerminationRepository _terminationRepository
@@ -26,7 +27,13 @@ public class TerminationService(
 
     public async Task<SuccessResponse> CreateAsync(Guid contractId, TerminationCreateRequest request)
     {
-        var contractRecord = await _terminationBusiness.GetForCreateAsync(contractId, request.CustomerId);
+        var contractRecord = await _terminationBusiness.GetContractForCreateAsync(contractId);
+        if (_notificationApi.HasNotification)
+        {
+            return default!;
+        }
+
+        var customerContractRecord = await _terminationBusiness.GetCustomerContractForCreateAsync(contractId, request.CustomerId);
         if (_notificationApi.HasNotification)
         {
             return default!;
@@ -34,11 +41,13 @@ public class TerminationService(
 
         _unitOfWork.BeginTransaction();
 
-        await _financialService.InactiveForTerminationAsync(contractId, request.CustomerId);
+        await _financialService.ToggleActiveForTerminationAsync(contractId, request.CustomerId);
         if (_notificationApi.HasNotification)
         {
             return default!;
         }
+
+        await _customerContractService.ToggleActiveForTerminationAsync(customerContractRecord);
 
         var record = new TerminationModel 
         { 

@@ -70,7 +70,7 @@ public class FinancialService(
         return true;
     }
 
-    public async Task<bool> InactiveForTerminationAsync(Guid contractId, Guid customerId)
+    public async Task<bool> ToggleActiveForTerminationAsync(Guid contractId, Guid customerId)
     {
         var financialRecord = await _financialRepository.GetByContractAndCustomerWithInvoicesAsync(contractId, customerId);
         if (financialRecord is null)
