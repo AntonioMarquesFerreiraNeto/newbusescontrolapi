@@ -325,7 +325,7 @@ public class ContractService(
             return default!;
         }
 
-        await _customerContractService.StartProcessTerminationWithOutValidationAsync(customerContractRecord);
+        await _customerContractService.ToggleProcessTerminationWithOutValidationAsync(customerContractRecord);
         if (_notificationApi.HasNotification)
         {
             return default!;
@@ -343,6 +343,16 @@ public class ContractService(
         }
 
         _contractRepository.Delete(record);
+        await _unitOfWork.CommitAsync();
+
+        return true;
+    }
+
+    public async Task<bool> CompletedWithoutValidationAsync(ContractModel record)
+    {
+        record.UpdatedAt = DateTime.UtcNow;
+        record.Status = ContractStatusEnum.Completed;
+        _contractRepository.Update(record);
         await _unitOfWork.CommitAsync();
 
         return true;

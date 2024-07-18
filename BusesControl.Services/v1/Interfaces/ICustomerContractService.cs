@@ -6,6 +6,6 @@ public interface ICustomerContractService
 {
     Task<bool> CreateForContractAsync(IEnumerable<Guid> customersId, Guid contractId);
     Task<bool> UpdateForContractAsync(IEnumerable<Guid> customersId, Guid contractId);
-    Task<bool> StartProcessTerminationWithOutValidationAsync(CustomerContractModel record);
+    Task<bool> ToggleProcessTerminationWithOutValidationAsync(CustomerContractModel record);
     Task<bool> ToggleActiveForTerminationAsync(CustomerContractModel record);
 }

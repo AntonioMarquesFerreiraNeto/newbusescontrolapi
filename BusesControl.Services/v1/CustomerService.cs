@@ -13,8 +13,6 @@ using BusesControl.Persistence.v1.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
 
 namespace BusesControl.Services.v1;
 
@@ -159,8 +157,6 @@ public class CustomerService(
         {
             return false;
         }
-
-        //TODO: ANALISAR A NECESSIDADE DE IMPLEMENTAR O UPDATE DO CLIENTE NO ASSAS TAMBÉM.
 
         record.Name = request.Name;
         record.Cpf = request.Cpf;

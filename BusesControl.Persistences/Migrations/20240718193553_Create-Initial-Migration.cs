@@ -62,7 +62,6 @@ namespace BusesControl.Persistence.Migrations
                     State = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
                     Active = table.Column<bool>(type: "bit", nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
-                    InCompliance = table.Column<bool>(type: "bit", nullable: false),
                     ExternalId = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>

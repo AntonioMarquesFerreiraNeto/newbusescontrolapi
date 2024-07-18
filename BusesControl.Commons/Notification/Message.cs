@@ -18,7 +18,7 @@ public class Message
     {
         public readonly static string Exists = "Cliente já se encontra registrado!";
         public readonly static string NotFound = "Cliente não encontrado!";
-        public readonly static string NotInCompliance = "Cliente não está em compliance com outras pendências.";
+        public readonly static string NotActive = "Cliente não está ativo!";
         public readonly static string Unexpected = "Desculpe, ocorreu um erro interno na criação do cliente.";
     }
 

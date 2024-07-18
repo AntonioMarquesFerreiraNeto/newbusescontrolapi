@@ -67,10 +67,10 @@ public class CustomerContractService(
         return true;
     }
 
-    public async Task<bool> StartProcessTerminationWithOutValidationAsync(CustomerContractModel record)
+    public async Task<bool> ToggleProcessTerminationWithOutValidationAsync(CustomerContractModel record)
     {
-        record.ProcessTermination = true;
-        record.ProcessTerminationDate = DateTime.UtcNow;
+        record.ProcessTermination = !record.ProcessTermination;
+        record.ProcessTerminationDate = record.ProcessTerminationDate is null ? DateTime.UtcNow : null;
         _customerContractRepository.Update(record);
         await _unitOfWork.CommitAsync();
 

@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using PasswordGenerator;
 using System.Security.Claims;
+
 namespace BusesControl.Services.v1;
 
 public class UserService(
@@ -27,14 +28,6 @@ public class UserService(
     UserManager<UserModel> _userManager
 ) : IUserService
 {
-    private static string GeneratePassword()
-    {
-        var pwd = new Password(includeLowercase: true, includeUppercase: true, includeNumeric: true, includeSpecial: true, passwordLength: 26);
-        var password = pwd.Next();
-
-        return password;
-    }
-
     private async Task<string> GenerateUniqueCode()
     {
         var random = new Random();
@@ -53,6 +46,14 @@ public class UserService(
         }
 
         return code;
+    }
+
+    public string GeneratePassword()
+    {
+        var pwd = new Password(includeLowercase: true, includeUppercase: true, includeNumeric: true, includeSpecial: true, passwordLength: 26);
+        var password = pwd.Next();
+
+        return password;
     }
 
     public UserAuthResponse FindAuthenticatedUser()

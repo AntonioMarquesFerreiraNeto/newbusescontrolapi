@@ -58,3 +58,8 @@ public static class AppSettingsTermination
 {
     public static int AddTerminateDays = 3;
 }
+
+public static class AppSettingsUserSystem 
+{
+    public static string Role = "System";
+}

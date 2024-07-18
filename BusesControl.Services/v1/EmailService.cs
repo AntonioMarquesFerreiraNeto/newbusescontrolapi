@@ -51,7 +51,7 @@ public class EmailService(
         }
     }
 
-    private string RenderTemplateCode(string name, string code, string template)
+    private static string RenderTemplateCode(string name, string code, string template)
     {
         var placeholders = new Dictionary<string, string>
         {
@@ -69,7 +69,7 @@ public class EmailService(
         return template;
     }
 
-    private string RenderTemplateWelcome(string name, string link, string template)
+    private static string RenderTemplateWelcome(string name, string link, string template)
     {
         var placeholders = new Dictionary<string, string>
         {

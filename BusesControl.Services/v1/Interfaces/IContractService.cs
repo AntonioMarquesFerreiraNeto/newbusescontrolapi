@@ -19,4 +19,5 @@ public interface IContractService
     Task<bool> WaitingReviewAsync(Guid id);
     Task<SuccessResponse> ApproveAsync(Guid id);
     Task<SuccessResponse> StartProgressAsync(Guid id);
+    Task<bool> CompletedWithoutValidationAsync(ContractModel record);
 }
