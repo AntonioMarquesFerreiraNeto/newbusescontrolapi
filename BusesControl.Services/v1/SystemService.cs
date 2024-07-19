@@ -1,5 +1,4 @@
-﻿using BusesControl.Commons;
-using BusesControl.Commons.Notification;
+﻿using BusesControl.Commons.Notification;
 using BusesControl.Entities.Enums;
 using BusesControl.Entities.Models;
 using BusesControl.Entities.Responses;
@@ -11,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 namespace BusesControl.Services.v1;
 
 public class SystemService(
+    AppSettings _appSettings,
     IUnitOfWork _unitOfWork,
     UserManager<UserModel> _userManager,
     IUserService _userService,
@@ -27,7 +27,7 @@ public class SystemService(
     {
         var systemResponse = new SystemResponse();
 
-        var users = await _userManager.GetUsersInRoleAsync(AppSettingsUserSystem.Role);
+        var users = await _userManager.GetUsersInRoleAsync(_appSettings.UserSystem.Role);
         if (users.Count == 0)
         {
             systemResponse.FailureOperation.Add("Nenhum usuário de sistema encontrado.");

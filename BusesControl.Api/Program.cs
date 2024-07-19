@@ -21,6 +21,10 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        var appSettingsSection = builder.Configuration.GetRequiredSection("AppSettings");
+        builder.Services.Configure<AppSettings>(appSettingsSection);
+        var appSettings = appSettingsSection.Get<AppSettings>();
+
         builder.Services
         .AddControllers(options => {
             options.ModelValidatorProviders.Clear();
@@ -58,7 +62,7 @@ public class Program
         RegisterPersistence.Register(builder);
         RegisterCommon.Register(builder);
 
-        var key = Encoding.ASCII.GetBytes(AppSettingsJWT.Key);
+        var key = Encoding.ASCII.GetBytes(appSettings!.JWT.Key);
 
         builder.Services.AddAuthentication(auth => {
             auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

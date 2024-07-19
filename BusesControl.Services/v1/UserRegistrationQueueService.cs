@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Identity;
 namespace BusesControl.Services.v1;
 
 public class UserRegistrationQueueService(
+    AppSettings _appSettings,
     IMapper _mapper,
     IUnitOfWork _unitOfWork,
     INotificationApi _notificationApi,
@@ -37,7 +38,7 @@ public class UserRegistrationQueueService(
         var existsCode = true;
         while (existsCode)
         {
-            for (int c = 0; c < AppSettingsSecurityCode.CodeLenght; c++)
+            for (int c = 0; c < _appSettings.SecurityCode.CodeLength; c++)
             {
                 code += chars[random.Next(chars.Length)];
             }
@@ -98,7 +99,7 @@ public class UserRegistrationQueueService(
         {
             Code = await GenerateUniqueCode(),
             UserId = userRecord.Id,
-            Expires = DateTime.UtcNow.AddMinutes(AppSettingsSecurityCode.ExpireCode)    
+            Expires = DateTime.UtcNow.AddMinutes(_appSettings.SecurityCode.ExpireCode)    
         };
         await _userRegistrationSecurityCodeRepository.CreateAsync(securityCodeRecord);
         await _unitOfWork.CommitAsync();
@@ -133,7 +134,7 @@ public class UserRegistrationQueueService(
         }
 
         var difference = DateTime.UtcNow - record.Expires;
-        var expires = TimeSpan.FromMinutes(AppSettingsSecurityCode.ExpireCode);
+        var expires = TimeSpan.FromMinutes(_appSettings.SecurityCode.ExpireCode);
         if (difference >= expires)
         {
             _notificationApi.SetNotification(

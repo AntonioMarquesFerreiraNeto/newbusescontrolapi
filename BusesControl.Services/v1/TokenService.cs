@@ -1,5 +1,4 @@
-﻿using BusesControl.Commons;
-using BusesControl.Commons.Notification;
+﻿using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.Models;
 using BusesControl.Filters.Notification;
@@ -14,6 +13,7 @@ using System.Text;
 namespace BusesControl.Services.v1;
 
 public class TokenService(
+    AppSettings _appSettings,
     INotificationApi _notificationApi,
     UserManager<UserModel> _userManager
 ) : ITokenService
@@ -46,11 +46,11 @@ public class TokenService(
         }
 
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(AppSettingsJWT.Key);
+        var key = Encoding.ASCII.GetBytes(_appSettings.JWT.Key);
         var tokenDescricao = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddHours(AppSettingsJWT.ExpireHours),
+            Expires = DateTime.UtcNow.AddHours(_appSettings.JWT.ExpireHours),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
 

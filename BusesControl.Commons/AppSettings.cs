@@ -1,65 +1,73 @@
-﻿namespace BusesControl.Commons;
-
-//OBS: Por ser um sistema desenvolvido para compartilhar conhecimento, tais informações ficaram neste local para simplificar o processo.
-//OBS: ...Mas se este sistema fosse usado por um cliente, tais informações ficariam em um azure key vault da vida
-//OBS: ...Já que chaves de integrações e outras informações que podem ou não estar aqui devem ser sigilosas para a boa segurança do sistema.
-
-public static class AppSettingsViaCep
+﻿public class AppSettings
 {
-    public static string Url = "https://viacep.com.br/ws";
+    public AppSettingsViaCep ViaCep { get; set; } = default!;
+    public AppSettingsJWT JWT { get; set; } = default!;
+    public AppSettingsPdfCo PdfCo { get; set; } = default!;
+    public AppSettingsAssas Assas { get; set; } = default!;
+    public AppSettingsWebhookAssas WebhookAssas { get; set; } = default!;
+    public AppSettingsEmail Email { get; set; } = default!;
+    public AppSettingsResetPassword ResetPassword { get; set; } = default!;
+    public AppSettingsSecurityCode SecurityCode { get; set; } = default!;
+    public AppSettingsTermination Termination { get; set; } = default!;
+    public AppSettingsUserSystem UserSystem { get; set; } = default!;
 }
 
-public static class AppSettingsJWT
+public class AppSettingsViaCep
 {
-    public static string Key = "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yqsST1peCXBNyeCXBNy4DpeCXBNy4DjCb3cFFHs4dnL04y";
-    public static int ExpireHours = 24;
+    public string Url { get; set; } = default!;
 }
 
-public static class AppSettingsPdfCo 
+public class AppSettingsJWT
 {
-    public static string Key = "sua chave da API";
-    public static string Url = "https://api.pdf.co/v1/pdf/convert/from/html";
+    public string Key { get; set; } = default!;
+    public int ExpireHours { get; set; }
 }
 
-public static class AppSettingsAssas
+public class AppSettingsPdfCo
 {
-    public static string Key = "sua key do assas";
-    public static string Url = "https://sandbox.asaas.com/api/v3";
+    public string Key { get; set; } = default!;
+    public string Url { get; set; } = default!;
 }
 
-public static class AppSettingsWebhookAssas
+public class AppSettingsAssas
 {
-    public static string AccessToken = "seu token de acesso para webhook do assas comunicar com nossa API";
+    public string Key { get; set; } = default!;
+    public string Url { get; set; } = default!;
 }
 
-public static class AppSettingsEmail
+public class AppSettingsWebhookAssas
 {
-    public static string UserName = "busescontrolmensagens@gmail.com";
-    public static string Name = "Buses Control";
-    public static string Host = "smtp.gmail.com";
-    public static string Key = "sua key do email";
-    public static int Port = 587;
+    public string AccessToken { get; set; } = default!;
 }
 
-public static class AppSettingsResetPassword
+public class AppSettingsEmail
 {
-    public static int ExpireCode = 3;
-    public static int ExpireResetToken = 15;
-    public static int CodeLenght = 6;
+    public string UserName { get; set; } = default!;
+    public string Name { get; set; } = default!;
+    public string Host { get; set; } = default!;
+    public string Key { get; set; } = default!;
+    public int Port { get; set; }
 }
 
-public static class AppSettingsSecurityCode 
+public class AppSettingsResetPassword
 {
-    public static int ExpireCode = 3;
-    public static int CodeLenght = 6;
+    public int ExpireCode { get; set; }
+    public int ExpireResetToken { get; set; }
+    public int CodeLength { get; set; }
 }
 
-public static class AppSettingsTermination
+public class AppSettingsSecurityCode
 {
-    public static int AddTerminateDays = 3;
+    public int ExpireCode { get; set; }
+    public int CodeLength { get; set; }
 }
 
-public static class AppSettingsUserSystem 
+public class AppSettingsTermination
 {
-    public static string Role = "System";
+    public int AddTerminateDays { get; set; }
+}
+
+public class AppSettingsUserSystem
+{
+    public string Role { get; set; } = default!;
 }

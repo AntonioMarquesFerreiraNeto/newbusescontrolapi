@@ -1,5 +1,4 @@
 ﻿using BusesControl.Business.v1.Interfaces;
-using BusesControl.Commons;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.Enums;
@@ -13,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 namespace BusesControl.Services.v1;
 
 public class WebhookService(
+    AppSettings _appSettings,
     IUnitOfWork _unitOfWork,
     INotificationApi _notificationApi,
     IInvoiceBusiness _invoiceBusiness,
@@ -21,7 +21,7 @@ public class WebhookService(
 {
     public async Task<bool> PaymentPixAsync(string? accessToken, PaymentPixRequest request)
     {
-        if (accessToken is null || accessToken != AppSettingsWebhookAssas.AccessToken)
+        if (accessToken is null || accessToken != _appSettings.WebhookAssas.AccessToken)
         {
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status401Unauthorized,

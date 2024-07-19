@@ -1,9 +1,10 @@
-﻿using BusesControl.Commons;
-using BusesControl.Services.v1;
+﻿using BusesControl.Services.v1;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using System.Text.Json;
 
 namespace BusesControl.Services;
@@ -18,9 +19,12 @@ public class RegisterServices
         };
         builder.Services.AddSingleton(jsonSerializerOptions);
 
-        builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
-        {
-            options.TokenLifespan = TimeSpan.FromMinutes(AppSettingsResetPassword.ExpireResetToken);
+        var appSettingsSection = builder.Configuration.GetRequiredSection("AppSettings");
+        builder.Services.Configure<AppSettings>(appSettingsSection);
+        var appSettingsValue = appSettingsSection.Get<AppSettings>();
+
+        builder.Services.Configure<DataProtectionTokenProviderOptions>(options => {
+            options.TokenLifespan = TimeSpan.FromMinutes(appSettingsValue!.ResetPassword.ExpireResetToken);
         });
 
         builder.Services.AddScoped<IBusService, BusService>();
@@ -43,6 +47,10 @@ public class RegisterServices
         builder.Services.AddScoped<ISystemService, SystemService>();
         builder.Services.AddScoped<IWebhookService, WebhookService>();
         builder.Services.AddScoped<ITerminationService, TerminationService>();
+
+        var appSettings = builder.Configuration.GetSection("AppSettings");
+        builder.Services.Configure<AppSettings>(appSettings);
+        builder.Services.AddSingleton(serviceProvider => serviceProvider.GetRequiredService<IOptions<AppSettings>>().Value);
 
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
     }

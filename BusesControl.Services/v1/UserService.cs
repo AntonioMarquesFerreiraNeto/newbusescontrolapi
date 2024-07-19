@@ -18,6 +18,7 @@ using System.Security.Claims;
 namespace BusesControl.Services.v1;
 
 public class UserService(
+    AppSettings _appSettings,
     IHttpContextAccessor _httpContextAccessor,
     IUnitOfWork _unitOfWork,
     INotificationApi _notificationApi,
@@ -37,7 +38,7 @@ public class UserService(
         var existsCode = true;
         while (existsCode)
         {
-            for (int c = 0; c < AppSettingsResetPassword.CodeLenght; c++)
+            for (int c = 0; c < _appSettings.ResetPassword.CodeLength; c++)
             {
                 code += chars[random.Next(chars.Length)];
             }
@@ -109,7 +110,7 @@ public class UserService(
             return default!;
         }
 
-        var expires = DateTime.UtcNow.AddHours(AppSettingsJWT.ExpireHours);
+        var expires = DateTime.UtcNow.AddHours(_appSettings.JWT.ExpireHours);
 
         return new LoginResponse(token, expires);
     }
@@ -142,7 +143,7 @@ public class UserService(
         {
             UserId = record.Id,
             Code = await GenerateUniqueCode(),
-            Expires = DateTime.UtcNow.AddMinutes(AppSettingsResetPassword.ExpireCode)
+            Expires = DateTime.UtcNow.AddMinutes(_appSettings.ResetPassword.ExpireCode)
         };
 
         await _resetPasswordSecurityCodeRepository.Create(newResetPasswordCodeRecord);
@@ -172,7 +173,7 @@ public class UserService(
         }
 
         var difference = DateTime.UtcNow - resetPasswordRecord.Expires;
-        var expireCode = TimeSpan.FromMinutes(AppSettingsResetPassword.ExpireCode);
+        var expireCode = TimeSpan.FromMinutes(_appSettings.ResetPassword.ExpireCode);
         if (difference >= expireCode)
         {
             _notificationApi.SetNotification(

@@ -18,6 +18,7 @@ using System.Net.Http.Json;
 namespace BusesControl.Services.v1;
 
 public class InvoiceService(
+    AppSettings _appSettings,
     IUnitOfWork _unitOfWork,
     INotificationApi _notificationApi,
     ISavedCardService _savedCardService,
@@ -47,7 +48,7 @@ public class InvoiceService(
     private async Task<string> CreateInAssasAsync(Guid id, string externalId, string descriptionInvoice, CreateInvoiceDTO createInvoice)
     {
         var httpClient = new HttpClient();
-        httpClient.DefaultRequestHeaders.Add("access_token", AppSettingsAssas.Key);
+        httpClient.DefaultRequestHeaders.Add("access_token", _appSettings.Assas.Key);
 
         var createInvoiceInAssas = new
         {
@@ -59,7 +60,7 @@ public class InvoiceService(
             externalReference = id
         };
 
-        var httpResult = await httpClient.PostAsJsonAsync($"{AppSettingsAssas.Url}/payments", createInvoiceInAssas);
+        var httpResult = await httpClient.PostAsJsonAsync($"{_appSettings.Assas.Url}/payments", createInvoiceInAssas);
         if (!httpResult.IsSuccessStatusCode)
         {
             _notificationApi.SetNotification(
@@ -97,7 +98,7 @@ public class InvoiceService(
         }
 
         var httpClient = new HttpClient();
-        httpClient.DefaultRequestHeaders.Add("access_token", AppSettingsAssas.Key);
+        httpClient.DefaultRequestHeaders.Add("access_token", _appSettings.Assas.Key);
 
         var invoicePaymentInAssas = new
         {
@@ -120,7 +121,7 @@ public class InvoiceService(
             }
         };
 
-        var httpResult = await httpClient.PostAsJsonAsync($"{AppSettingsAssas.Url}/payments/{record.ExternalId}/payWithCreditCard", invoicePaymentInAssas);
+        var httpResult = await httpClient.PostAsJsonAsync($"{_appSettings.Assas.Url}/payments/{record.ExternalId}/payWithCreditCard", invoicePaymentInAssas);
         if (!httpResult.IsSuccessStatusCode)
         {
             _notificationApi.SetNotification(
@@ -153,9 +154,9 @@ public class InvoiceService(
     private async Task<PaymentPixResponse> HandlePixPaymentAsync(InvoiceModel record)
     {
         var httpClient = new HttpClient();
-        httpClient.DefaultRequestHeaders.Add("access_token", AppSettingsAssas.Key);
+        httpClient.DefaultRequestHeaders.Add("access_token", _appSettings.Assas.Key);
 
-        var httpResult = await httpClient.GetAsync($"{AppSettingsAssas.Url}/payments/{record.ExternalId}/pixQrCode");
+        var httpResult = await httpClient.GetAsync($"{_appSettings.Assas.Url}/payments/{record.ExternalId}/pixQrCode");
         if (!httpResult.IsSuccessStatusCode)
         {
             _notificationApi.SetNotification(
@@ -184,9 +185,9 @@ public class InvoiceService(
     {
         var httpClient = new HttpClient();
 
-        httpClient.DefaultRequestHeaders.Add("access_token", AppSettingsAssas.Key);
+        httpClient.DefaultRequestHeaders.Add("access_token", _appSettings.Assas.Key);
 
-        var httpResult = await httpClient.DeleteAsync($"{AppSettingsAssas.Url}/payments/{externalId}");
+        var httpResult = await httpClient.DeleteAsync($"{_appSettings.Assas.Url}/payments/{externalId}");
         if (!httpResult.IsSuccessStatusCode)
         {
             _notificationApi.SetNotification(
@@ -298,14 +299,14 @@ public class InvoiceService(
     public async Task<AutomatedPaymentResponse> AutomatedPaymentAsync(InvoiceModel record, Guid creditCardToken)
     {
         var httpCliente = new HttpClient();
-        httpCliente.DefaultRequestHeaders.Add("access_token", AppSettingsAssas.Key);
+        httpCliente.DefaultRequestHeaders.Add("access_token", _appSettings.Assas.Key);
 
         var automatedPayment = new 
         {
             creditCardToken,
         };
 
-        var httpResult = await httpCliente.PostAsJsonAsync($"{AppSettingsAssas.Url}/payments/{record.ExternalId}/payWithCreditCard", automatedPayment);
+        var httpResult = await httpCliente.PostAsJsonAsync($"{_appSettings.Assas.Url}/payments/{record.ExternalId}/payWithCreditCard", automatedPayment);
         if (!httpResult.IsSuccessStatusCode)
         {
             var assasErrorResponse = await httpResult.Content.ReadFromJsonAsync<AssasErrorResponseDTO>();

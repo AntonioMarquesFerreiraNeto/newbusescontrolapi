@@ -1,5 +1,4 @@
-﻿using BusesControl.Commons;
-using BusesControl.Commons.Notification;
+﻿using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.DTOs;
 using BusesControl.Filters.Notification;
@@ -12,6 +11,7 @@ using System.Text.RegularExpressions;
 namespace BusesControl.Services.v1;
 
 public class EmailService(
+    AppSettings _appSettings,
     INotificationApi _notificationApi
 ) : IEmailService
 {
@@ -21,7 +21,7 @@ public class EmailService(
         {
             var mail = new MailMessage()
             {
-                From = new MailAddress(AppSettingsEmail.UserName, AppSettingsEmail.Name)
+                From = new MailAddress(_appSettings.Email.UserName, _appSettings.Email.Name)
             };
 
             mail.To.Add(sendEmail.Recipient);
@@ -30,12 +30,12 @@ public class EmailService(
             mail.IsBodyHtml = true;
             mail.Priority = MailPriority.High;
 
-            using SmtpClient smtp = new(AppSettingsEmail.Host, AppSettingsEmail.Port);
+            using SmtpClient smtp = new(_appSettings.Email.Host, _appSettings.Email.Port);
 
             smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
             smtp.UseDefaultCredentials = false;
             smtp.EnableSsl = true;
-            smtp.Credentials = new NetworkCredential(AppSettingsEmail.UserName, AppSettingsEmail.Key);
+            smtp.Credentials = new NetworkCredential(_appSettings.Email.UserName, _appSettings.Email.Key);
             smtp.Send(mail);
 
             return true;
