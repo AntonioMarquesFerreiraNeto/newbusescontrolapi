@@ -269,7 +269,7 @@ public class ContractService(
             return default!;
         }
 
-        var startDate = DateTime.UtcNow.AddDays(2);
+        var startDate = DateTime.UtcNow;
         var installmentsCount = record.PaymentType == PaymentTypeEnum.Single ? 1 : CalculateMonths(DateOnly.FromDateTime(startDate), record.TerminateDate);
 
         record.UpdatedAt = DateTime.UtcNow;

@@ -71,6 +71,7 @@ public class SystemService(
                 var savedCardRecord = await _savedCardRepository.GetByCustomerAsync(invoiceRecord.Financial.CustomerId!.Value);
                 if (savedCardRecord is null)
                 {
+                    systemResponse.FailureOperation.Add($"Pagamento da fatura {invoiceRecord.Reference} falhou por ausência de informações do cartão de crédito.");
                     _unitOfWork.Rollback();
                     continue;
                 }
@@ -174,7 +175,7 @@ public class SystemService(
 
         var customerContractRecords = await _customerContractRepository.FindByProcessTerminationAsync(true);
 
-        customerContractRecords = customerContractRecords.Where(x => x.ProcessTerminationDate!.Value <= DateTime.UtcNow.AddDays(-2));
+        customerContractRecords = customerContractRecords.Where(x => x.ProcessTerminationDate!.Value.Date >= DateTime.UtcNow.Date.AddDays(2));
         if (!customerContractRecords.Any())
         {
             systemResponse.NoOperation = Message.Commons.NoOperation;

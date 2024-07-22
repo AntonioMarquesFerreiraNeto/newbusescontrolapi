@@ -61,7 +61,7 @@ public class ContractRepository(
 
     public async Task<IEnumerable<ContractModel>> FindByContractAndTerminateDateAsync(ContractStatusEnum status, DateOnly terminateDate)
     {
-        return await _context.Contracts.AsNoTracking().Where(x => x.Status == status && x.TerminateDate >= terminateDate).ToListAsync();
+        return await _context.Contracts.AsNoTracking().Where(x => x.Status == status && x.TerminateDate <= terminateDate).ToListAsync();
     }
 
     public async Task<bool> CreateAsync(ContractModel record)
