@@ -25,12 +25,12 @@ public class CustomerContractBusiness(
             return false;
         }
 
-        if (!customerRecord.InCompliance)
+        if (!customerRecord.Active)
         {
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
-                details: Message.Customer.NotInCompliance
+                details: Message.Customer.NotActive
             );
             return false;
         }

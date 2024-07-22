@@ -32,6 +32,5 @@ public class CustomerModel
     public string State { get; set; } = default!;
     public bool Active { get; set; } = true;
     public CustomerTypeEnum Type { get; set; }
-    public bool InCompliance { get; set; } = true;
     public string ExternalId { get; set; } = default!;
 }

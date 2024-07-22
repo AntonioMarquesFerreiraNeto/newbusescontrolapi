@@ -1,5 +1,4 @@
-﻿using BusesControl.Commons;
-using BusesControl.Commons.Notification;
+﻿using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.Response;
 using BusesControl.Filters.Notification;
@@ -10,6 +9,7 @@ using System.Net.Http.Json;
 namespace BusesControl.Services.v1;
 
 public class ViaCepIntegrationService(
+    AppSettings _appSettings,
     INotificationApi _notificationApi
 ) : IViaCepIntegrationService
 {
@@ -27,7 +27,7 @@ public class ViaCepIntegrationService(
 
         var httpClient = new HttpClient();
         
-        var result = await httpClient.GetAsync($"{AppSettingsViaCep.Url}/{cep}/json");
+        var result = await httpClient.GetAsync($"{_appSettings.ViaCep.Url}/{cep}/json");
         if (!result.IsSuccessStatusCode)
         {
             _notificationApi.SetNotification(

@@ -38,6 +38,11 @@ public class CustomerContractRepository(
         return await _context.CustomersContract.AsNoTracking().Where(x => x.ContractId == contractId).ToListAsync();
     }
 
+    public async Task<IEnumerable<CustomerContractModel>> FindByProcessTerminationAsync(bool processTermination)
+    {
+        return await _context.CustomersContract.AsNoTracking().Where(x => x.ProcessTermination == processTermination && x.Active == true).ToListAsync();
+    }
+
     public async Task<bool> CreateRangeAsync(IEnumerable<CustomerContractModel> record)
     {
         await _context.CustomersContract.AddRangeAsync(record);

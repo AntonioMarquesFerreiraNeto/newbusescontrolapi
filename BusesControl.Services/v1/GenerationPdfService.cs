@@ -1,5 +1,4 @@
-﻿using BusesControl.Commons;
-using BusesControl.Commons.Notification;
+﻿using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.Enums;
 using BusesControl.Entities.Models;
@@ -13,6 +12,7 @@ using System.Text.RegularExpressions;
 namespace BusesControl.Services.v1;
 
 public class GenerationPdfService(
+    AppSettings _appSettings,
     INotificationApi _notificationApi
 ) : IGenerationPdfService
 {
@@ -154,7 +154,7 @@ public class GenerationPdfService(
         var renderedHtml = RenderTemplateContract(customerContract, template);
 
         var httpClient = new HttpClient();
-        httpClient.DefaultRequestHeaders.Add("x-api-key", AppSettingsPdfCo.Key);
+        httpClient.DefaultRequestHeaders.Add("x-api-key", _appSettings.PdfCo.Key);
 
         var requestContent = new MultipartFormDataContent
         {
@@ -162,7 +162,7 @@ public class GenerationPdfService(
             { new StringContent(renderedHtml), "html" }
         };
 
-        var httpResult = await httpClient.PostAsync(AppSettingsPdfCo.Url, requestContent);
+        var httpResult = await httpClient.PostAsync(_appSettings.PdfCo.Url, requestContent);
         if (!httpResult.IsSuccessStatusCode)
         {
             _notificationApi.SetNotification(
@@ -198,7 +198,7 @@ public class GenerationPdfService(
 
         var httpClient = new HttpClient();
 
-        httpClient.DefaultRequestHeaders.Add("x-api-key", AppSettingsPdfCo.Key);
+        httpClient.DefaultRequestHeaders.Add("x-api-key", _appSettings.PdfCo.Key);
 
         var bodyRequest = new MultipartFormDataContent
         {
@@ -206,7 +206,7 @@ public class GenerationPdfService(
             { new StringContent(renderedHtml), "html" }
         };
 
-        var httpResult = await httpClient.PostAsync(AppSettingsPdfCo.Url, bodyRequest);
+        var httpResult = await httpClient.PostAsync(_appSettings.PdfCo.Url, bodyRequest);
         if (!httpResult.IsSuccessStatusCode)
         {
             _notificationApi.SetNotification(

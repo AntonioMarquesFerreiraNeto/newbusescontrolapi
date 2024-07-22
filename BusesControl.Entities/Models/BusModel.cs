@@ -21,5 +21,5 @@ public class BusModel
     public string Chassi { get; set; } = default!;
     public int SeatingCapacity { get; set; }
     public BusStatusEnum Status { get; set; } = BusStatusEnum.Active;
-    public AvailabilityEnum Availability { get; set; } = AvailabilityEnum.Unavailable;
+    public AvailabilityEnum Availability { get; set; } = AvailabilityEnum.Available;
 }

@@ -13,12 +13,11 @@ using BusesControl.Persistence.v1.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
 
 namespace BusesControl.Services.v1;
 
 public class CustomerService(
+    AppSettings _appSettings,
     IMapper _mapper,
     IUnitOfWork _unitOfWork,
     INotificationApi _notificationApi,
@@ -40,7 +39,7 @@ public class CustomerService(
     private async Task<string> CreateInAssasAsync(CustomerModel customer)
     {
         var httpClient = new HttpClient();
-        httpClient.DefaultRequestHeaders.Add("access_token", AppSettingsAssas.Key);
+        httpClient.DefaultRequestHeaders.Add("access_token", _appSettings.Assas.Key);
 
         var createCustomerInAssas = new
         {
@@ -50,7 +49,7 @@ public class CustomerService(
             email = customer.Email
         };
 
-        var httpResult = await httpClient.PostAsJsonAsync($"{AppSettingsAssas.Url}/customers", createCustomerInAssas);
+        var httpResult = await httpClient.PostAsJsonAsync($"{_appSettings.Assas.Url}/customers", createCustomerInAssas);
         if (!httpResult.IsSuccessStatusCode)
         {
             _notificationApi.SetNotification(
@@ -159,8 +158,6 @@ public class CustomerService(
         {
             return false;
         }
-
-        //TODO: ANALISAR A NECESSIDADE DE IMPLEMENTAR O UPDATE DO CLIENTE NO ASSAS TAMBÉM.
 
         record.Name = request.Name;
         record.Cpf = request.Cpf;

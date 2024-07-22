@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using BusesControl.Business.v1.Interfaces;
+﻿using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.Models;

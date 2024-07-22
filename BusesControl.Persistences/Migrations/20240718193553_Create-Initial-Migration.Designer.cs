@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BusesControl.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240717195048_Create-Initial-Migration")]
+    [Migration("20240718193553_Create-Initial-Migration")]
     partial class CreateInitialMigration
     {
         /// <inheritdoc />
@@ -291,9 +291,6 @@ namespace BusesControl.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
-
-                    b.Property<bool>("InCompliance")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Logradouro")
                         .IsRequired()
