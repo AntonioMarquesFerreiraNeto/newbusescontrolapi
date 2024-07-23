@@ -85,8 +85,8 @@ public partial class CreateInitialData : Migration
         values: new object[,]
         {
             { adminUserId, employeeAdminId, "Antonio - Admin", "62972345678", 1, "antonio@gmail.com", "ANTONIO@GMAIL.COM", "antonio@gmail.com", "ANTONIO@GMAIL.COM", false, "AQAAAAIAAYagAAAAEEPUjzRSY6IzySo5GfpBpndAcHn0VbULkQbcP4Nk0KrfKPfmQiGYF5MAbdSbLFFfcg==", "SK2DLQLAT2KYGIC6XHSSG7OCZ77DXSFI", "1ca82e4c-8084-4302-88a3-0fe98ea23dab", false, false, null, true, 0 },
-            { assistantUserId, employeeAssistantId, "Raquel - Assistant", "11982345678", 1, "frontendbackend006@gmail.com", "FRONTENDBACKEND006@GMAIL.COM", "frontendbackend006@gmail.com", "FRONTENDBACKEND006@GMAIL.COM", false, "AQAAAAIAAYagAAAAELpe0kzBtWydXqxOoG2K9kwLJdJylCWagnAAiKMOuNzCGv2bYZOT2YP4sP9/hv0rug==", "SSIWEH5OXGTVFTEE52QYFWLZIYWIAS4L", "3cd3faee-dcee-4efa-8d5c-7e7916661a89", false, false, null, true, 0 },
-            { systemUserId, null, "Sistema - System", "11982345679", 1, "system@gmail.com", "SYSTEM@GMAIL.COM", "system@gmail.com", "SYSTEM@GMAIL.COM", false, "AQAAAAIAAYagAAAAEP6Op9It0R1VcPCtIVKw+Q+ikQ+J8zX5kUgpp/nSL1UwRzWtAnM69A==", "KNJ3L72YDP3R5KTGFVO7JIKHYD28J4YK", "9d8c6eab-3c5a-4e2d-a2a7-f2d29d9e899c", false, false, null, true, 0 }
+            { assistantUserId, employeeAssistantId, "Raquel - Assistant", "11982345678", 1, "frontendbackend006@gmail.com", "FRONTENDBACKEND006@GMAIL.COM", "frontendbackend006@gmail.com", "FRONTENDBACKEND006@GMAIL.COM", false, "AQAAAAIAAYagAAAAEEPUjzRSY6IzySo5GfpBpndAcHn0VbULkQbcP4Nk0KrfKPfmQiGYF5MAbdSbLFFfcg==", "SSIWEH5OXGTVFTEE52QYFWLZIYWIAS4L", "3cd3faee-dcee-4efa-8d5c-7e7916661a89", false, false, null, true, 0 },
+            { systemUserId, null, "Sistema - System", "11982345679", 1, "system@gmail.com", "SYSTEM@GMAIL.COM", "system@gmail.com", "SYSTEM@GMAIL.COM", false, "AQAAAAIAAYagAAAAEEPUjzRSY6IzySo5GfpBpndAcHn0VbULkQbcP4Nk0KrfKPfmQiGYF5MAbdSbLFFfcg==", "KNJ3L72YDP3R5KTGFVO7JIKHYD28J4YK", "9d8c6eab-3c5a-4e2d-a2a7-f2d29d9e899c", false, false, null, true, 0 }
         });
 
         migrationBuilder.InsertData("UserRoles",

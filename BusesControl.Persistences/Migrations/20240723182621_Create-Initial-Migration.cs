@@ -108,6 +108,30 @@ namespace BusesControl.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Webhooks",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExternalId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SendType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Enabled = table.Column<bool>(type: "bit", nullable: false),
+                    Interrupted = table.Column<bool>(type: "bit", nullable: false),
+                    Events = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AuthToken = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ApiVersion = table.Column<int>(type: "int", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Webhooks", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Buses",
                 columns: table => new
                 {
@@ -734,6 +758,9 @@ namespace BusesControl.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Webhooks");
 
             migrationBuilder.DropTable(
                 name: "Financials");

@@ -37,7 +37,10 @@ public class AppSettingsAssas
 
 public class AppSettingsWebhookAssas
 {
-    public string AccessToken { get; set; } = default!;
+    public string SendType { get; set; } = default!;
+    public bool Enabled { get; set; }
+    public bool Interrupted { get; set; }
+    public int ApiVersion { get; set; }
 }
 
 public class AppSettingsEmail

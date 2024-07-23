@@ -3,6 +3,7 @@ using BusesControl.Entities.Models;
 using BusesControl.Entities.Request;
 using BusesControl.Entities.Requests;
 using BusesControl.Entities.Responses;
+using System.Text.Json;
 
 namespace BusesControl.Services.v1.AutoMapper;
 
@@ -25,5 +26,13 @@ public class AutoMapper : Profile
         CreateMap<BusModel, BusResponse>();
         CreateMap<SettingPanelModel, SettingPanelResponse>();
         CreateMap<ContractDescriptionModel, ContractDescriptionResponse>();
+
+        CreateMap<WebhookModel, WebhookResponse>()
+            .ForMember(dest => dest.Events, opt => opt.MapFrom(src => DeserializeEvents(src.Events)));
+    }
+
+    private static IEnumerable<string> DeserializeEvents(string events)
+    {
+        return JsonSerializer.Deserialize<IEnumerable<string>>(events) ?? [];
     }
 }
