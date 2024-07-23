@@ -14,13 +14,15 @@ public class SystemService(
     IUnitOfWork _unitOfWork,
     UserManager<UserModel> _userManager,
     IUserService _userService,
+    IContractService _contractService,
     IInvoiceService _invoiceService,
+    IWebhookService _webhookService,
     ICustomerContractService _customerContractService,
     IContractRepository _contractRepository,
     ICustomerContractRepository _customerContractRepository,
-    IContractService _contractService,
     ISavedCardRepository _savedCardRepository,
-    IInvoiceRepository _invoiceRepository
+    IInvoiceRepository _invoiceRepository,
+    IWebhookRepository _webhookRepository
 ) : ISystemService
 {
     public async Task<SystemResponse> AutomatedChangePasswordUserSystem()
@@ -46,6 +48,44 @@ public class SystemService(
         }
 
         systemResponse.SuccessOperation.Add("Senha de usuário de sistema atualizada com sucesso.");
+
+        return systemResponse;
+    }
+
+    public async Task<SystemResponse> AutomatedChangeWebhookAsync()
+    {
+        var systemResponse = new SystemResponse();
+
+        var webhookRecords = await _webhookRepository.GetAllAsync();
+        if (!webhookRecords.Any())
+        {
+            systemResponse.NoOperation = Message.Commons.NoOperation;
+        }
+
+        foreach (var webhook in webhookRecords)
+        {
+            try
+            {
+                _unitOfWork.BeginTransaction();
+
+                var webhookChangeTokenResponse = await _webhookService.ChangeWebhookAsync(webhook);
+                if (!webhookChangeTokenResponse.Success)
+                {
+                    systemResponse.FailureOperation.Add($"Webhook ({webhook.Name}). \nDetalhes do erro: {webhookChangeTokenResponse.ErrorMessage}");
+                    _unitOfWork.Rollback();
+                    continue;
+                }
+
+                await _unitOfWork.CommitAsync(true);
+
+                systemResponse.SuccessOperation.Add($"Webhook ({webhook.Name}) atualizado com sucesso");
+            } 
+            catch (Exception ex) 
+            {
+                systemResponse.FailureOperation.Add($"Falha ao tentar atualizar o token do webhook - {webhook.Name}. \nDetalhes do erro: {ex.Message}");
+                _unitOfWork.Rollback();
+            }
+        }
 
         return systemResponse;
     }

@@ -14,12 +14,22 @@ public class SystemController(
 ) : ControllerBase
 {
     /// <summary>
-    /// Alteração de senha de usuário de sistema automatizado
+    /// Atualiza senha de usuário de sistema
     /// </summary>
     [HttpPatch("user/password")]
     public async Task<IActionResult> AutomatedChangePasswordUserSystem()
     {
         var response = await _systemService.AutomatedChangePasswordUserSystem();
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Atualiza de tokens e ativação dos webhooks na API e no assas
+    /// </summary>
+    [HttpPatch("webhook/change")]
+    public async Task<IActionResult> AutomatedChangeWebhook()
+    {
+        var response = await _systemService.AutomatedChangeWebhookAsync();
         return Ok(response);
     }
 

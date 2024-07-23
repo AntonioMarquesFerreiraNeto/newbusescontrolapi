@@ -156,9 +156,13 @@ public class Message
 
     public class Webhook
     {
+        public readonly static string NotFound = "Webhook não encontrado!";
         public readonly static string RequestRequired = "Corpo da requisição é obrigatório!";
         public readonly static string Unauthorized = "Requisição não autorizada!";
+        public readonly static string Unexpected = "Desculpe, houve uma falha na ação ao integrar com o assas!";
         public readonly static string EventNotAccepted = "O evento recebido não corresponde a nenhum evento conhecido para esse método.";
+        public readonly static string ExistsByNameOrUrlOrType = "Já existe um webhook com esse nome, url ou tipo!";
+        public readonly static string SuccessDelete = "Webhook deletado com sucesso. O sistema não executará mais as ações que dependiam deste webhook até que um novo webhook compatível seja criado.";
     }
 
     public class Termination 
