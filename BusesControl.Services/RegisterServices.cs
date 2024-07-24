@@ -47,6 +47,7 @@ public class RegisterServices
         builder.Services.AddScoped<ISystemService, SystemService>();
         builder.Services.AddScoped<IWebhookService, WebhookService>();
         builder.Services.AddScoped<ITerminationService, TerminationService>();
+        builder.Services.AddScoped<ISupplierService, SupplierService>();
 
         var appSettings = builder.Configuration.GetSection("AppSettings");
         builder.Services.Configure<AppSettings>(appSettings);

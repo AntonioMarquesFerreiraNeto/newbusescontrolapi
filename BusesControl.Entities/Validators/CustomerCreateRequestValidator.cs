@@ -36,10 +36,10 @@ public class CustomerCreateRequestValidator : AbstractValidator<CustomerCreateRe
                 .Must(ValidateBirthDateOfLegalAge.IsValid).WithMessage("Data de nascimento inválida!");
         });
 
-        When(x => x.Type == CustomerTypeEnum.LegalEntity, () => 
-        {
-            RuleFor(x => x.OpenDate)
-            .NotEmpty().WithMessage("Data de abertura é um campo obrigatório");
+        When(x => x.OpenDate is not null, () => {
+            RuleFor(x => x.OpenDate!.Value)
+                .NotEmpty().WithMessage("Data de abertura é um campo obrigatório")
+                .Must(ValidateOpenDate.IsValid).WithMessage("Data de abertura inválida");
         });
 
         RuleFor(x => x.Email)
