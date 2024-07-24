@@ -176,4 +176,11 @@ public class Message
     {
         public readonly static string NotFound = "Financeiro não encontrado!";
     }
+
+    public class Supplier
+    {
+        public readonly static string Exists = "Fornecedor já se encontra registrado!";
+        public readonly static string NotFound = "Fornecedor não encontrado!";
+        public readonly static string NotActive = "Fornecedor não está ativo!";
+    }
 }

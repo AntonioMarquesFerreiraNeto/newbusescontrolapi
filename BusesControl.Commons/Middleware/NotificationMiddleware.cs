@@ -27,6 +27,7 @@ public class NotificationMiddleware(RequestDelegate _next)
 
         return context.Response.WriteAsync(JsonSerializer.Serialize(new ProblemDetails
         {
+            Type = $"Método HTTP - {context.Request.Method}",
             Title = NotificationTitle.InternalError,
             Detail = Message.Commons.Unexpected,
             Status = code,

@@ -1,0 +1,67 @@
+﻿using Asp.Versioning;
+using BusesControl.Entities.Requests;
+using BusesControl.Services.v1.Interfaces;
+using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Service.Api.Utils;
+
+namespace BusesControl.Api.Controllers.v1;
+
+[ApiController]
+[ApiVersion("1.0")]
+[Authorize]
+[Route("api/v1/suppliers")]
+public class SupplierController(
+    IValidator<SupplierCreateRequest> _supplierCreateRequestValidator,
+    IValidator<SupplierUpdateRequest> _supplierUpdateRequestValidator,
+    ISupplierService _supplierService
+) : ControllerBase
+{
+    [HttpGet]
+    public async Task<IActionResult> FindBySearch([FromQuery] PaginationRequest request)
+    {
+        var response = await _supplierService.FindBySearchAsync(request);
+        return Ok(response);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById([FromRoute] Guid id)
+    {
+        var response = await _supplierService.GetByIdAsync(id);
+        return Ok(response);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] SupplierCreateRequest request)
+    {
+        var validation = await ValidateModel.CheckIsValid(request, Request.Path, ModelState, _supplierCreateRequestValidator);
+        if (validation is not null)
+        {
+            return BadRequest(validation);
+        }
+
+        await _supplierService.CreateAsync(request);
+        return NoContent();
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] SupplierUpdateRequest request)
+    {
+        var validation = await ValidateModel.CheckIsValid(request, Request.Path, ModelState, _supplierUpdateRequestValidator);
+        if (validation is not null)
+        {
+            return BadRequest(validation);
+        }
+
+        await _supplierService.UpdateAsync(id, request);
+        return NoContent();
+    }
+
+    [HttpPatch("{id}/active")]
+    public async Task<IActionResult> ToggleActive([FromRoute] Guid id)
+    {
+        await _supplierService.ToggleActiveAsync(id);
+        return NoContent();
+    }
+}

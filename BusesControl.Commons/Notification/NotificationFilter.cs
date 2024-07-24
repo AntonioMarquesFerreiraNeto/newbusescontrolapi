@@ -29,10 +29,11 @@ public class NotificationFilter : IAsyncResultFilter
             ProblemDetails result;
             result = new ProblemDetails
             {
+                Type = $"Método HTTP - {context.HttpContext.Request.Method}",
                 Title = _notificationApi.Title,
                 Detail = _notificationApi.Details,
                 Status = _notificationApi.StatusCodes,
-                Instance = context.HttpContext.Request.Path,
+                Instance = context.HttpContext.Request.Path
             };
             await context.HttpContext.Response.WriteAsync(JsonSerializer.Serialize(result, _jsonSerializerOptions));
 
