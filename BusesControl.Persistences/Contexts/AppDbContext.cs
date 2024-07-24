@@ -29,6 +29,7 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
     public DbSet<TerminationModel> Terminations { get; set; }
     public DbSet<WebhookModel> Webhooks { get; set; }
     public DbSet<SupplierModel> Suppliers { get; set; }
+    public DbSet<NotificationModel> Notifications { get; set; }
 
     public override DbSet<UserModel> Users { get; set; }
 
