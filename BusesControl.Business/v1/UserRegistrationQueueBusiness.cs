@@ -81,7 +81,7 @@ public class UserRegistrationQueueBusiness(
 
     public async Task<UserRegistrationQueueModel> GetForRegistrationUserStepPasswordAsync(Guid userId)
     {
-        var record = await _userRegistrationQueueRepository.GetByUserAsync(userId);
+        var record = await _userRegistrationQueueRepository.GetByUserWithEmployeeAsync(userId);
         if (record is null)
         {
             _notificationApi.SetNotification(

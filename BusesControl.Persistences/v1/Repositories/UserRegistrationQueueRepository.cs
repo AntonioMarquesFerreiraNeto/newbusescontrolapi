@@ -32,9 +32,9 @@ public class UserRegistrationQueueRepository(
         return await _context.UsersRegistrationQueue.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<UserRegistrationQueueModel?> GetByUserAsync(Guid userId)
+    public async Task<UserRegistrationQueueModel?> GetByUserWithEmployeeAsync(Guid userId)
     {
-        return await _context.UsersRegistrationQueue.AsNoTracking().SingleOrDefaultAsync(x => x.UserId == userId);
+        return await _context.UsersRegistrationQueue.AsNoTracking().Include(x => x.Employee).SingleOrDefaultAsync(x => x.UserId == userId);
     }
 
     public async Task<UserRegistrationQueueModel?> GetByEmployeeAttributesAsync(string email, string cpf, DateOnly birthDate)

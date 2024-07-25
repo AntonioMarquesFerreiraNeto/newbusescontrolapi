@@ -74,7 +74,7 @@ public class UserService(
         }
 
         var id = Guid.Parse(userIdClaim.Value.ToString());
-        var role = roleClaim.ToString();
+        var role = roleClaim.Value.ToString();
         Guid? employeeId = employeeIdClaim is not null ? Guid.Parse(employeeIdClaim.Value.ToString()) : null;
 
         return new UserAuthResponse(id, role, employeeId);

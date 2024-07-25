@@ -35,6 +35,11 @@ public class CustomerRepository(
         return await _context.Customers.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
     }
 
+    public async Task<CustomerModel?> GetByExternalAsync(string externalId)
+    {
+        return await _context.Customers.AsNoTracking().SingleOrDefaultAsync(x => x.ExternalId == externalId);
+    }
+
     public async Task<bool> CreateAsync(CustomerModel record)
     {
         await _context.Customers.AddAsync(record);

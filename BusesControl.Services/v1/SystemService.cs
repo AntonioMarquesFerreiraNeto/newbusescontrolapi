@@ -1,4 +1,5 @@
-﻿using BusesControl.Commons.Notification;
+﻿using BusesControl.Commons;
+using BusesControl.Commons.Notification;
 using BusesControl.Entities.Enums;
 using BusesControl.Entities.Models;
 using BusesControl.Entities.Responses;
@@ -16,6 +17,7 @@ public class SystemService(
     IUserService _userService,
     IContractService _contractService,
     IInvoiceService _invoiceService,
+    INotificationService _notificationService,
     IWebhookService _webhookService,
     ICustomerContractService _customerContractService,
     IContractRepository _contractRepository,
@@ -162,6 +164,8 @@ public class SystemService(
                     continue;
                 }
 
+                await _notificationService.SendInternalNotificationAsync(TemplateTitle.InvoiceOverDue, TemplateMessage.InvoiceOverDue(invoiceRecord.Reference), NotificationAccessLevelEnum.Public);
+
                 await _unitOfWork.CommitAsync(true);
 
                 systemResponse.SuccessOperation.Add($"Fatura {invoiceRecord.Reference} atualizada com sucesso");
@@ -194,6 +198,8 @@ public class SystemService(
                 _unitOfWork.BeginTransaction();
 
                 await _contractService.CompletedWithoutValidationAsync(contract);
+
+                await _notificationService.SendInternalNotificationAsync(TemplateTitle.ContractCompleted, TemplateMessage.ContractCompleted(contract.Reference), NotificationAccessLevelEnum.Admin);
 
                 await _unitOfWork.CommitAsync(true);
 

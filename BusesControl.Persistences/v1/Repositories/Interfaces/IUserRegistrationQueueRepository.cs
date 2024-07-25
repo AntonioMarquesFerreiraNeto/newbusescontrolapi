@@ -6,7 +6,7 @@ public interface IUserRegistrationQueueRepository
 {
     Task<IEnumerable<UserRegistrationQueueModel>> FindAsync(int page, int pageSize, string? search);
     Task<UserRegistrationQueueModel?> GetByIdAsync(Guid id);
-    Task<UserRegistrationQueueModel?> GetByUserAsync(Guid userId);
+    Task<UserRegistrationQueueModel?> GetByUserWithEmployeeAsync(Guid userId);
     Task<UserRegistrationQueueModel?> GetByEmployeeAttributesAsync(string email, string cpf, DateOnly birthDate);
     Task<bool> CreateAsync(UserRegistrationQueueModel record);
     bool Update(UserRegistrationQueueModel record);

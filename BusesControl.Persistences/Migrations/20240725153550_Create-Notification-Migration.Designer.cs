@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BusesControl.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240724220759_Create-Notification-Migration")]
+    [Migration("20240725153550_Create-Notification-Migration")]
     partial class CreateNotificationMigration
     {
         /// <inheritdoc />
@@ -538,11 +538,19 @@ namespace BusesControl.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("SenderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SenderType")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SenderId");
 
                     b.ToTable("Notifications");
                 });
@@ -1160,6 +1168,15 @@ namespace BusesControl.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Financial");
+                });
+
+            modelBuilder.Entity("BusesControl.Entities.Models.NotificationModel", b =>
+                {
+                    b.HasOne("BusesControl.Entities.Models.EmployeeModel", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId");
+
+                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("BusesControl.Entities.Models.ResetPasswordSecurityCodeModel", b =>

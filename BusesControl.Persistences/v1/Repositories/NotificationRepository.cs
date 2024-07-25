@@ -12,12 +12,21 @@ public class NotificationRepository(
 {
     private readonly AppDbContext _context = context;
 
-    public async Task<IEnumerable<NotificationModel>> FindForAdminAsync(int page = 0, int pageSize = 0)
+    public async Task<IEnumerable<NotificationModel>> GetAllAsync(int page = 0, int pageSize = 0)
     {
-        return await _context.Notifications.Skip((page - 1) * pageSize).Take(pageSize).AsNoTracking().ToListAsync();
+        var query = _context.Notifications.AsNoTracking();
+
+        query = query.OrderByDescending(x => x.CreatedAt);
+
+        if (page > 0 && pageSize > 0)
+        {
+            query = query.Skip((page - 1) * pageSize).Take(pageSize);
+        }
+
+        return await query.ToListAsync();
     }
 
-    public async Task<IEnumerable<NotificationModel>> FindMyNotificationsAsync(Guid employeeId, string role, int page = 0, int pageSize = 0)
+    public async Task<IEnumerable<NotificationModel>> FindMyNotificationsAsync(string role, int page = 0, int pageSize = 0)
     {
         var query = _context.Notifications.AsNoTracking();
 
@@ -30,7 +39,12 @@ public class NotificationRepository(
             query = query.Where(x => x.AccessLevel == NotificationAccessLevelEnum.Assistant || x.AccessLevel == NotificationAccessLevelEnum.Public);
         }
 
-        query = query.Skip((page - 1) * pageSize).Take(pageSize);
+        query = query.OrderByDescending(x => x.CreatedAt);
+
+        if (page > 0 & pageSize > 0)
+        {
+            query = query.Skip((page - 1) * pageSize).Take(pageSize);
+        }
 
         return await query.ToListAsync();
     }

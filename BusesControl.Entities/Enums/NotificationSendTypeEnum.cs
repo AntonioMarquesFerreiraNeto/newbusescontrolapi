@@ -2,5 +2,6 @@
 
 public enum NotificationSenderTypeEnum
 {
-    System = 1
+    System = 1,
+    Employee = 2
 }
