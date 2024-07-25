@@ -8,6 +8,6 @@ public class UserRegistrationStepTokenRequestValidator : AbstractValidator<UserR
     public UserRegistrationStepTokenRequestValidator()
     {
         RuleFor(x => x.Code)
-            .NotEmpty().WithMessage("Código é um campo obrigatório!");
+            .NotEmpty().WithMessage("Código é um campo obrigatório");
     }
 }

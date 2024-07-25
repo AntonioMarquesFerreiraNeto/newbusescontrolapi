@@ -8,8 +8,8 @@ public class SettingPanelCreateRequestValidator : AbstractValidator<SettingPanel
     public SettingPanelCreateRequestValidator()
     {
         RuleFor(x => x.Parent)
-            .NotEmpty().WithMessage("Parent é um campo obrigatório!")
-            .IsInEnum().WithMessage("Parent inválido!");
+            .NotEmpty().WithMessage("Parent é um campo obrigatório")
+            .IsInEnum().WithMessage("Parent inválido");
 
         RuleFor(x => x.TerminationFee)
             .NotEmpty().WithMessage("Taxa de rescisão é um campo obrigatório")

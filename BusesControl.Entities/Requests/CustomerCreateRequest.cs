@@ -18,4 +18,5 @@ public class CustomerCreateRequest
     public string City { get; set; } = default!;
     public string State { get; set; } = default!;
     public CustomerTypeEnum Type { get; set; }
+    public PersonGenderEnum? Gender { get; set; }
 }

@@ -8,7 +8,7 @@ public class UserSetNickNameRequestValidator : AbstractValidator<UserSetNickName
     public UserSetNickNameRequestValidator()
     {
         RuleFor(x => x.Nickname)
-            .NotEmpty().WithMessage("Nickname é um campo obrigatório!")
+            .NotEmpty().WithMessage("Nickname é um campo obrigatório")
             .MaximumLength(20).WithMessage("Nickname deve ter no máximo 20 caracteres");
     }
 }

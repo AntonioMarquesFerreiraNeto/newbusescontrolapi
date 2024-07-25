@@ -32,5 +32,6 @@ public class CustomerModel
     public string State { get; set; } = default!;
     public bool Active { get; set; } = true;
     public CustomerTypeEnum Type { get; set; }
+    public PersonGenderEnum? Gender { get; set; }
     public string ExternalId { get; set; } = default!;
 }

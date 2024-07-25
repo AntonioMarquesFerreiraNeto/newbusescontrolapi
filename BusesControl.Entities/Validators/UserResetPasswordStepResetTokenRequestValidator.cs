@@ -8,6 +8,6 @@ public class UserResetPasswordStepResetTokenRequestValidator : AbstractValidator
     public UserResetPasswordStepResetTokenRequestValidator()
     {
         RuleFor(x => x.Code)
-            .NotEmpty().WithMessage("Código é um campo obrigatório!");
+            .NotEmpty().WithMessage("Código é um campo obrigatório");
     }
 }
