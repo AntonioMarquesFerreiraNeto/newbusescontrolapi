@@ -8,7 +8,7 @@ public class UserToggleActiveRequestValidator : AbstractValidator<UserToggleActi
     public UserToggleActiveRequestValidator()
     {
         RuleFor(x => x.Status)
-            .NotEmpty().WithMessage("Status é um campo obrigatório!")
-            .IsInEnum().WithMessage("Status inválido!");
+            .NotEmpty().WithMessage("Status é um campo obrigatório")
+            .IsInEnum().WithMessage("Status inválido");
     }
 }

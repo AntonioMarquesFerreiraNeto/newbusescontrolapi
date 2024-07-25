@@ -1,4 +1,6 @@
-﻿namespace BusesControl.Entities.Request;
+﻿using BusesControl.Entities.Enums;
+
+namespace BusesControl.Entities.Request;
 
 public class EmployeeUpdateRequest
 {
@@ -13,4 +15,5 @@ public class EmployeeUpdateRequest
     public string Neighborhood { get; set; } = default!;
     public string City { get; set; } = default!;
     public string State { get; set; } = default!;
+    public PersonGenderEnum Gender { get; set; }
 }

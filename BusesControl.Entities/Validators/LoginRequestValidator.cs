@@ -8,9 +8,9 @@ public class LoginRequestValidator : AbstractValidator<LoginRequest>
     public LoginRequestValidator()
     {
         RuleFor(x => x.Username)
-            .NotEmpty().WithMessage("E-mail é um campo obrigatório!");
+            .NotEmpty().WithMessage("E-mail é um campo obrigatório");
 
         RuleFor(x => x.Password)
-            .NotEmpty().WithMessage("Senha é um campo obrigatório!");
+            .NotEmpty().WithMessage("Senha é um campo obrigatório");
     }
 }

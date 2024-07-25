@@ -30,6 +30,7 @@ public class CustomerService(
         request.Cpf = (request.Type == CustomerTypeEnum.NaturalPerson) ? OnlyNumbers.ClearValue(request.Cpf!) : null;
         request.Cnpj = (request.Type == CustomerTypeEnum.LegalEntity) ? OnlyNumbers.ClearValue(request.Cnpj!) : null;
         request.BirthDate = (request.Type == CustomerTypeEnum.NaturalPerson) ? request.BirthDate : null;
+        request.Gender = (request.Type == CustomerTypeEnum.NaturalPerson) ? request.Gender : null;
         request.OpenDate = (request.Type == CustomerTypeEnum.LegalEntity) ? request.OpenDate : null;
         request.PhoneNumber = OnlyNumbers.ClearValue(request.PhoneNumber);
 
@@ -121,7 +122,8 @@ public class CustomerService(
             Neighborhood = request.Neighborhood,
             City = request.City,
             State = request.State,
-            Type = request.Type
+            Type = request.Type,
+            Gender = request.Gender
         };
 
         var externalId = await CreateInAssasAsync(record);
@@ -173,6 +175,7 @@ public class CustomerService(
         record.City = request.City;
         record.State = request.State;
         record.Type = request.Type;
+        record.Gender = request.Gender;
 
         _customerRepository.Update(record);
         await _unitOfWork.CommitAsync();

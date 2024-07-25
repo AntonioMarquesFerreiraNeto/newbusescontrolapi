@@ -28,5 +28,6 @@ public class EmployeeModel
     [MaxLength(60)]
     public string State { get; set; } = default!;
     public EmployeeTypeEnum Type { get; set; }
+    public PersonGenderEnum Gender { get; set; }
     public EmployeeStatusEnum Status { get; set; } = EmployeeStatusEnum.Active;
 }

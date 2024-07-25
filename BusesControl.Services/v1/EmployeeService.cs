@@ -69,9 +69,9 @@ public class EmployeeService(
             Neighborhood = request.Neighborhood,
             City = request.City,
             State = request.State,
-            Type = request.Type
+            Type = request.Type,
+            Gender = request.Gender
         };
-
         await _employeeRepository.CreateAsync(record);
         await _unitOfWork.CommitAsync();
 
@@ -129,6 +129,7 @@ public class EmployeeService(
         record.Neighborhood = request.Neighborhood;
         record.City = request.City;
         record.State = request.State;
+        record.Gender = request.Gender;
 
         _employeeRepository.Update(record);
         await _unitOfWork.CommitAsync();

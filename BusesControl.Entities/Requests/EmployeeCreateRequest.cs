@@ -16,4 +16,5 @@ public class EmployeeCreateRequest
     public string City { get; set; } = default!;
     public string State { get; set; } = default!;
     public EmployeeTypeEnum Type { get; set; }
+    public PersonGenderEnum Gender { get; set; }
 }
