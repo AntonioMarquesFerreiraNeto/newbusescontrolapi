@@ -35,6 +35,7 @@ public class RegisterPersistence
         builder.Services.AddScoped<ITerminationRepository, TerminationRepository>();
         builder.Services.AddScoped<IWebhookRepository, WebhookRepository>();
         builder.Services.AddScoped<ISupplierRepository, SupplierRepository>();
+        builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 
         builder.Services.AddIdentity<UserModel, IdentityRole<Guid>>(options => 
         {

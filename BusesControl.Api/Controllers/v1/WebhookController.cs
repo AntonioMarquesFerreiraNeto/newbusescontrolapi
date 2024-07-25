@@ -10,8 +10,8 @@ namespace BusesControl.Api.Controllers.v1;
 
 [ApiController]
 [ApiVersion("1.0")]
-[Route("api/v1/webhook")]
 [Authorize(Roles = "System, Admin")]
+[Route("api/v1/webhook")]
 public class WebhookController(
     IValidator<WebhookCreateRequest> _webhookCreateValidator,
     IWebhookService _webhookService

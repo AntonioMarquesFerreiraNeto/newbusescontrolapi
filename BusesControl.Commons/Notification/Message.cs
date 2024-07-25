@@ -183,4 +183,9 @@ public class Message
         public readonly static string NotFound = "Fornecedor não encontrado!";
         public readonly static string NotActive = "Fornecedor não está ativo!";
     }
+
+    public class Notification
+    {
+        public readonly static string NotFound = "Notificação não encontrada!";
+    }
 }

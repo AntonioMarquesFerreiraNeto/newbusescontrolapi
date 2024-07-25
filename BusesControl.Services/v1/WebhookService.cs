@@ -24,6 +24,7 @@ public class WebhookService(
     IMapper _mapper,
     IUnitOfWork _unitOfWork,
     INotificationApi _notificationApi,
+    INotificationService _notificationService,
     IInvoiceBusiness _invoiceBusiness,
     IWebhookBusiness _webhookBusiness,
     IInvoiceRepository _invoiceRepository,
@@ -247,11 +248,17 @@ public class WebhookService(
             return false;
         }
 
+        _unitOfWork.BeginTransaction();
+
         record.UpdatedAt = DateTime.UtcNow;
         record.PaymentDate = request.Payment.PaymentDate ?? DateOnly.FromDateTime(DateTime.UtcNow);
         record.Status = InvoiceStatusEnum.Paid;
         _invoiceRepository.Update(record);
         await _unitOfWork.CommitAsync();
+
+        await _notificationService.SendInternalNotificationAsync(TemplateTitle.InvoicePaymentPix, TemplateMessage.InvoicePaymentPix(record.Reference), NotificationAccessLevelEnum.Public);
+
+        await _unitOfWork.CommitAsync(true);
 
         return true;
     }

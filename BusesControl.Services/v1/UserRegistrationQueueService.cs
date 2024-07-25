@@ -18,11 +18,12 @@ namespace BusesControl.Services.v1;
 
 public class UserRegistrationQueueService(
     AppSettings _appSettings,
+    UserManager<UserModel> _userManager,
     IMapper _mapper,
     IUnitOfWork _unitOfWork,
     INotificationApi _notificationApi,
-    UserManager<UserModel> _userManager,
     IEmailService _emailService,
+    INotificationService _notificationService,
     IUserService _userService,
     IUserRegistrationQueueBusiness _userRegistrationQueueBusiness,
     IUserRegistrationQueueRepository _userRegistrationQueueRepository,
@@ -215,6 +216,12 @@ public class UserRegistrationQueueService(
         userRegistrationQueueRecord.Status = UserRegistrationQueueStatusEnum.Finished;
         userRegistrationQueueRecord.UpdatedAt = DateTime.UtcNow;
         _userRegistrationQueueRepository.Update(userRegistrationQueueRecord);
+
+        await _notificationService.SendInternalNotificationAsync(
+            TemplateTitle.UserRegistrationQueueReview, 
+            TemplateMessage.UserRegistrationQueueReview(userRegistrationQueueRecord.Employee.Name), 
+            NotificationAccessLevelEnum.Admin
+        );
 
         await _unitOfWork.CommitAsync(true);
 
