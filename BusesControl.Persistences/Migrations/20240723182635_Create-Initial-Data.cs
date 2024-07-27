@@ -57,7 +57,7 @@ public partial class CreateInitialData : Migration
         ],
         values: new object[,]
         {
-            { employeeAdminId, "Antonio Marques Admin", "29125064096", "1990-01-01", "antonio@gmail.com", "1234567890", "42", "Rua das Flores", "Apto 101", "Centro", "São Paulo", "SP", 3, 1, 1 },
+            { employeeAdminId, "Antonio Marques Admin", "29125064096", "1990-01-01", "antonio@gmail.com", "62972345678", "42", "Rua das Flores", "Apto 101", "Centro", "São Paulo", "SP", 3, 1, 1 },
             { employeeAssistantId, "Raquel Letícia da Cunha", "80898354307", "2001-05-15", "frontendbackend006@gmail.com", "11982345678", "200", "Avenida Principal, 456", "Casa 2", "Bairro Central", "São Paulo", "SP", 2, 2, 1 }
         });
 

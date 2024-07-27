@@ -8,5 +8,5 @@ public static class TemplateMessage
     public static string ContractWaitingReview(string reference) => $"Identificamos que o contrato {reference} está pendente de análise.";
     
     public static string InvoicePaymentPix(string reference) => $"Identificamos que o pagamento da fatura {reference} foi realizado via pix.";
-    public static string InvoiceOverDue(string reference) => $"Informamos que a fatura {reference} entrou em estado de atraso neste momento";
+    public static string InvoiceOverDue(string reference) => $"Informamos que a fatura {reference} está atrasada até o presente momento";
 }

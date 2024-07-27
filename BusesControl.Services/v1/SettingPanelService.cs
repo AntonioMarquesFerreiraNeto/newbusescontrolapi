@@ -62,12 +62,6 @@ public class SettingPanelService(
 
     public async Task<bool> CreateAsync(SettingPanelCreateRequest request)
     {
-        await _settingPanelBusiness.ExistsByParentAsync(request.Parent);
-        if (_notificationApi.HasNotification)
-        {
-            return false;
-        }
-
         var employeeId = _userService.FindAuthenticatedUser().EmployeeId!.Value;
         var reference = await GenerateReferenceUniqueAsync();
 

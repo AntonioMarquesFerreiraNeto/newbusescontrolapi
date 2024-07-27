@@ -68,7 +68,7 @@ Boa parte dessas tecnologias já foram integradas na versão anterior do projeto
 
 1. Clone o repositório:
     ```sh
-    git clone https://github.com/seu-usuario/seu-projeto.git
+    git clone https://github.com/AntonioMarquesFerreiraNeto/newbusescontrolapi
     ```
 
 2. Navegue até o diretório do projeto:

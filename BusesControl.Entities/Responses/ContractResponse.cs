@@ -18,8 +18,8 @@ public class ContractResponse
     public int? InstallmentsCount { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
-    public DateTime? StartDate { get; set; }
-    public DateTime TerminateDate { get; set; }
+    public DateOnly? StartDate { get; set; }
+    public DateOnly TerminateDate { get; set; }
     public ContractStatusEnum Status { get; set; }
     public bool IsApproved { get; set; } = false;
     public Guid? ApproverId { get; set; }

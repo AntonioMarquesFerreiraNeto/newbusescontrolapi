@@ -29,6 +29,11 @@ public class AutoMapper : Profile
 
         CreateMap<WebhookModel, WebhookResponse>()
             .ForMember(dest => dest.Events, opt => opt.MapFrom(src => DeserializeEvents(src.Events)));
+
+        CreateMap<FinancialModel, FinancialResponse>();
+        CreateMap<InvoiceModel, InvoiceResponse>();
+        CreateMap<InvoiceExpenseModel, InvoiceExpenseResponse>();
+        CreateMap<SupplierModel, SupplierResponse>();
     }
 
     private static IEnumerable<string> DeserializeEvents(string events)

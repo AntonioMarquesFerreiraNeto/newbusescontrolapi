@@ -295,7 +295,7 @@ public class ContractService(
 
         _unitOfWork.BeginTransaction();
 
-        await _financialService.CreateForContractAsync(record);
+        await _financialService.CreateInternalAsync(record);
         if (_notificationApi.HasNotification)
         {
             return default!;

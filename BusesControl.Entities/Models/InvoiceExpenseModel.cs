@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BusesControl.Entities.Models;
 
-public class InvoiceModel
+public class InvoiceExpenseModel
 {
     public Guid Id { get; set; }
     [MaxLength(8)]
@@ -19,7 +19,7 @@ public class InvoiceModel
     public decimal Price { get; set; }
     [Precision(10, 2)]
     public decimal InterestRate { get; set; }
-    public InvoiceStatusEnum Status { get; set; } = InvoiceStatusEnum.Pending;
+    public InvoiceExpenseStatusEnum Status { get; set; } = InvoiceExpenseStatusEnum.Pending;
     public DateOnly DueDate { get; set; }
     public string? ExternalId { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

@@ -93,8 +93,8 @@ public class Message
         public readonly static string NotFound = "Painel de configurações não encontrado!";
         public readonly static string Exists = "Já existe um painel de configurações para o parent especificado!";
         public readonly static string NotUpdate = "Existe contratos aprovados que usam esse painel de configurações!";
-        public readonly static string NotDestine = "Não é possível realizar essa vinculação!";
-        public readonly static string NotDelete = "Painel de configurações é usado em pelo menos um contrato!";
+        public readonly static string NotDestine = "Não é possível realizar essa vinculação de painel de configuração!";
+        public readonly static string NotDelete = "Painel de configurações é usado em pelo menos um contrato ou financeiro!";
     }
 
     public class User
@@ -143,7 +143,7 @@ public class Message
         public readonly static string NotFound = "Fatura não encontrada!";
         public readonly static string NotPending = "Fatura não está pendente!";
         public readonly static string UnexpectedCreate = "Desculpe, não conseguimos gerar a fatura do cliente!";
-        public readonly static string UnexpectedRemove = "Desculpe, não conseguimos tratar a fatura do cliente!";
+        public readonly static string Unexpected = "Desculpe, não conseguimos tratar a fatura do cliente!";
         public readonly static string UnexpectedPay = "Desculpe, não conseguimos realizar seu pagamento!";
         public readonly static string UnexpectedPix = "Desculpe, não conseguimos gerar seu pix!";
         public readonly static string NotPendingOrOverdue = "Fatura não está pendente ou atrasada!";
@@ -152,6 +152,7 @@ public class Message
         public readonly static string NotCreditCard = "Cartão de crédito não informado.";
         public readonly static string FailureAutomatedPay = "Fatura não está confirmada ou recebida no assas.";
         public readonly static string FailureOverDue = "Fatura não pode estar pendente.";
+        public readonly static string SettingPanelNotFound = "Painel de configuração não encontrado.";
     }
 
     public class Webhook
@@ -175,6 +176,9 @@ public class Message
     public class Financial
     {
         public readonly static string NotFound = "Financeiro não encontrado!";
+        public static readonly string IsInactive = "Não é possível alterar esse financeiro, ele não está ativo!";
+        public readonly static string InvalidInactive = "Não é possível inativar esse financeiro!";
+        public readonly static string TerminationDateExceedsLimit = "A data de término não deve exceder o limite de seis anos.";
     }
 
     public class Supplier

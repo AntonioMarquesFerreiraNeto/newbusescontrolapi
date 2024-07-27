@@ -17,8 +17,11 @@ public class NotificationApi : INotificationApi
         HasNotification = true;
     }
 
-    public object GetDetails()
+    public void Reset()
     {
-        return new { Title, Details, StatusCodes };
+        Title = default!;
+        Details = default!;
+        StatusCodes = null;
+        HasNotification = false;
     }
 }

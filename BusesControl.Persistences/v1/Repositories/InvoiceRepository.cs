@@ -26,11 +26,11 @@ public class InvoiceRepository(
         return await query.ToListAsync();
     }
 
-    public async Task<IEnumerable<InvoiceModel>> FindByStatusForSystemAsync(InvoiceStatusEnum status)
+    public async Task<IEnumerable<InvoiceModel>> FindByStatusForSystemWithFinancialAsync(InvoiceStatusEnum status)
     {
-        var query = _context.Invoices.AsNoTracking();
+        var query = _context.Invoices.Include(x => x.Financial.SettingPanel).AsNoTracking();
 
-        query = query.Where(x => x.Status == status && x.DueDate <= DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-2)));
+        query = query.Where(x => x.Status == status && x.DueDate <= DateOnly.FromDateTime(DateTime.UtcNow.AddDays(4)));
 
         return await query.ToListAsync();
     }

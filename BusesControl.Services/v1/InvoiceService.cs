@@ -1,6 +1,4 @@
-﻿using Azure;
-using BusesControl.Business.v1.Interfaces;
-using BusesControl.Commons;
+﻿using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.DTOs;
@@ -61,6 +59,9 @@ public class InvoiceService(
         };
 
         var httpResult = await httpClient.PostAsJsonAsync($"{_appSettings.Assas.Url}/payments", createInvoiceInAssas);
+
+        var teste = await httpResult.Content.ReadAsStringAsync();
+
         if (!httpResult.IsSuccessStatusCode)
         {
             _notificationApi.SetNotification(
@@ -83,6 +84,49 @@ public class InvoiceService(
         }
 
         return invoiceExternal.Id;
+    }
+
+    private async Task<bool> UpdateInAssasAsync(InvoiceModel updateInvoice, decimal interest = 0)
+    {
+        var httpClient = new HttpClient();
+        httpClient.DefaultRequestHeaders.Add("access_token", _appSettings.Assas.Key);
+
+        var invoiceUpdateInAssas = new
+        {
+            billingType = "UNDEFINED",
+            dueDate = updateInvoice.DueDate,
+            value = updateInvoice.Price,
+            description = updateInvoice.Description,
+            externalReference = updateInvoice.Id,
+            interest = new 
+            {
+                value = interest
+            }
+        };
+
+        var httpResult = await httpClient.PutAsJsonAsync($"{_appSettings.Assas.Url}/payments/{updateInvoice.ExternalId}", invoiceUpdateInAssas);
+        if (!httpResult.IsSuccessStatusCode)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.Invoice.Unexpected
+            );
+            return false;
+        }
+
+        var response = await httpResult.Content.ReadAsStringAsync();
+        if (response is null)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.Invoice.Unexpected
+            );
+            return false;
+        }
+
+        return true;
     }
 
     private async Task<InvoicePayWithCardInAssasDTO> HandleCreditCardPaymentAsync(InvoiceModel record, InvoicePaymentRequest request)
@@ -143,7 +187,7 @@ public class InvoiceService(
             return default!;
         }
 
-        if (record.Financial.Type == FinancialTypeEnum.Expense)
+        if (record.Financial.Type == FinancialTypeEnum.Revenue)
         {
             await _savedCardService.CreateAsync(record.Financial.CustomerId!.Value, response.CreditCard.CreditCardNumber, response.CreditCard.CreditCardBrand, Guid.Parse(response.CreditCard.CreditCardToken));
         }
@@ -193,7 +237,7 @@ public class InvoiceService(
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
-                details: Message.Invoice.UnexpectedRemove
+                details: Message.Invoice.Unexpected
             );
             return false;
         }
@@ -204,7 +248,7 @@ public class InvoiceService(
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
-                details: Message.Invoice.UnexpectedRemove
+                details: Message.Invoice.Unexpected
             );
             return false;
         }
@@ -212,7 +256,7 @@ public class InvoiceService(
         return true;
     }
 
-    public async Task<bool> CreateForFinancialAsync(CreateInvoiceDTO createInvoice)
+    public async Task<bool> CreateInternalAsync(CreateInvoiceDTO createInvoice)
     {
         createInvoice.SetTitleAndDescription();
 
@@ -229,7 +273,7 @@ public class InvoiceService(
         await _invoiceRepository.CreateAsync(record);
         await _unitOfWork.CommitAsync();
 
-        var externalId = await CreateInAssasAsync(record.Id, createInvoice.ExternalId, record.Description, createInvoice);
+        var externalId = await CreateInAssasAsync(record.Id, createInvoice.CustomerExternalId, record.Description, createInvoice);
         if (_notificationApi.HasNotification)
         {
             return false;
@@ -328,12 +372,36 @@ public class InvoiceService(
         return new AutomatedPaymentResponse(sucess: true);
     }
 
-    public async Task<(bool success, string? errorMessage)> ChangeOverDueForSystemAsync(InvoiceModel record)
+    public async Task<(bool success, string? errorMessage)> ChangeOverDueInternalAsync(InvoiceModel record)
     {
         if (record.Status != InvoiceStatusEnum.Pending)
         {
             return (false, Message.Invoice.FailureOverDue);
         }
+
+        if (record.Financial.SettingPanel is null)
+        {
+            return (false, Message.Invoice.SettingPanelNotFound);
+        }
+
+        var lateFeeInterestRate = record.Financial.SettingPanel.LateFeeInterestRate;
+
+        if (lateFeeInterestRate >= 1)
+        {
+            record.InterestRate = Math.Round(record.Price * lateFeeInterestRate / 100, 2);
+            record.TotalPrice = Math.Round(record.TotalPrice + record.InterestRate, 2);
+
+            await UpdateInAssasAsync(record, interest: lateFeeInterestRate);
+            if (_notificationApi.HasNotification)
+            {
+                string errorMessage = _notificationApi.Details;
+                _notificationApi.Reset();
+
+                return (false, errorMessage);
+            }
+        }
+
+        record.Financial.SettingPanel = null;
 
         record.UpdatedAt = DateTime.UtcNow;
         record.Status = InvoiceStatusEnum.OverDue;
@@ -343,7 +411,7 @@ public class InvoiceService(
         return (true, null);
     }
 
-    public async Task<bool> CancelForFinancialAsync(InvoiceModel record)
+    public async Task<bool> CancelInternalAsync(InvoiceModel record)
     {
         await RemoveInAssasAsync(record.ExternalId!);
         if (_notificationApi.HasNotification)

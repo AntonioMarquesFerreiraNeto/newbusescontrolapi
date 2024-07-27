@@ -5,7 +5,7 @@ namespace BusesControl.Entities.Enums;
 public enum FinancialTypeEnum
 {
     [Description("Receita")]
-    Expense = 1,
+    Revenue = 1,
     [Description("Despesa")]
-    Revenue = 2
+    Expense = 2,
 }

@@ -5,8 +5,8 @@ namespace BusesControl.Entities.DTOs;
 public class CreateInvoiceDTO
 {
     public Guid FinancialId { get; set; }
-    public string ExternalId { get; set; } = default!;
-    public string? Reference { get; set; } = default!;
+    public string CustomerExternalId { get; set; } = default!;
+    public string Reference { get; set; } = default!;
     public int Index { get; set; }
     public decimal Price { get; set; }
     public DateOnly DueDate { get; set; }
@@ -18,9 +18,9 @@ public class CreateInvoiceDTO
 
     public void SetTitleAndDescription()
     {
-        var suffix = IsContract ? "contrato" : "receita/despesa";
+        var suffix = IsContract ? "do contrato" : "da receita";
 
         Title = PaymentType == PaymentTypeEnum.Single ? "Fatura única" : $"{Index}º fatura";
-        Description = $"{Title} referente ao módulo financeiro do {suffix} Nº {Reference}.";
+        Description = $"{Title} referente ao módulo financeiro {suffix} {Reference}.";
     }
 }

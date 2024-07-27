@@ -41,7 +41,7 @@ public class TerminationService(
 
         _unitOfWork.BeginTransaction();
 
-        await _financialService.ToggleActiveForTerminationAsync(contractId, request.CustomerId);
+        await _financialService.InactiveInternalAsync(contractId, request.CustomerId);
         if (_notificationApi.HasNotification)
         {
             return default!;
