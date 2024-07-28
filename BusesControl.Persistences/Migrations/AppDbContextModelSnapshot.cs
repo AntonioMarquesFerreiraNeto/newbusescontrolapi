@@ -433,8 +433,19 @@ namespace BusesControl.Persistence.Migrations
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
 
+                    b.Property<string>("Reference")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
+
+                    b.Property<Guid?>("SettingPanelId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateOnly>("StartDate")
                         .HasColumnType("date");
+
+                    b.Property<Guid?>("SupplierId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateOnly>("TerminateDate")
                         .HasColumnType("date");
@@ -463,7 +474,73 @@ namespace BusesControl.Persistence.Migrations
 
                     b.HasIndex("CustomerId");
 
+                    b.HasIndex("SettingPanelId");
+
+                    b.HasIndex("SupplierId");
+
                     b.ToTable("Financials");
+                });
+
+            modelBuilder.Entity("BusesControl.Entities.Models.InvoiceExpenseModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateOnly>("DueDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("ExternalId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("FinancialId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("InterestRate")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<DateOnly?>("PaymentDate")
+                        .HasColumnType("date");
+
+                    b.Property<int?>("PaymentMethod")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<string>("Reference")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FinancialId");
+
+                    b.ToTable("InvoicesExpense");
                 });
 
             modelBuilder.Entity("BusesControl.Entities.Models.InvoiceModel", b =>
@@ -494,6 +571,9 @@ namespace BusesControl.Persistence.Migrations
 
                     b.Property<DateOnly?>("PaymentDate")
                         .HasColumnType("date");
+
+                    b.Property<int?>("PaymentMethod")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("Price")
                         .HasPrecision(10, 2)
@@ -1157,9 +1237,33 @@ namespace BusesControl.Persistence.Migrations
                         .WithMany()
                         .HasForeignKey("CustomerId");
 
+                    b.HasOne("BusesControl.Entities.Models.SettingPanelModel", "SettingPanel")
+                        .WithMany()
+                        .HasForeignKey("SettingPanelId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("BusesControl.Entities.Models.SupplierModel", "Supplier")
+                        .WithMany()
+                        .HasForeignKey("SupplierId");
+
                     b.Navigation("Contract");
 
                     b.Navigation("Customer");
+
+                    b.Navigation("SettingPanel");
+
+                    b.Navigation("Supplier");
+                });
+
+            modelBuilder.Entity("BusesControl.Entities.Models.InvoiceExpenseModel", b =>
+                {
+                    b.HasOne("BusesControl.Entities.Models.FinancialModel", "Financial")
+                        .WithMany("InvoiceExpenses")
+                        .HasForeignKey("FinancialId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Financial");
                 });
 
             modelBuilder.Entity("BusesControl.Entities.Models.InvoiceModel", b =>
@@ -1325,6 +1429,8 @@ namespace BusesControl.Persistence.Migrations
 
             modelBuilder.Entity("BusesControl.Entities.Models.FinancialModel", b =>
                 {
+                    b.Navigation("InvoiceExpenses");
+
                     b.Navigation("Invoices");
                 });
 #pragma warning restore 612, 618

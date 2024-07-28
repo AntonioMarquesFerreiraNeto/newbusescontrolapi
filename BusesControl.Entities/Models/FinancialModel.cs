@@ -1,15 +1,22 @@
 ﻿using BusesControl.Entities.Enums;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace BusesControl.Entities.Models;
 
 public class FinancialModel
 {
     public Guid Id { get; set; }
+    [MaxLength(8)]
+    public string Reference { get; set; } = default!;
     public Guid? ContractId { get; set; }
     public ContractModel? Contract { get; set; }
+    public Guid? SettingPanelId { get; set; }
+    public SettingPanelModel? SettingPanel { get; set; }
     public Guid? CustomerId { get; set; }
-    public CustomerModel? Customer { get; set; }
+    public CustomerModel? Customer { get; set; } = default!;
+    public Guid? SupplierId { get; set; }
+    public SupplierModel? Supplier { get; set; }
     public string Title { get; set; } = default!;
     public string Description { get; set; } = default!;
     [Precision(10, 2)]
@@ -27,4 +34,5 @@ public class FinancialModel
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }
     public ICollection<InvoiceModel> Invoices { get; set; } = default!;
+    public ICollection<InvoiceExpenseModel> InvoiceExpenses { get; set; } = default!;
 }

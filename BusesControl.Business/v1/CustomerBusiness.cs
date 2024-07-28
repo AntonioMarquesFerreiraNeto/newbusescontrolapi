@@ -1,6 +1,7 @@
 ﻿using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
+using BusesControl.Entities.Models;
 using BusesControl.Entities.Requests;
 using BusesControl.Filters.Notification;
 using BusesControl.Persistence.v1.Repositories.Interfaces;
@@ -27,5 +28,31 @@ public class CustomerBusiness(
         }
 
         return true;
+    }
+
+    public async Task<CustomerModel> GetWithValidateActiveAsync(Guid id)
+    {
+        var record = await _customerRepository.GetByIdAsync(id);
+        if (record is null)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status404NotFound,
+                title: NotificationTitle.NotFound,
+                details: Message.Customer.NotFound
+            );
+            return default!;
+        }
+
+        if (!record.Active)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.Customer.NotActive
+            );
+            return default!;
+        }
+
+        return record;
     }
 }

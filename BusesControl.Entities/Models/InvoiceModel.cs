@@ -21,8 +21,9 @@ public class InvoiceModel
     public decimal InterestRate { get; set; }
     public InvoiceStatusEnum Status { get; set; } = InvoiceStatusEnum.Pending;
     public DateOnly DueDate { get; set; }
-    public string? ExternalId { get; set; } = default!;
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public string? ExternalId { get; set; }
     public DateOnly? PaymentDate { get; set; }
+    public PaymentMethodEnum? PaymentMethod { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }
 }

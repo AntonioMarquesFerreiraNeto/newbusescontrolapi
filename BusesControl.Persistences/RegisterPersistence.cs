@@ -31,6 +31,7 @@ public class RegisterPersistence
         builder.Services.AddScoped<IUserRegistrationSecurityCodeRepository, UserRegistrationSecurityCodeRepository>();
         builder.Services.AddScoped<IFinancialRepository, FinancialRepository>();
         builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+        builder.Services.AddScoped<IInvoiceExpenseRepository, InvoiceExpenseRepository>();
         builder.Services.AddScoped<ISavedCardRepository, SavedCardRepository>();
         builder.Services.AddScoped<ITerminationRepository, TerminationRepository>();
         builder.Services.AddScoped<IWebhookRepository, WebhookRepository>();

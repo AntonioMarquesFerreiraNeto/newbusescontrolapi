@@ -3,6 +3,7 @@ using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.Enums;
 using BusesControl.Entities.Models;
+using BusesControl.Entities.Response;
 using BusesControl.Filters.Notification;
 using BusesControl.Persistence.v1.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -64,5 +65,20 @@ public class InvoiceBusiness(
         }
 
         return record;
+    }
+
+    public bool ValidateLoggedUserForJustCountPayment(UserAuthResponse loggedUser)
+    {
+        if (loggedUser.Role != "Admin" && loggedUser.Role != "Assistant")
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.Invoice.JustCountInternalUsersOnly
+            );
+            return false;
+        }
+
+        return true;
     }
 }

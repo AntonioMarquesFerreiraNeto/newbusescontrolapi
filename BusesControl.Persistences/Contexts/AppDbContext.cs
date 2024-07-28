@@ -25,6 +25,7 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
     public DbSet<UserRegistrationSecurityCodeModel> UsersRegistrationSecurityCode { get; set; }
     public DbSet<FinancialModel> Financials { get; set; }
     public DbSet<InvoiceModel> Invoices { get; set; }
+    public DbSet<InvoiceExpenseModel> InvoicesExpense { get; set; }
     public DbSet<SavedCardModel> SavedCards { get; set; }
     public DbSet<TerminationModel> Terminations { get; set; }
     public DbSet<WebhookModel> Webhooks { get; set; }
@@ -72,6 +73,12 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
             .OnDelete(DeleteBehavior.NoAction);
 
         builder.Entity<ContractModel>()
+            .HasOne(x => x.SettingPanel)
+            .WithMany()
+            .HasForeignKey(x => x.SettingPanelId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.Entity<FinancialModel>()
             .HasOne(x => x.SettingPanel)
             .WithMany()
             .HasForeignKey(x => x.SettingPanelId)

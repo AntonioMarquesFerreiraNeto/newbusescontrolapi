@@ -144,7 +144,7 @@ public class SystemService(
     {
         var systemResponse = new SystemResponse();
 
-        var invoiceRecords = await _invoiceRepository.FindByStatusForSystemAsync(InvoiceStatusEnum.Pending);
+        var invoiceRecords = await _invoiceRepository.FindByStatusForSystemWithFinancialAsync(InvoiceStatusEnum.Pending);
         if (!invoiceRecords.Any())
         {
             systemResponse.NoOperation = Message.Commons.NoOperation;
@@ -156,7 +156,7 @@ public class SystemService(
             {
                 _unitOfWork.BeginTransaction();
 
-                var (success, errorMessage) = await _invoiceService.ChangeOverDueForSystemAsync(invoiceRecord);
+                var (success, errorMessage) = await _invoiceService.ChangeOverDueInternalAsync(invoiceRecord);
                 if (!success)
                 {
                     systemResponse.FailureOperation.Add(errorMessage!);
