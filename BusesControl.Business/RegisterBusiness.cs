@@ -24,5 +24,6 @@ public class RegisterBusiness
         builder.Services.AddScoped<IWebhookBusiness, WebhookBusiness>();
         builder.Services.AddScoped<ISupplierBusiness, SupplierBusiness>();
         builder.Services.AddScoped<IFinancialBusiness, FinancialBusiness>();
+        builder.Services.AddScoped<ISupportTicketBusiness, SupportTicketBusiness>();
     }
 }

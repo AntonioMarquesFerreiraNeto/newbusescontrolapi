@@ -116,7 +116,7 @@ public class Message
     public class UserRegistration
     {
         public readonly static string SuccessCreate = "Solicitação de registro de usuário realizada com sucesso!";
-        public readonly static string SuccessCanceled = "Solicitação de registro de usuário cancelada com sucesso.";
+        public readonly static string SuccessDelete = "Solicitação de registro de usuário deletado com sucesso.";
         public readonly static string SuccessApproved = "Usuário aprovado com sucesso! Agora ele poderá conectar ao sistema buses control.";
         public readonly static string SuccessStepCode = "Olá, tudo bem? Enviamos um código de definição de senha para seu e-mail.";
         public readonly static string NotFound = "Solicitação de registro de usuário não encontrada!";
@@ -208,5 +208,16 @@ public class Message
     public class Notification
     {
         public readonly static string NotFound = "Notificação não encontrada!";
+    }
+
+    public class SupportTicket
+    {
+        public readonly static string NotFound = "Ticket de suporte não encontrada!";
+        public readonly static string NotOpenOrInProgress = "Ticket de suporte não está aberto ou em progresso!";
+    }
+
+    public class SupportTicketMessage
+    {
+        public readonly static string NotFound = "Mensagem de ticket de suporte não encontrada!";
     }
 }

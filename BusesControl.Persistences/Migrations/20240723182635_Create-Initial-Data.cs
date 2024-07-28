@@ -20,6 +20,7 @@ public partial class CreateInitialData : Migration
         Guid adminRoleId = Guid.Parse("0300add6-fdd9-497e-b400-5111fc804434");
         Guid assistantRoleId = Guid.Parse("6c84509b-9c38-492b-b524-6afffabfabee");
         Guid systemRoleId = Guid.Parse("8fe66851-2d59-4c40-a219-130cb8bc1b05");
+        Guid supportAgentRoleId = Guid.Parse("e72aea9b-cabf-43ee-8cf5-0d8c0c7cc10d");
 
         migrationBuilder.InsertData("Roles",
         columns:
@@ -31,6 +32,7 @@ public partial class CreateInitialData : Migration
         ],
         values: new object[,]
         {
+            { supportAgentRoleId, "SupportAgent", "SUPPORTAGENT", "5E1030BE-DEB9-470D-8FBF-24147EADA23B" },
             { adminRoleId, "Admin", "ADMIN", "c332220a-479c-4029-90f8-eaae330a9141" },
             { assistantRoleId, "Assistant", "ASSISTANT", "ab879eb0-e677-4c61-bc6a-c2d9a37312e2" },
             { systemRoleId, "System", "SYSTEM", "0db578bb-2121-4f98-84a3-3a7751d894e3" }

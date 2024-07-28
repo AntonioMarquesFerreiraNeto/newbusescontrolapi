@@ -50,6 +50,8 @@ public class RegisterServices
         builder.Services.AddScoped<ISupplierService, SupplierService>();
         builder.Services.AddScoped<INotificationService, NotificationService>();
         builder.Services.AddScoped<IInvoiceExpenseService, InvoiceExpenseService>();
+        builder.Services.AddScoped<ISupportTicketService, SupportTicketService>();
+        builder.Services.AddScoped<ISupportTicketMessageService, SupportTicketMessageService>();
 
         var appSettings = builder.Configuration.GetSection("AppSettings");
         builder.Services.Configure<AppSettings>(appSettings);

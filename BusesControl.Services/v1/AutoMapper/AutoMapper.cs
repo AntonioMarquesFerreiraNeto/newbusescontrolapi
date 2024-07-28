@@ -34,6 +34,9 @@ public class AutoMapper : Profile
         CreateMap<InvoiceModel, InvoiceResponse>();
         CreateMap<InvoiceExpenseModel, InvoiceExpenseResponse>();
         CreateMap<SupplierModel, SupplierResponse>();
+
+        CreateMap<SupportTicketModel, SupportTicketResponse>();
+        CreateMap<SupportTicketMessageModel, SupportTicketMessageResponse>();
     }
 
     private static IEnumerable<string> DeserializeEvents(string events)
