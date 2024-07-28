@@ -38,6 +38,11 @@ public class FinancialRepository(
         return await _context.Financials.AsNoTracking().Include(x => x.Invoices).SingleOrDefaultAsync(x => x.Id == id);
     }
 
+    public async Task<FinancialModel?> GetByIdWithInvoicesExpenseAsync(Guid id)
+    {
+        return await _context.Financials.AsNoTracking().Include(x => x.InvoiceExpenses).SingleOrDefaultAsync(x => x.Id == id);
+    }
+
     public async Task<FinancialModel?> GetByContractAndCustomerWithInvoicesAsync(Guid contractId, Guid customerId)
     {
         return await _context.Financials.Include(x => x.Invoices).AsNoTracking().SingleOrDefaultAsync(x => x.ContractId == contractId && x.CustomerId == customerId);

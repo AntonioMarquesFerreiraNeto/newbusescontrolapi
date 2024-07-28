@@ -1,4 +1,5 @@
-﻿using BusesControl.Business.v1.Interfaces;
+﻿using Azure.Core;
+using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.DTOs;
@@ -19,6 +20,7 @@ public class InvoiceService(
     AppSettings _appSettings,
     IUnitOfWork _unitOfWork,
     INotificationApi _notificationApi,
+    IUserService _userService,
     ISavedCardService _savedCardService,
     IInvoiceBusiness _invoiceBusiness,
     IInvoiceRepository _invoiceRepository
@@ -187,10 +189,7 @@ public class InvoiceService(
             return default!;
         }
 
-        if (record.Financial.Type == FinancialTypeEnum.Revenue)
-        {
-            await _savedCardService.CreateAsync(record.Financial.CustomerId!.Value, response.CreditCard.CreditCardNumber, response.CreditCard.CreditCardBrand, Guid.Parse(response.CreditCard.CreditCardToken));
-        }
+        await _savedCardService.CreateAsync(record.Financial.CustomerId!.Value, response.CreditCard.CreditCardNumber, response.CreditCard.CreditCardBrand, Guid.Parse(response.CreditCard.CreditCardToken));
 
         return response;
     }
@@ -324,12 +323,25 @@ public class InvoiceService(
                 invoicePaymentResponse.Message = Message.Invoice.SuccessPix;
             }
             break;
+
+            case PaymentMethodEnum.JustCount:
+            {
+                _invoiceBusiness.ValidateLoggedUserForJustCountPayment(_userService.FindAuthenticatedUser());
+                if (_notificationApi.HasNotification)
+                {
+                    return default!;
+                }
+
+                invoicePaymentResponse.Message = Message.Invoice.SuccessJustCount;
+            }
+            break;
         }
 
-        if (request.PaymentMethod == PaymentMethodEnum.CreditCard)
+        if (request.PaymentMethod == PaymentMethodEnum.CreditCard || request.PaymentMethod == PaymentMethodEnum.JustCount)
         {
-            record.PaymentDate = invoicePayWithCardResponse.ConfirmedDate;
+            record.PaymentDate = invoicePayWithCardResponse.ConfirmedDate ?? DateOnly.FromDateTime(DateTime.UtcNow);
             record.UpdatedAt = DateTime.UtcNow;
+            record.PaymentMethod = request.PaymentMethod;
             record.Status = InvoiceStatusEnum.Paid;
             _invoiceRepository.Update(record);
             await _unitOfWork.CommitAsync();
@@ -365,6 +377,7 @@ public class InvoiceService(
 
         record.PaymentDate = response.ConfirmedDate;
         record.UpdatedAt = DateTime.UtcNow;
+        record.PaymentMethod = PaymentMethodEnum.CreditCard;
         record.Status = InvoiceStatusEnum.Paid;
         _invoiceRepository.Update(record);
         await _unitOfWork.CommitAsync();

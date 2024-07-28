@@ -1,4 +1,6 @@
-﻿namespace BusesControl.Commons.Notification;
+﻿using static BusesControl.Commons.Notification.Message;
+
+namespace BusesControl.Commons.Notification;
 
 public class Message
 {
@@ -11,6 +13,7 @@ public class Message
     public class Commons
     {
         public readonly static string Unexpected = "Desculpe, ocorreu um erro interno no servidor.";
+        public readonly static string BalanceAssasFailure = "Desculpe, ocorreu um erro ao consultar o saldo no assas e essa solicitação.";
         public readonly static string NoOperation = "Nenhuma operação foi necessária para a data especificada ou a atual.";
     }
 
@@ -149,10 +152,24 @@ public class Message
         public readonly static string NotPendingOrOverdue = "Fatura não está pendente ou atrasada!";
         public readonly static string SuccessPay = "Pagamento realizado com sucesso!";
         public readonly static string SuccessPix = "Use o QR code para realizar o pagamento de sua fatura.";
+        public readonly static string SuccessJustCount = "Pagamento contabilizado com sucesso!";
         public readonly static string NotCreditCard = "Cartão de crédito não informado.";
         public readonly static string FailureAutomatedPay = "Fatura não está confirmada ou recebida no assas.";
         public readonly static string FailureOverDue = "Fatura não pode estar pendente.";
         public readonly static string SettingPanelNotFound = "Painel de configuração não encontrado.";
+        public readonly static string JustCountInternalUsersOnly = "Contabilizar pagamento é apenas para usuários internos!";
+    }
+
+    public class InvoiceExpense
+    {
+        public readonly static string NotFound = "Fatura de despensa não encontrada!";
+        public readonly static string NotPending = "Fatura de despesa não está pendente!";
+        public readonly static string Unexpected = "Desculpe, não conseguimos tratar a fatura de despesa!";
+        public readonly static string UnexpectedPay = "Desculpe, não conseguimos realizar seu pagamento!";
+        public readonly static string SuccessPayPix = "Pagamento via pix realizado com sucesso.";
+        public readonly static string SuccessPayTed = "Pagamento via TED realizado com sucesso.";
+        public readonly static string SuccessPayJustCount = "Pagamento contabilizado com sucesso.";
+        public readonly static string InsufficientBalance = "O saldo disponível é insuficiente para o pagamento dessa fatura de despesa!";
     }
 
     public class Webhook

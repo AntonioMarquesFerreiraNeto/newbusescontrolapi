@@ -9,5 +9,6 @@ public interface IInvoiceExpenseRepository
     Task<InvoiceExpenseModel?> GetByIdAndExternalAsync(Guid id, string external);
     Task<bool> CreateAsync(InvoiceExpenseModel record);
     bool Update(InvoiceExpenseModel record);
+    bool UpdateRange(IEnumerable<InvoiceExpenseModel> records);
     Task<bool> ExistsByReferenceAsync(string reference);
 }

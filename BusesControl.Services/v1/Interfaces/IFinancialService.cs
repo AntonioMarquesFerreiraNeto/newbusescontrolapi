@@ -10,6 +10,7 @@ public interface IFinancialService
     Task<FinancialResponse> GetByIdAsync(Guid id);
     Task<bool> CreateRevenueAsync(FinancialRevenueCreateRequest request);
     Task<bool> InactiveRevenueAsync(Guid id);
+    Task<bool> InactiveExpenseAsync(Guid id);
     Task<bool> CreateExpenseAsync(FinancialExpenseCreateRequest request);
     Task<bool> UpdateDetailsAsync(Guid id, FinancialUpdateDetailsRequest request);
     Task<bool> CreateInternalAsync(ContractModel contractRecord);

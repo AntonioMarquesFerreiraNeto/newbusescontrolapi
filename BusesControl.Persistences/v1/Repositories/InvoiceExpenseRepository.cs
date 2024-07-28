@@ -38,6 +38,12 @@ public class InvoiceExpenseRepository(
         return true;
     }
 
+    public bool UpdateRange(IEnumerable<InvoiceExpenseModel> records)
+    {
+        _context.InvoicesExpense.UpdateRange(records);
+        return true;
+    }
+
     public async Task<bool> ExistsByReferenceAsync(string reference)
     {
         return await _context.InvoicesExpense.AnyAsync(x => x.Reference == reference);

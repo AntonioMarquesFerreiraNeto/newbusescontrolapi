@@ -250,6 +250,32 @@ public class FinancialService(
         return true;
     }
 
+    public async Task<bool> InactiveExpenseAsync(Guid id)
+    {
+        var record = await _financialBusiness.GetForInactiveExpenseAsync(id);
+        if (_notificationApi.HasNotification)
+        {
+            return false;
+        }
+
+        _unitOfWork.BeginTransaction();
+
+        await _invoiceExpenseService.CancelInternalAsync(record.InvoiceExpenses);
+        if (_notificationApi.HasNotification)
+        {
+            return false;
+        }
+
+        record.UpdatedAt = DateTime.UtcNow;
+        record.Active = false;
+        _financialRepository.Update(record);
+        await _unitOfWork.CommitAsync();
+
+        await _unitOfWork.CommitAsync(true);
+
+        return true;
+    }
+
     public async Task<bool> UpdateDetailsAsync(Guid id, FinancialUpdateDetailsRequest request)
     {
         var record = await _financialBusiness.GetForUpdateDetailsAsync(id);

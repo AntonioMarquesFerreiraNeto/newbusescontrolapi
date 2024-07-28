@@ -22,7 +22,8 @@ public class InvoiceModel
     public InvoiceStatusEnum Status { get; set; } = InvoiceStatusEnum.Pending;
     public DateOnly DueDate { get; set; }
     public string? ExternalId { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateOnly? PaymentDate { get; set; }
+    public PaymentMethodEnum? PaymentMethod { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }
 }

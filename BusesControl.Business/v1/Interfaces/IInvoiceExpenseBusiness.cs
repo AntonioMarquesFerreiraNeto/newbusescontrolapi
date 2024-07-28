@@ -3,9 +3,9 @@ using BusesControl.Entities.Response;
 
 namespace BusesControl.Business.v1.Interfaces;
 
-public interface IInvoiceBusiness
+public interface IInvoiceExpenseBusiness
 {
-    Task<InvoiceModel> GetForPaymentAsync(Guid id);
-    Task<InvoiceModel> GetForPaymentPixAsync(Guid id, string externalId);
+    Task<InvoiceExpenseModel> GetForPaymentAsync(Guid id);
+    Task<bool> ValidateBalanceInAssasAsync(decimal pricePayment);
     bool ValidateLoggedUserForJustCountPayment(UserAuthResponse loggedUser);
 }

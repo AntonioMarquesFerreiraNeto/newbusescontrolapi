@@ -252,6 +252,7 @@ public class WebhookService(
 
         record.UpdatedAt = DateTime.UtcNow;
         record.PaymentDate = request.Payment.PaymentDate ?? DateOnly.FromDateTime(DateTime.UtcNow);
+        record.PaymentMethod = PaymentMethodEnum.Pix;
         record.Status = InvoiceStatusEnum.Paid;
         _invoiceRepository.Update(record);
         await _unitOfWork.CommitAsync();

@@ -65,6 +65,14 @@ public class FinancialController(
         return NoContent();
     }
 
+    [Authorize(Roles = "Admin")]
+    [HttpPatch("{id}/expense/inactive")]
+    public async Task<IActionResult> InactiveExpense([FromRoute] Guid id)
+    {
+        await _financialService.InactiveExpenseAsync(id);
+        return NoContent();
+    }
+
     [HttpPatch("{id}/details")]
     public async Task<IActionResult> UpdateDetails([FromRoute] Guid id, [FromBody] FinancialUpdateDetailsRequest request)
     {

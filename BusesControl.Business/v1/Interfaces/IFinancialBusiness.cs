@@ -6,5 +6,6 @@ public interface IFinancialBusiness
 {
     bool ValidateTerminationDate(SettingPanelModel settingPanelRecord, DateOnly terminateDate);
     Task<FinancialModel> GetForInactiveRevenueAsync(Guid id);
+    Task<FinancialModel> GetForInactiveExpenseAsync(Guid id);
     Task<FinancialModel> GetForUpdateDetailsAsync(Guid id);
 }

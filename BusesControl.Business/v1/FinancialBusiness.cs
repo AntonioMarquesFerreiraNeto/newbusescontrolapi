@@ -92,6 +92,52 @@ public class FinancialBusiness(
         return record;
     }
 
+    public async Task<FinancialModel> GetForInactiveExpenseAsync(Guid id)
+    {
+        var record = await _financialRepository.GetByIdWithInvoicesExpenseAsync(id);
+        if (record is null)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status404NotFound,
+                title: NotificationTitle.NotFound,
+                details: Message.Financial.NotFound
+            );
+            return default!;
+        }
+
+        if (record.ContractId is not null)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.Financial.InvalidInactive
+            );
+            return default!;
+        }
+
+        if (!record.Active)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.Financial.IsInactive
+            );
+            return default!;
+        }
+
+        if (record.Type != FinancialTypeEnum.Expense)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.Financial.InvalidInactive
+            );
+            return default!;
+        }
+
+        return record;
+    }
+
     public async Task<FinancialModel> GetForUpdateDetailsAsync(Guid id)
     {
         var record = await _financialRepository.GetByIdAsync(id);
