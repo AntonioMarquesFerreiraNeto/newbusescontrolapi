@@ -251,7 +251,7 @@ public class UserRegistrationQueueService(
 
         await _unitOfWork.CommitAsync(true);
 
-        return new SuccessResponse(Message.UserRegistration.SuccessCanceled);
+        return new SuccessResponse(Message.UserRegistration.SuccessDelete);
     }
 
     public async Task<SuccessResponse> AprrovedAsync(Guid id)

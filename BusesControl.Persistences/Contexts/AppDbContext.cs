@@ -31,6 +31,8 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
     public DbSet<WebhookModel> Webhooks { get; set; }
     public DbSet<SupplierModel> Suppliers { get; set; }
     public DbSet<NotificationModel> Notifications { get; set; }
+    public DbSet<SupportTicketModel> SupportTickets { get; set; }
+    public DbSet<SupportTicketMessageModel> SupportTicketMessages { get; set; }
 
     public override DbSet<UserModel> Users { get; set; }
 
@@ -88,6 +90,12 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
             .HasOne(x => x.ContractDescription)
             .WithMany()
             .HasForeignKey(x => x.ContractDescriptionId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.Entity<SupportTicketModel>()
+            .HasOne(x => x.Employee)
+            .WithMany()
+            .HasForeignKey(x => x.EmployeeId)
             .OnDelete(DeleteBehavior.NoAction);
     }
 }
