@@ -139,6 +139,15 @@ public class InvoiceExpenseService(
             return default!;
         }
 
+        if (request.PaymentMethod != PaymentExpenseMethodEnum.JustCount)
+        {
+            await _invoiceExpenseBusiness.ValidateBalanceInAssasAsync(record.TotalPrice);
+            if (_notificationApi.HasNotification)
+            {
+                return default!;
+            }
+        }
+
         switch (request.PaymentMethod)
         {
             case PaymentExpenseMethodEnum.Pix:

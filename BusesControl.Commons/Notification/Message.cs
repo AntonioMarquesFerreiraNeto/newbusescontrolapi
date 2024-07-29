@@ -58,6 +58,15 @@ public class Message
         public readonly static string NotDelete = "Descrição de contrato é usado em pelo menos um contrato!";
     }
 
+    public class ContractBusReplacement
+    {
+        public readonly static string NotFound = "Substituição de ônibus não encontrada!";
+        public readonly static string StartDateLessTerminateDate = "Data de início não pode ser menor que a data de término.";
+        public readonly static string StartDateLessContractStartDate = "Data de início não pode ser menor que a data de início do contrato.";
+        public readonly static string TerminateDateGreaterContractTerminateDate = "Data de término não pode ser maior que a data de término do contrato.";
+        public readonly static string BusInvalid = "Não é possível vincular esse ônibus!";
+    }
+
     public class Color
     {
         public readonly static string NotFound = "Cor não encontrada!";

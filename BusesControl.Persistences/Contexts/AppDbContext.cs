@@ -33,6 +33,7 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
     public DbSet<NotificationModel> Notifications { get; set; }
     public DbSet<SupportTicketModel> SupportTickets { get; set; }
     public DbSet<SupportTicketMessageModel> SupportTicketMessages { get; set; }
+    public DbSet<ContractBusReplacementModel> ContractBusReplacements { get; set; }
 
     public override DbSet<UserModel> Users { get; set; }
 
@@ -96,6 +97,12 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
             .HasOne(x => x.Employee)
             .WithMany()
             .HasForeignKey(x => x.EmployeeId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.Entity<ContractBusReplacementModel>()
+            .HasOne(x => x.Contract)
+            .WithMany()
+            .HasForeignKey(x => x.ContractId)
             .OnDelete(DeleteBehavior.NoAction);
     }
 }

@@ -156,7 +156,7 @@ public class WebhookService(
         return true;
     }
 
-    public async Task<WebhookChangeTokenResponse> ChangeWebhookAsync(WebhookModel record)
+    public async Task<WebhookChangeTokenResponse> ChangeInternalAsync(WebhookModel record)
     {
         var httpClient = new HttpClient();
         httpClient.DefaultRequestHeaders.Add("access_token", _appSettings.Assas.Key);

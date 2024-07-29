@@ -13,6 +13,7 @@ public interface IContractBusiness
     Task<ContractModel> GetForWaitingReviewAsync(Guid id);
     Task<ContractModel> GetForApproveAsync(Guid id);
     Task<ContractModel> GetForStartProgressAsync(Guid id);
+    Task<ContractModel> GetForContractBusOrDriverReplacementAsync(Guid contractId);
     bool ValidateTerminationDate(SettingPanelModel settingPanelRecord, DateOnly terminateDate);
     bool ValidateDuplicateCustomersValidate(IEnumerable<Guid> customersId);
 }

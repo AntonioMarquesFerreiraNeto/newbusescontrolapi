@@ -10,7 +10,7 @@ public interface IWebhookService
     Task<IEnumerable<WebhookResponse>> GetAllAsync();
     Task<WebhookResponse> GetByIdAsync(Guid id);
     Task<bool> CreateAsync(WebhookCreateRequest request);
-    Task<WebhookChangeTokenResponse> ChangeWebhookAsync(WebhookModel record);
+    Task<WebhookChangeTokenResponse> ChangeInternalAsync(WebhookModel record);
     Task<SuccessResponse> DeleteAsync(Guid id);
     Task<bool> PaymentPixAsync(string? accessToken, PaymentPixRequest request);
 }

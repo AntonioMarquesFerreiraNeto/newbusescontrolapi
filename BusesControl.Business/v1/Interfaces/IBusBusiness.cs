@@ -3,4 +3,5 @@
 public interface IBusBusiness
 {
     Task<bool> ExistsByRenavamOrLicensePlateOrChassisAsync(string renavam, string licensePlate, string chassi, Guid? id = null);
+    Task<bool> ValidateForContractBusReplacementAsync(Guid id);
 }
