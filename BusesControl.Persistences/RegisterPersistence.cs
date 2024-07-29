@@ -21,6 +21,7 @@ public class RegisterPersistence
         builder.Services.AddScoped<IColorRepository, ColorRepository>();
         builder.Services.AddScoped<IContractRepository, ContractRepository>();
         builder.Services.AddScoped<IContractDescriptionRepository, ContractDescriptionRepository>();
+        builder.Services.AddScoped<IContractBusReplacementRepository, ContractBusReplacementRepository>();
         builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
         builder.Services.AddScoped<ICustomerContractRepository, CustomerContractRepository>();
         builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();

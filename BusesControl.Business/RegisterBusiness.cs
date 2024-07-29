@@ -13,6 +13,7 @@ public class RegisterBusiness
         builder.Services.AddScoped<IColorBusiness, ColorBusiness>();
         builder.Services.AddScoped<IContractBusiness, ContractBusiness>();
         builder.Services.AddScoped<IContractDescriptionBusiness, ContractDescriptionBusiness>();
+        builder.Services.AddScoped<IContractBusReplacementBusiness, ContractBusReplacementBusiness>();
         builder.Services.AddScoped<ICustomerBusiness, CustomerBusiness>();
         builder.Services.AddScoped<ICustomerContractBusiness, CustomerContractBusiness>();
         builder.Services.AddScoped<IEmployeeBusiness, EmployeeBusiness>();

@@ -302,6 +302,32 @@ public class ContractBusiness(
         return record;
     }
 
+    public async Task<ContractModel> GetForContractBusOrDriverReplacementAsync(Guid contractId)
+    {
+        var contractRecord = await _contractRepository.GetByIdWithSettingPanelAsync(contractId);
+        if (contractRecord is null)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status404NotFound,
+                title: NotificationTitle.NotFound,
+                details: Message.Contract.NotFound
+            );
+            return default!;
+        }
+
+        if (contractRecord.Status != ContractStatusEnum.InProgress)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.Contract.NotInProgress
+            );
+            return default!;
+        }
+
+        return contractRecord;
+    }
+
     public bool ValidateTerminationDate(SettingPanelModel settingPanelRecord, DateOnly terminateDate)
     {
         var dateNow = DateOnly.FromDateTime(DateTime.UtcNow.Date);

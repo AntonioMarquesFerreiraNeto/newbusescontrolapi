@@ -70,7 +70,7 @@ public class SystemService(
             {
                 _unitOfWork.BeginTransaction();
 
-                var webhookChangeTokenResponse = await _webhookService.ChangeWebhookAsync(webhook);
+                var webhookChangeTokenResponse = await _webhookService.ChangeInternalAsync(webhook);
                 if (!webhookChangeTokenResponse.Success)
                 {
                     systemResponse.FailureOperation.Add($"Webhook ({webhook.Name}). \nDetalhes do erro: {webhookChangeTokenResponse.ErrorMessage}");
