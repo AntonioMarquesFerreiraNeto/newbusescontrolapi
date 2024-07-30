@@ -8,11 +8,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace BusesControl.Business.v1;
 
-public class ContractBusReplacementBusiness(
+public class ContractDriverReplacementBusiness(
     INotificationApi _notificationApi,
-    IBusBusiness _busBusiness,
-    IContractBusiness _contractBusiness
-) : IContractBusReplacementBusiness
+    IContractBusiness _contractBusiness,
+    IEmployeeBusiness _employeeBusiness
+) : IContractDriverReplacementBusiness
 {
     private bool ValidateStartDateAndTerminateDate(DateOnly startDate, DateOnly terminateDate, ContractModel contract)
     {
@@ -21,7 +21,7 @@ public class ContractBusReplacementBusiness(
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
-                details: Message.ContractBusReplacement.StartDateLessTerminateDate
+                details: Message.ContractDriverReplacement.StartDateLessTerminateDate
             );
             return false;
         }
@@ -31,7 +31,7 @@ public class ContractBusReplacementBusiness(
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
-                details: Message.ContractBusReplacement.StartDateLessContractStartDate
+                details: Message.ContractDriverReplacement.StartDateLessContractStartDate
             );
             return false;
         }
@@ -41,7 +41,7 @@ public class ContractBusReplacementBusiness(
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
-                details: Message.ContractBusReplacement.TerminateDateGreaterContractTerminateDate
+                details: Message.ContractDriverReplacement.TerminateDateGreaterContractTerminateDate
             );
             return false;
         }
@@ -49,7 +49,7 @@ public class ContractBusReplacementBusiness(
         return true;
     }
 
-    public async Task<bool> ValidateForCreateAsync(Guid contractId, ContractBusReplacementCreateRequest request)
+    public async Task<bool> ValidateForCreateAsync(Guid contractId, ContractDriverReplacementCreateRequest request)
     {
         var contractRecord = await _contractBusiness.GetForContractBusOrDriverReplacementAsync(contractId);
         if (_notificationApi.HasNotification)
@@ -63,17 +63,17 @@ public class ContractBusReplacementBusiness(
             return false;
         }
 
-        if (request.BusId == contractRecord.BusId)
+        if (request.DriverId == contractRecord.DriverId)
         {
             _notificationApi.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
-                details: Message.ContractBusReplacement.BusInvalid
+                details: Message.ContractDriverReplacement.DriverInvalid
             );
             return false;
         }
 
-        await _busBusiness.ValidateForContractBusReplacementAsync(request.BusId);
+        await _employeeBusiness.ValidateForContractDriverReplacementAsync(request.DriverId);
         if (_notificationApi.HasNotification)
         {
             return false;

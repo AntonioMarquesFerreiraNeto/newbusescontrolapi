@@ -58,6 +58,15 @@ public class Message
         public readonly static string NotDelete = "Descrição de contrato é usado em pelo menos um contrato!";
     }
 
+    public class ContractDriverReplacement
+    {
+        public readonly static string NotFound = "Substituição de motorista não encontrada!";
+        public readonly static string StartDateLessTerminateDate = "Data de início não pode ser menor que a data de término.";
+        public readonly static string StartDateLessContractStartDate = "Data de início não pode ser menor que a data de início do contrato.";
+        public readonly static string TerminateDateGreaterContractTerminateDate = "Data de término não pode ser maior que a data de término do contrato.";
+        public readonly static string DriverInvalid = "Não é possível vincular esse motorista!";
+    }
+
     public class ContractBusReplacement
     {
         public readonly static string NotFound = "Substituição de ônibus não encontrada!";
@@ -89,6 +98,7 @@ public class Message
         public readonly static string Exists = "Funcionário já se encontra registrado!";
         public readonly static string NotFound = "Funcionário não encontrado!";
         public readonly static string NotActive = "Funcionário não está ativo!";
+        public readonly static string NotDriver = "Funcionário não é um motorista!";
         public readonly static string NoChangeNeeded = "A requisição não resultou em nenhuma alteração, pois o tipo do registro já é o mesmo.";
         public readonly static string RoleChangedNoAccess = "Papel do funcionário alterado com sucesso! Devido ao perfil do mesmo, ele não possui acesso ao sistema.";
         public readonly static string RoleChangedRegisterInQueue = "Papel do funcionário alterado com sucesso, mas se deseja que ele tenha acesso ao sistema, registre o mesmo na fila de registro de usuários.";
