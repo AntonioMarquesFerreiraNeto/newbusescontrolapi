@@ -1,6 +1,7 @@
 ﻿using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
+using BusesControl.Entities.Enums;
 using BusesControl.Entities.Models;
 using BusesControl.Entities.Request;
 using BusesControl.Filters.Notification;
@@ -54,5 +55,41 @@ public class EmployeeBusiness(
         }
 
         return record;
+    }
+
+    public async Task<bool> ValidateForContractDriverReplacementAsync(Guid id)
+    {
+        var record = await _employeeRepository.GetByIdAsync(id);
+        if (record is null)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status404NotFound,
+                title: NotificationTitle.NotFound,
+                details: Message.Employee.NotFound
+            );
+            return false;
+        }
+
+        if (record.Type != EmployeeTypeEnum.Driver)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.Employee.NotDriver
+            );
+            return false;
+        }
+
+        if (record.Status != EmployeeStatusEnum.Active)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.Employee.NotActive
+            );
+            return false;
+        }
+
+        return true;
     }
 }

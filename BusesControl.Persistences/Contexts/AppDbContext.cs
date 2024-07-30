@@ -17,6 +17,8 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
     public DbSet<CustomerModel> Customers { get; set; }
     public DbSet<ContractModel> Contracts { get; set; }
     public DbSet<ContractDescriptionModel> ContractDescriptions { get; set; }
+    public DbSet<ContractBusReplacementModel> ContractBusReplacements { get; set; }
+    public DbSet<ContractDriverReplacementModel> ContractDriverReplacements { get; set; }
     public DbSet<CustomerContractModel> CustomersContract { get; set; }
     public DbSet<EmployeeModel> Employees { get; set; }
     public DbSet<SettingPanelModel> SettingsPanel { get; set; }
@@ -33,7 +35,6 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
     public DbSet<NotificationModel> Notifications { get; set; }
     public DbSet<SupportTicketModel> SupportTickets { get; set; }
     public DbSet<SupportTicketMessageModel> SupportTicketMessages { get; set; }
-    public DbSet<ContractBusReplacementModel> ContractBusReplacements { get; set; }
 
     public override DbSet<UserModel> Users { get; set; }
 
@@ -100,6 +101,12 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
             .OnDelete(DeleteBehavior.NoAction);
 
         builder.Entity<ContractBusReplacementModel>()
+            .HasOne(x => x.Contract)
+            .WithMany()
+            .HasForeignKey(x => x.ContractId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.Entity<ContractDriverReplacementModel>()
             .HasOne(x => x.Contract)
             .WithMany()
             .HasForeignKey(x => x.ContractId)

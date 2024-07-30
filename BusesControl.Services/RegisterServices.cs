@@ -32,6 +32,7 @@ public class RegisterServices
         builder.Services.AddScoped<IContractService, ContractService>();
         builder.Services.AddScoped<IContractDescriptionService, ContractDescriptionService>();
         builder.Services.AddScoped<IContractBusReplacementService, ContractBusReplacementService>();
+        builder.Services.AddScoped<IContractDriverReplacementService, ContractDriverReplacementService>();
         builder.Services.AddScoped<ICustomerService, CustomerService>();
         builder.Services.AddScoped<ICustomerContractService, CustomerContractService>();
         builder.Services.AddScoped<IViaCepIntegrationService, ViaCepIntegrationService>();

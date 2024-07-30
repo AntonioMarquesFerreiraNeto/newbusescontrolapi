@@ -1,0 +1,83 @@
+﻿using BusesControl.Business.v1.Interfaces;
+using BusesControl.Commons.Notification;
+using BusesControl.Commons.Notification.Interfaces;
+using BusesControl.Entities.Models;
+using BusesControl.Entities.Requests;
+using BusesControl.Filters.Notification;
+using BusesControl.Persistence.v1.Repositories.Interfaces;
+using BusesControl.Persistence.v1.UnitOfWork;
+using BusesControl.Services.v1.Interfaces;
+using Microsoft.AspNetCore.Http;
+
+namespace BusesControl.Services.v1;
+
+public class ContractDriverReplacementService(
+    IUnitOfWork _unitOfWork,
+    INotificationApi _notificationApi,
+    IContractDriverReplacementBusiness _contractDriverReplacementBusiness,
+    IContractDriverReplacementRepository _contractDriverReplacementRepository
+) : IContractDriverReplacementService
+{
+    public async Task<IEnumerable<ContractDriverReplacementModel>> FindByContractAsync(Guid contractId)
+    {
+        var records = await _contractDriverReplacementRepository.FindByContractAsync(contractId);
+        return records;
+    }
+
+    public async Task<ContractDriverReplacementModel> GetByIdAsync(Guid id, Guid contractId)
+    {
+        var record = await _contractDriverReplacementRepository.GetByIdAndContractWithDriverAsync(id, contractId);
+        if (record is null)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status404NotFound,
+                title: NotificationTitle.NotFound,
+                details: Message.ContractDriverReplacement.NotFound
+            );
+            return default!;
+        }
+
+        return record;
+    }
+
+    public async Task<bool> CreateAsync(Guid contractId, ContractDriverReplacementCreateRequest request)
+    {
+        await _contractDriverReplacementBusiness.ValidateForCreateAsync(contractId, request);
+        if (_notificationApi.HasNotification)
+        {
+            return false;
+        }
+
+        var record = new ContractDriverReplacementModel
+        { 
+            ContractId = contractId,
+            DriverId = request.DriverId,
+            StartDate = request.StartDate,
+            TerminateDate = request.TerminateDate,
+            ReasonDescription = request.ReasonDescription
+        };
+        await _contractDriverReplacementRepository.CreateAsync(record);
+        await _unitOfWork.CommitAsync();
+
+        return true;
+    }
+
+    public async Task<bool> DeleteAsync(Guid contractId, Guid id)
+    {
+        var record = await _contractDriverReplacementRepository.GetByIdAndContractAsync(id, contractId);
+        if (record is null)
+        {
+            _notificationApi.SetNotification(
+                statusCode: StatusCodes.Status404NotFound,
+                title: NotificationTitle.NotFound,
+                details: Message.ContractDriverReplacement.NotFound
+            );
+            return false;
+        }
+
+        _contractDriverReplacementRepository.Delete(record);
+        await _unitOfWork.CommitAsync();
+
+        return true;
+    }
+}
