@@ -18,6 +18,17 @@ public class ContractDescriptionController(
     IContractDescriptionService _contractDescriptionService
 ) : ControllerBase
 {
+    /// <summary>
+    /// Retorna descrição de contrato pelo ID
+    /// </summary>
+    /// <response code="200">Retorna sucesso da requisição</response>
+    /// <response code="401">Retorna erro de não autorizado</response>
+    /// <response code="404">Retorna erro de não não encontrado</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
@@ -25,6 +36,15 @@ public class ContractDescriptionController(
         return Ok(response);
     }
 
+    /// <summary>
+    /// Retorna descrições de contrato
+    /// </summary>
+    /// <response code="200">Retorna sucesso da requisição</response>
+    /// <response code="401">Retorna erro de não autorizado</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet]
     public async Task<IActionResult> Find([FromQuery] int page, [FromQuery] int pageSize)
     {
@@ -32,6 +52,19 @@ public class ContractDescriptionController(
         return Ok(response);
     }
 
+    /// <summary>
+    /// Cria uma nova descrição de contrato
+    /// </summary>
+    /// <response code="204">Retorna sucesso da requisição</response>
+    /// <response code="400">Retorna erro de requisição inválida</response>
+    /// <response code="401">Retorna erro de não autorizado</response>
+    /// <response code="404">Retorna erro de não não encontrado</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] ContractDescriptionCreateRequest request)
     {
@@ -45,6 +78,19 @@ public class ContractDescriptionController(
         return NoContent();
     }
 
+    /// <summary>
+    /// Atualiza descrição de contrato
+    /// </summary>
+    /// <response code="204">Retorna sucesso da requisição</response>
+    /// <response code="400">Retorna erro de requisição inválida</response>
+    /// <response code="401">Retorna erro de não autorizado</response>
+    /// <response code="404">Retorna erro de não não encontrado</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPut("{id}")]
     public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] ContractDescriptionUpdateRequest request)
     {
@@ -58,6 +104,19 @@ public class ContractDescriptionController(
         return NoContent();
     }
 
+    /// <summary>
+    /// Remove descrição do contrato pelo ID
+    /// </summary>
+    /// <response code="204">Retorna sucesso da requisição</response>
+    /// <response code="400">Retorna erro de requisição inválida</response>
+    /// <response code="401">Retorna erro de não autorizado</response>
+    /// <response code="404">Retorna erro de não não encontrado</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete([FromRoute] Guid id)
     {

@@ -17,6 +17,15 @@ public class ContractBusReplacementController(
     IContractBusReplacementService _contractBusReplacementService
 ) : ControllerBase
 {
+    /// <summary>
+    /// Busca substituições de ônibus pelo contrato
+    /// </summary>
+    /// <response code="200">Retorna sucesso da requisição</response>
+    /// <response code="401">Retorna erro de não autorizado</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet]
     public async Task<IActionResult> FindByContract([FromRoute] Guid contractId)
     {
@@ -24,6 +33,17 @@ public class ContractBusReplacementController(
         return Ok(response);
     }
 
+    /// <summary>
+    /// Busca substituição de ônibus pelo contrato e ID
+    /// </summary>
+    /// <response code="200">Retorna sucesso da requisição</response>
+    /// <response code="401">Retorna erro de não autorizado</response>
+    /// <response code="404">Retorna erro de não encontrado</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById([FromRoute] Guid contractId, [FromRoute] Guid id)
     {
@@ -31,6 +51,19 @@ public class ContractBusReplacementController(
         return Ok(response);
     }
 
+    /// <summary>
+    /// Cria uma nova substituição de ônibus para o contrato
+    /// </summary>
+    /// <response code="204">Retorna sucesso da requisição</response>
+    /// <response code="400">Retorna erro de requisição inválida</response>
+    /// <response code="401">Retorna erro de não autorizado</response>
+    /// <response code="404">Retorna erro de não não encontrado</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost]
     public async Task<IActionResult> Create([FromRoute] Guid contractId, [FromBody] ContractBusReplacementCreateRequest request)
     {
@@ -44,6 +77,17 @@ public class ContractBusReplacementController(
         return NoContent();
     }
 
+    /// <summary>
+    /// Remove substituição de ônibus pelo contrato e ID
+    /// </summary>
+    /// <response code="204">Retorna sucesso da requisição</response>
+    /// <response code="401">Retorna erro de não autorizado</response>
+    /// <response code="404">Retorna erro de não encontrado</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete([FromRoute] Guid contractId, [FromRoute] Guid id)
     {

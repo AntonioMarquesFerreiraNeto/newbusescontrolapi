@@ -19,6 +19,17 @@ public class EmployeeController(
     IEmployeeService _employeeService
 ) : ControllerBase
 {
+    /// <summary>
+    /// Busca funcionários
+    /// </summary>
+    /// <response code="200">Retorna sucesso da requisição</response>
+    /// <response code="401">Retorna erro de não autorizado</response>
+    /// <response code="403">Retorna erro de acesso negado</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet]
     public async Task<IActionResult> FindBySearch([FromQuery] int page, [FromQuery] int pageSize, [FromQuery] string? search)
     {
@@ -26,6 +37,19 @@ public class EmployeeController(
         return Ok(response);
     }
 
+    /// <summary>
+    /// Busca funcionário pelo ID
+    /// </summary>
+    /// <response code="200">Retorna sucesso da requisição</response>
+    /// <response code="401">Retorna erro de não autorizado</response>
+    /// <response code="403">Retorna erro de acesso negado</response>
+    /// <response code="404">Retorna erro de não não encontrado</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
@@ -33,6 +57,23 @@ public class EmployeeController(
         return Ok(response);
     }
 
+    /// <summary>
+    /// Cria um novo funcionário
+    /// </summary>
+    /// <response code="204">Retorna sucesso da requisição</response>
+    /// <response code="400">Retorna erro de requisição inválida</response>
+    /// <response code="401">Retorna erro de não autorizado</response>
+    /// <response code="403">Retorna erro de acesso negado</response>
+    /// <response code="404">Retorna erro de não não encontrado</response>
+    /// <response code="409">Retorna erro de conflito</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] EmployeeCreateRequest request)
     {
@@ -46,6 +87,23 @@ public class EmployeeController(
         return NoContent();
     }
 
+    /// <summary>
+    /// Atualiza funcionário pelo ID
+    /// </summary>
+    /// <response code="204">Retorna sucesso da requisição</response>
+    /// <response code="400">Retorna erro de requisição inválida</response>
+    /// <response code="401">Retorna erro de não autorizado</response>
+    /// <response code="403">Retorna erro de acesso negado</response>
+    /// <response code="404">Retorna erro de não não encontrado</response>
+    /// <response code="409">Retorna erro de conflito</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPut("{id}")]
     public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] EmployeeUpdateRequest request)
     {
@@ -59,6 +117,21 @@ public class EmployeeController(
         return NoContent();
     }
 
+    /// <summary>
+    /// Atualiza ou inativa pelo ID
+    /// </summary>
+    /// <response code="204">Retorna sucesso da requisição</response>
+    /// <response code="400">Retorna erro de requisição inválida</response>
+    /// <response code="401">Retorna erro de não autorizado</response>
+    /// <response code="403">Retorna erro de acesso negado</response>
+    /// <response code="404">Retorna erro de não não encontrado</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPatch("{id}/active")]
     public async Task<IActionResult> ToggleActive([FromRoute] Guid id)
     {
@@ -66,6 +139,21 @@ public class EmployeeController(
         return NoContent();
     }
 
+    /// <summary>
+    /// Atualiza cargo pelo ID
+    /// </summary>
+    /// <response code="200">Retorna sucesso da requisição</response>
+    /// <response code="400">Retorna erro de requisição inválida</response>
+    /// <response code="401">Retorna erro de não autorizado</response>
+    /// <response code="403">Retorna erro de acesso negado</response>
+    /// <response code="404">Retorna erro de não não encontrado</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPatch("{id}/type")]
     public async Task<IActionResult> ToggleType([FromRoute] Guid id, [FromBody] EmployeeToggleTypeRequest request)
     {

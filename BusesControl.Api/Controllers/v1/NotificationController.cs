@@ -17,6 +17,15 @@ public class NotificationController(
     INotificationService _notificationService
 ) : ControllerBase
 {
+    /// <summary>
+    /// Busca notifications para admin
+    /// </summary>
+    /// <response code="200">Retorna sucesso da requisição</response>
+    /// <response code="401">Retorna erro de não autorizado</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetAllForAdmin([FromQuery] PaginationRequest request)
@@ -25,6 +34,15 @@ public class NotificationController(
         return Ok(response);
     }
 
+    /// <summary>
+    /// Busca notificações pelo usuário logado
+    /// </summary>
+    /// <response code="200">Retorna sucesso da requisição</response>
+    /// <response code="401">Retorna erro de não autorizado</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet("my")]
     public async Task<IActionResult> FindMyNotifications([FromQuery] PaginationRequest request)
     {
@@ -32,6 +50,19 @@ public class NotificationController(
         return Ok(response);
     }
 
+    /// <summary>
+    /// Busca notificação pelo ID
+    /// </summary>
+    /// <response code="200">Retorna sucesso da requisição</response>
+    /// <response code="401">Retorna erro de não autorizado</response>
+    /// <response code="403">Retorna erro de acesso negado</response>
+    /// <response code="404">Retorna erro de não encontrado</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet("{id}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetById([FromRoute] Guid id)
@@ -40,6 +71,21 @@ public class NotificationController(
         return Ok(response);
     }
 
+    /// <summary>
+    /// Cria notificação
+    /// </summary>
+    /// <response code="204">Retorna sucesso da requisição</response>
+    /// <response code="400">Retorna erro de requisição inválida</response>
+    /// <response code="401">Retorna erro de não autorizado</response>
+    /// <response code="403">Retorna erro de acesso negado</response>
+    /// <response code="404">Retorna erro de não encontrado</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create([FromBody] NotificationCreateRequest request)
@@ -54,6 +100,19 @@ public class NotificationController(
         return NoContent();
     }
 
+    /// <summary>
+    /// Remove notificação pelo ID
+    /// </summary>
+    /// <response code="204">Retorna sucesso da requisição</response>
+    /// <response code="401">Retorna erro de não autorizado</response>
+    /// <response code="403">Retorna erro de acesso negado</response>
+    /// <response code="404">Retorna erro de não encontrado</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete([FromRoute] Guid id)
