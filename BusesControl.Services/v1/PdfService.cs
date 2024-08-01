@@ -11,10 +11,10 @@ using System.Text.RegularExpressions;
 
 namespace BusesControl.Services.v1;
 
-public class GenerationPdfService(
+public class PdfService(
     AppSettings _appSettings,
     INotificationApi _notificationApi
-) : IGenerationPdfService
+) : IPdfService
 {
     private static string RenderTemplateContract(CustomerContractModel customerContract, string template)
     {

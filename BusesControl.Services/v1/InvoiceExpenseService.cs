@@ -98,12 +98,14 @@ public class InvoiceExpenseService(
 
     public async Task<bool> CreateInternalAsync(CreateInvoiceExpenseInDTO createInvoiceExpense)
     {
+        createInvoiceExpense.SetTitleAndDescription();
+
         var record = new InvoiceExpenseModel
         {
             Reference = await GenerateReferenceUniqueAsync(),
             FinancialId = createInvoiceExpense.FinancialId,
-            Title = "Fatura referente a despesa",
-            Description = $"{createInvoiceExpense.Index}º fatura referente a despesa do financeiro {createInvoiceExpense.FinancialReference}",
+            Title = createInvoiceExpense.Title,
+            Description = createInvoiceExpense.Description,
             Price = createInvoiceExpense.Price,
             TotalPrice = createInvoiceExpense.Price,
             DueDate = createInvoiceExpense.DueDate

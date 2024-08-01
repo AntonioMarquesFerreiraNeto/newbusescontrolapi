@@ -20,7 +20,7 @@ public class ContractService(
     IUnitOfWork _unitOfWork,
     INotificationApi _notificationApi,
     IUserService _userService,
-    IGenerationPdfService _generationPdfService,
+    IPdfService _pdfService,
     ICustomerContractService _customerContractService,
     IContractDescriptionService _contractDescriptionService,
     IFinancialService _financialService,
@@ -85,7 +85,7 @@ public class ContractService(
             return default!;
         }
 
-        var response = await _generationPdfService.GeneratePdfFromTemplateAsync(customerContractRecord);
+        var response = await _pdfService.GeneratePdfFromTemplateAsync(customerContractRecord);
         if (_notificationApi.HasNotification)
         {
             return default!;
@@ -319,7 +319,7 @@ public class ContractService(
             return default!;
         }
 
-        var response = await _generationPdfService.GeneratePdfTerminationFromTemplateAsync(customerContractRecord);
+        var response = await _pdfService.GeneratePdfTerminationFromTemplateAsync(customerContractRecord);
         if (_notificationApi.HasNotification)
         {
             return default!;

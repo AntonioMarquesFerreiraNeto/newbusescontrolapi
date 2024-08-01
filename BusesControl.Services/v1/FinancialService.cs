@@ -203,12 +203,13 @@ public class FinancialService(
         for (var index = 1; index <= installments; index++)
         {
             var createInvoiceExpense = new CreateInvoiceExpenseInDTO
-            { 
+            {
                 Index = index,
                 FinancialId = record.Id,
                 FinancialReference = record.Reference,
                 Price = Math.Round(record.TotalPrice / installments, 2),
-                DueDate = index != 1 ? record.StartDate.AddMonths(index - 1) : record.StartDate
+                DueDate = index != 1 ? record.StartDate.AddMonths(index - 1) : record.StartDate,
+                IsSingle = record.PaymentType == PaymentTypeEnum.Single
             };
             
             await _invoiceExpenseService.CreateInternalAsync(createInvoiceExpense);

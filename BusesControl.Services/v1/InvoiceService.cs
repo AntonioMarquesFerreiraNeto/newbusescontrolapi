@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using BusesControl.Business.v1.Interfaces;
+﻿using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.DTOs;
@@ -61,9 +60,6 @@ public class InvoiceService(
         };
 
         var httpResult = await httpClient.PostAsJsonAsync($"{_appSettings.Assas.Url}/payments", createInvoiceInAssas);
-
-        var teste = await httpResult.Content.ReadAsStringAsync();
-
         if (!httpResult.IsSuccessStatusCode)
         {
             _notificationApi.SetNotification(

@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.Enums;
 using BusesControl.Entities.Requests;
 using BusesControl.Services.v1.Interfaces;
@@ -16,6 +17,8 @@ namespace BusesControl.Api.Controllers.v1;
 public class ContractController(
     IValidator<ContractCreateRequest> _contractCreateRequestValidator,
     IValidator<ContractUpdateRequest> _contractUpdateRequestValidator,
+    INotificationApi _notificationApi,
+    IExcelService _excelService,
     IContractService _contractService
 ) : ControllerBase
 {
@@ -24,6 +27,18 @@ public class ContractController(
     {
         var response = await _contractService.FindByOptionalStatusAsync(page, pageSize, status);
         return Ok(response);
+    }
+
+    [HttpGet("report/excel")]
+    public async Task<IActionResult> GetExcel()
+    {
+        var fileResponse = await _excelService.GenerateContractAsync();
+        if (_notificationApi.HasNotification)
+        {
+            return StatusCode(_notificationApi.StatusCodes!.Value, _notificationApi.Details);
+        }
+
+        return File(fileResponse.FileContent, fileResponse.ContentType, fileResponse.FileName);
     }
 
     [HttpGet("{id}")]

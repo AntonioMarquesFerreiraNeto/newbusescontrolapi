@@ -12,6 +12,11 @@ public class InvoiceRepository(
 {
     private readonly AppDbContext _context = context;
 
+    public async Task<IEnumerable<InvoiceModel>> FindByFinancialAsync(Guid financialId)
+    {
+        return await _context.Invoices.Where(x => x.FinancialId == financialId).ToListAsync();
+    }
+
     public async Task<IEnumerable<InvoiceModel>> FindByDueDateForSystemAsync(DateOnly date, bool expenseOnly)
     {
         var query = _context.Invoices.Include(x => x.Financial).AsNoTracking();
