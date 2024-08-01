@@ -42,6 +42,15 @@ public class ContractRepository(
         return await query.SingleOrDefaultAsync(x => x.Id == id);
     }
 
+    public async Task<IEnumerable<ContractModel>> GetAllAsync()
+    {
+        return await _context.Contracts.AsNoTracking()
+                .Include(x => x.Bus)
+                .Include(x => x.Driver)
+                .Include(x => x.Approver)
+                .ToListAsync();
+    }
+
     public async Task<IEnumerable<ContractModel>> FindByOptionalStatusAsync(int page = 0, int pageSize = 0, ContractStatusEnum? status = null)
     {
         var query = _context.Contracts.AsNoTracking();

@@ -1,9 +1,15 @@
-﻿namespace BusesControl.Entities.Enums;
+﻿using System.ComponentModel;
+
+namespace BusesControl.Entities.Enums;
 
 public enum EmployeeTypeEnum
 {
+    [Description("Motorista")]
     Driver = 1,
+    [Description("Assistente")]
     Assistant = 2,
+    [Description("Administrador")]
     Admin = 3,
+    [Description("Agente de suporte")]
     SupportAgent = 4
 }

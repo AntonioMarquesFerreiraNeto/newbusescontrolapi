@@ -9,6 +9,7 @@ public interface IContractRepository
     Task<ContractModel?> GetByIdWithCustomersContractAsync(Guid id);
     Task<ContractModel?> GetByIdWithIncludesAsync(Guid id);
     Task<ContractModel?> GetByIdWithSettingPanelAsync(Guid id);
+    Task<IEnumerable<ContractModel>> GetAllAsync();
     Task<IEnumerable<ContractModel>> FindByOptionalStatusAsync(int page = 0, int pageSize = 0, ContractStatusEnum? status = null);
     Task<IEnumerable<ContractModel>> FindByContractAndTerminateDateAsync(ContractStatusEnum status, DateOnly terminateDate);
     Task<bool> CreateAsync(ContractModel record);

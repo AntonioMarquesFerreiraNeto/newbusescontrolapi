@@ -11,6 +11,16 @@ public class FinancialRepository(
 {
     private readonly AppDbContext _context = context;
 
+    public async Task<IEnumerable<FinancialModel>> GetAllAsync()
+    {
+        return await _context.Financials.AsNoTracking()
+                .Include(x => x.Customer)
+                .Include(x => x.Supplier)
+                .Include(x => x.Invoices)
+                .Include(x => x.InvoiceExpenses)
+                .ToListAsync();
+    }
+
     public async Task<IEnumerable<FinancialModel>> FindBySearchAsync(int page = 0, int pageSize = 0, string? search = null)
     {
         var query = _context.Financials.Include(x => x.Customer).Include(x => x.Supplier).AsNoTracking();

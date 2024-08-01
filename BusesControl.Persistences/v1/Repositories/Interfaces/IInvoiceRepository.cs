@@ -5,6 +5,7 @@ namespace BusesControl.Persistence.v1.Repositories.Interfaces;
 
 public interface IInvoiceRepository
 {
+    Task<IEnumerable<InvoiceModel>> FindByFinancialAsync(Guid financialId);
     Task<IEnumerable<InvoiceModel>> FindByDueDateForSystemAsync(DateOnly date, bool expenseOnly);
     Task<IEnumerable<InvoiceModel>> FindByStatusForSystemWithFinancialAsync(InvoiceStatusEnum status);
     Task<InvoiceModel?> GetByIdWithFinancialAsync(Guid id);

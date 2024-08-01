@@ -41,7 +41,7 @@ public class RegisterServices
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IUserRegistrationQueueService, UserRegistrationQueueService>();
-        builder.Services.AddScoped<IGenerationPdfService, GenerationPdfService>();
+        builder.Services.AddScoped<IPdfService, PdfService>();
         builder.Services.AddScoped<IEmailService, EmailService>();
         builder.Services.AddScoped<IFinancialService, FinancialService>();
         builder.Services.AddScoped<IInvoiceService, InvoiceService>();
@@ -54,6 +54,7 @@ public class RegisterServices
         builder.Services.AddScoped<IInvoiceExpenseService, InvoiceExpenseService>();
         builder.Services.AddScoped<ISupportTicketService, SupportTicketService>();
         builder.Services.AddScoped<ISupportTicketMessageService, SupportTicketMessageService>();
+        builder.Services.AddScoped<IExcelService, ExcelService>();
 
         var appSettings = builder.Configuration.GetSection("AppSettings");
         builder.Services.Configure<AppSettings>(appSettings);

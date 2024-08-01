@@ -11,6 +11,11 @@ public class InvoiceExpenseRepository(
 {
     private readonly AppDbContext _context = context;
 
+    public async Task<IEnumerable<InvoiceExpenseModel>> FindByFinancialAsync(Guid financialId)
+    {
+        return await _context.InvoicesExpense.Where(x => x.FinancialId == financialId).ToListAsync();
+    }
+
     public async Task<InvoiceExpenseModel?> GetByIdAsync(Guid id)
     {
         return await _context.InvoicesExpense.SingleOrDefaultAsync(x => x.Id == id);
