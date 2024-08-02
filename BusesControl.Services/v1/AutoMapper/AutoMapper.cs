@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
-using BusesControl.Entities.Models;
-using BusesControl.Entities.Request;
-using BusesControl.Entities.Requests;
-using BusesControl.Entities.Responses;
+using BusesControl.Entities.Models.v1;
+using BusesControl.Entities.Requests.v1;
+using BusesControl.Entities.Responses.v1;
 using System.Text.Json;
 
 namespace BusesControl.Services.v1.AutoMapper;

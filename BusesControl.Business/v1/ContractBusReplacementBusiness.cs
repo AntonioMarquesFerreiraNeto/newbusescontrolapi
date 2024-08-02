@@ -1,15 +1,15 @@
 ﻿using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Models;
-using BusesControl.Entities.Requests;
+using BusesControl.Entities.Models.v1;
+using BusesControl.Entities.Requests.v1;
 using BusesControl.Filters.Notification;
 using Microsoft.AspNetCore.Http;
 
 namespace BusesControl.Business.v1;
 
 public class ContractBusReplacementBusiness(
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     IBusBusiness _busBusiness,
     IContractBusiness _contractBusiness
 ) : IContractBusReplacementBusiness
@@ -18,7 +18,7 @@ public class ContractBusReplacementBusiness(
     {
         if (terminateDate < startDate)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.ContractBusReplacement.StartDateLessTerminateDate
@@ -28,7 +28,7 @@ public class ContractBusReplacementBusiness(
 
         if (startDate < contract.StartDate)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.ContractBusReplacement.StartDateLessContractStartDate
@@ -38,7 +38,7 @@ public class ContractBusReplacementBusiness(
 
         if (terminateDate > contract.TerminateDate)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.ContractBusReplacement.TerminateDateGreaterContractTerminateDate
@@ -52,20 +52,20 @@ public class ContractBusReplacementBusiness(
     public async Task<bool> ValidateForCreateAsync(Guid contractId, ContractBusReplacementCreateRequest request)
     {
         var contractRecord = await _contractBusiness.GetForContractBusOrDriverReplacementAsync(contractId);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
 
         ValidateStartDateAndTerminateDate(request.StartDate, request.TerminateDate, contractRecord);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
 
         if (request.BusId == contractRecord.BusId)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.ContractBusReplacement.BusInvalid
@@ -74,7 +74,7 @@ public class ContractBusReplacementBusiness(
         }
 
         await _busBusiness.ValidateForContractBusReplacementAsync(request.BusId);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }

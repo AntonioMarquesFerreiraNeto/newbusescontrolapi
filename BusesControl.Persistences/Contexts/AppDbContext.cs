@@ -1,4 +1,4 @@
-﻿using BusesControl.Entities.Models;
+﻿using BusesControl.Entities.Models.v1;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

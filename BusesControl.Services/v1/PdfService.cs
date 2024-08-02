@@ -1,8 +1,8 @@
 ﻿using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Enums;
-using BusesControl.Entities.Models;
-using BusesControl.Entities.Responses;
+using BusesControl.Entities.Enums.v1;
+using BusesControl.Entities.Models.v1;
+using BusesControl.Entities.Responses.v1;
 using BusesControl.Filters.Notification;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -13,7 +13,7 @@ namespace BusesControl.Services.v1;
 
 public class PdfService(
     AppSettings _appSettings,
-    INotificationApi _notificationApi
+    INotificationContext _notificationContext
 ) : IPdfService
 {
     private static string RenderTemplateContract(CustomerContractModel customerContract, string template)
@@ -165,7 +165,7 @@ public class PdfService(
         var httpResult = await httpClient.PostAsync(_appSettings.PdfCo.Url, requestContent);
         if (!httpResult.IsSuccessStatusCode)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status500InternalServerError,
                 title: NotificationTitle.InternalError,
                 details: Message.CustomerContract.PdfUnexpected
@@ -176,7 +176,7 @@ public class PdfService(
         var response = await httpResult.Content.ReadFromJsonAsync<PdfCoResponse>();
         if (response is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status500InternalServerError,
                 title: NotificationTitle.InternalError,
                 details: Message.CustomerContract.PdfUnexpected
@@ -209,7 +209,7 @@ public class PdfService(
         var httpResult = await httpClient.PostAsync(_appSettings.PdfCo.Url, bodyRequest);
         if (!httpResult.IsSuccessStatusCode)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status500InternalServerError,
                 title: NotificationTitle.InternalError,
                 details: Message.CustomerContract.PdfUnexpected
@@ -220,7 +220,7 @@ public class PdfService(
         var response = await httpResult.Content.ReadFromJsonAsync<PdfCoResponse>();
         if (response is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status500InternalServerError,
                 title: NotificationTitle.InternalError,
                 details: Message.CustomerContract.PdfUnexpected

@@ -1,15 +1,15 @@
 ﻿using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Models;
-using BusesControl.Entities.Requests;
+using BusesControl.Entities.Models.v1;
+using BusesControl.Entities.Requests.v1;
 using BusesControl.Filters.Notification;
 using Microsoft.AspNetCore.Http;
 
 namespace BusesControl.Business.v1;
 
 public class ContractDriverReplacementBusiness(
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     IContractBusiness _contractBusiness,
     IEmployeeBusiness _employeeBusiness
 ) : IContractDriverReplacementBusiness
@@ -18,7 +18,7 @@ public class ContractDriverReplacementBusiness(
     {
         if (terminateDate < startDate)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.ContractDriverReplacement.StartDateLessTerminateDate
@@ -28,7 +28,7 @@ public class ContractDriverReplacementBusiness(
 
         if (startDate < contract.StartDate)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.ContractDriverReplacement.StartDateLessContractStartDate
@@ -38,7 +38,7 @@ public class ContractDriverReplacementBusiness(
 
         if (terminateDate > contract.TerminateDate)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.ContractDriverReplacement.TerminateDateGreaterContractTerminateDate
@@ -52,20 +52,20 @@ public class ContractDriverReplacementBusiness(
     public async Task<bool> ValidateForCreateAsync(Guid contractId, ContractDriverReplacementCreateRequest request)
     {
         var contractRecord = await _contractBusiness.GetForContractBusOrDriverReplacementAsync(contractId);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
 
         ValidateStartDateAndTerminateDate(request.StartDate, request.TerminateDate, contractRecord);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
 
         if (request.DriverId == contractRecord.DriverId)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.ContractDriverReplacement.DriverInvalid
@@ -74,7 +74,7 @@ public class ContractDriverReplacementBusiness(
         }
 
         await _employeeBusiness.ValidateForContractDriverReplacementAsync(request.DriverId);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }

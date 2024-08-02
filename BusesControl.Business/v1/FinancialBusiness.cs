@@ -1,16 +1,16 @@
 ﻿using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Enums;
-using BusesControl.Entities.Models;
+using BusesControl.Entities.Enums.v1;
+using BusesControl.Entities.Models.v1;
 using BusesControl.Filters.Notification;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
 using Microsoft.AspNetCore.Http;
 
 namespace BusesControl.Business.v1;
 
 public class FinancialBusiness(
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     IFinancialRepository _financialRepository
 ) : IFinancialBusiness
 {
@@ -20,7 +20,7 @@ public class FinancialBusiness(
 
         if (dateNow >= terminateDate)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Contract.TerminationDateNotInFuture
@@ -34,7 +34,7 @@ public class FinancialBusiness(
 
             if (terminateDate > dateLimit)
             {
-                _notificationApi.SetNotification(
+                _notificationContext.SetNotification(
                     statusCode: StatusCodes.Status400BadRequest,
                     title: NotificationTitle.BadRequest,
                     details: Message.Financial.TerminationDateExceedsLimit
@@ -51,7 +51,7 @@ public class FinancialBusiness(
         var record = await _financialRepository.GetByIdWithInvoicesAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Financial.NotFound
@@ -61,7 +61,7 @@ public class FinancialBusiness(
 
         if (record.ContractId is not null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Financial.InvalidInactive
@@ -71,7 +71,7 @@ public class FinancialBusiness(
 
         if (!record.Active)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Financial.IsInactive
@@ -81,7 +81,7 @@ public class FinancialBusiness(
 
         if (record.Type != FinancialTypeEnum.Revenue)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Financial.InvalidInactive
@@ -97,7 +97,7 @@ public class FinancialBusiness(
         var record = await _financialRepository.GetByIdWithInvoicesExpenseAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Financial.NotFound
@@ -107,7 +107,7 @@ public class FinancialBusiness(
 
         if (record.ContractId is not null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Financial.InvalidInactive
@@ -117,7 +117,7 @@ public class FinancialBusiness(
 
         if (!record.Active)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Financial.IsInactive
@@ -127,7 +127,7 @@ public class FinancialBusiness(
 
         if (record.Type != FinancialTypeEnum.Expense)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Financial.InvalidInactive
@@ -143,7 +143,7 @@ public class FinancialBusiness(
         var record = await _financialRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Financial.NotFound
@@ -153,7 +153,7 @@ public class FinancialBusiness(
 
         if (!record.Active)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Financial.IsInactive

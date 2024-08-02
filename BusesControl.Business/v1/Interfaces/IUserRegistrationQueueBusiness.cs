@@ -1,5 +1,5 @@
-﻿using BusesControl.Entities.Models;
-using BusesControl.Entities.Request;
+﻿using BusesControl.Entities.Models.v1;
+using BusesControl.Entities.Requests.v1;
 
 namespace BusesControl.Business.v1.Interfaces;
 

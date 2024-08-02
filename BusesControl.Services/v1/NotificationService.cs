@@ -1,12 +1,11 @@
-﻿using BusesControl.Commons;
-using BusesControl.Commons.Notification;
+﻿using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Enums;
-using BusesControl.Entities.Models;
-using BusesControl.Entities.Requests;
+using BusesControl.Entities.Enums.v1;
+using BusesControl.Entities.Models.v1;
+using BusesControl.Entities.Requests.v1;
 using BusesControl.Filters.Notification;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
-using BusesControl.Persistence.v1.UnitOfWork;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
+using BusesControl.Persistence.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Http;
 
@@ -15,7 +14,7 @@ namespace BusesControl.Services.v1;
 public class NotificationService(
     IUserService _userService,
     IUnitOfWork _unitOfWork,
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     INotificationRepository _notificationRepository
 ) : INotificationService
 {
@@ -38,7 +37,7 @@ public class NotificationService(
         var record = await _notificationRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Notification.NotFound
@@ -74,7 +73,7 @@ public class NotificationService(
             SenderType = senderId is null ? NotificationSenderTypeEnum.System : NotificationSenderTypeEnum.Employee,
             AccessLevel = request.AccessLevel
         };
-        await _notificationRepository.CreateAsync(record);  
+        await _notificationRepository.AddAsync(record);  
         await _unitOfWork.CommitAsync();
 
         return true;
@@ -85,7 +84,7 @@ public class NotificationService(
         var record = await _notificationRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Notification.NotFound
@@ -93,7 +92,7 @@ public class NotificationService(
             return default!;
         }
 
-        _notificationRepository.Delete(record);
+        _notificationRepository.Remove(record);
         await _unitOfWork.CommitAsync();
 
         return true;

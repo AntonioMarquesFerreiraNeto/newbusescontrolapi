@@ -1,16 +1,16 @@
 ﻿using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Enums;
-using BusesControl.Entities.Models;
-using BusesControl.Entities.Requests;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
-using BusesControl.Persistence.v1.UnitOfWork;
+using BusesControl.Entities.Enums.v1;
+using BusesControl.Entities.Models.v1;
+using BusesControl.Entities.Requests.v1;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
+using BusesControl.Persistence.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
 
 namespace BusesControl.Services.v1;
 
 public class SupportTicketMessageService(
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     IUnitOfWork _unitOfWork,
     IUserService _userService,
     ISupportTicketBusiness _supportTicketBusiness,
@@ -26,7 +26,7 @@ public class SupportTicketMessageService(
             Message = message,
             IsSupportAgent = false
         };
-        await _supportTicketMessageRepository.CreateAsync(record);
+        await _supportTicketMessageRepository.AddAsync(record);
         await _unitOfWork.CommitAsync();
 
         return false;
@@ -39,7 +39,7 @@ public class SupportTicketMessageService(
         var supportAgentId = user.Role == "SupportAgent" ? user.EmployeeId : null;
 
         var supportTicketRecord = await _supportTicketBusiness.GetForCreateSupportTicketMessageAsync(ticketId, employeeId);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
@@ -53,7 +53,7 @@ public class SupportTicketMessageService(
             SupportAgentId = supportAgentId,
             IsSupportAgent = supportAgentId is not null,
         };
-        await _supportTicketMessageRepository.CreateAsync(record);
+        await _supportTicketMessageRepository.AddAsync(record);
         await _unitOfWork.CommitAsync();
 
         if (supportAgentId is not null && supportTicketRecord.Status != SupportTicketStatusEnum.InProgress)

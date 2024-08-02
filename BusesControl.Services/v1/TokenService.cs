@@ -1,6 +1,6 @@
 ﻿using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Models;
+using BusesControl.Entities.Models.v1;
 using BusesControl.Filters.Notification;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -14,7 +14,7 @@ namespace BusesControl.Services.v1;
 
 public class TokenService(
     AppSettings _appSettings,
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     UserManager<UserModel> _userManager
 ) : ITokenService
 {
@@ -23,7 +23,7 @@ public class TokenService(
         var roles = await _userManager.GetRolesAsync(user);
         if (roles is null || roles.Count == 0)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status401Unauthorized,
                 title: NotificationTitle.Unauthorized,
                 details: Message.User.CredentialsInvalid

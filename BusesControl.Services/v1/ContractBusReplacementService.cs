@@ -1,11 +1,11 @@
 ﻿using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Models;
-using BusesControl.Entities.Requests;
+using BusesControl.Entities.Models.v1;
+using BusesControl.Entities.Requests.v1;
 using BusesControl.Filters.Notification;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
-using BusesControl.Persistence.v1.UnitOfWork;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
+using BusesControl.Persistence.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Http;
 
@@ -13,7 +13,7 @@ namespace BusesControl.Services.v1;
 
 public class ContractBusReplacementService(
     IUnitOfWork _unitOfWork,
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     IContractBusReplacementBusiness _contractBusReplacementBusiness,
     IContractBusReplacementRepository _contractBusReplacementRepository
 ) : IContractBusReplacementService
@@ -29,7 +29,7 @@ public class ContractBusReplacementService(
         var record = await _contractBusReplacementRepository.GetByIdAndContractWithBusAsync(id, contractId);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.ContractBusReplacement.NotFound
@@ -43,7 +43,7 @@ public class ContractBusReplacementService(
     public async Task<bool> CreateAsync(Guid contractId, ContractBusReplacementCreateRequest request)
     {
         await _contractBusReplacementBusiness.ValidateForCreateAsync(contractId, request);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
@@ -56,7 +56,7 @@ public class ContractBusReplacementService(
             TerminateDate = request.TerminateDate,
             ReasonDescription = request.ReasonDescription
         };
-        await _contractBusReplacementRepository.CreateAsync(record);
+        await _contractBusReplacementRepository.AddAsync(record);
         await _unitOfWork.CommitAsync();
 
         return true;
@@ -67,7 +67,7 @@ public class ContractBusReplacementService(
         var record = await _contractBusReplacementRepository.GetByIdAndContractAsync(id, contractId);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.ContractBusReplacement.NotFound
@@ -75,7 +75,7 @@ public class ContractBusReplacementService(
             return false;
         }
 
-        _contractBusReplacementRepository.Delete(record);
+        _contractBusReplacementRepository.Remove(record);
         await _unitOfWork.CommitAsync();
 
         return true;

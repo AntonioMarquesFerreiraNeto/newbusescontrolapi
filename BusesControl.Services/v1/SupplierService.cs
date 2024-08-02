@@ -2,11 +2,11 @@
 using BusesControl.Commons;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Models;
-using BusesControl.Entities.Requests;
+using BusesControl.Entities.Models.v1;
+using BusesControl.Entities.Requests.v1;
 using BusesControl.Filters.Notification;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
-using BusesControl.Persistence.v1.UnitOfWork;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
+using BusesControl.Persistence.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Http;
 
@@ -14,7 +14,7 @@ namespace BusesControl.Services.v1;
 
 public class SupplierService(
     IUnitOfWork _unitOfWork,
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     ISupplierRepository _supplierRepository,
     ISupplierBusiness _supplierBusiness
 ) : ISupplierService
@@ -38,7 +38,7 @@ public class SupplierService(
         var record = await _supplierRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Supplier.NotFound
@@ -54,7 +54,7 @@ public class SupplierService(
         var (cnpj, phoneNumber) = ClearValues(request.Cnpj, request.PhoneNumber);
 
         await _supplierBusiness.ExistsByEmailOrPhoneNumberOrCnpjAsync(request.Email, phoneNumber, cnpj);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
@@ -73,7 +73,7 @@ public class SupplierService(
             City = request.City,
             State = request.State,
         };
-        await _supplierRepository.CreateAsync(record);
+        await _supplierRepository.AddAsync(record);
         await _unitOfWork.CommitAsync();
 
         return true;
@@ -86,7 +86,7 @@ public class SupplierService(
         var record = await _supplierRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Supplier.NotFound
@@ -95,7 +95,7 @@ public class SupplierService(
         }
 
         await _supplierBusiness.ExistsByEmailOrPhoneNumberOrCnpjAsync(request.Email, phoneNumber, cnpj, id);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
@@ -122,7 +122,7 @@ public class SupplierService(
         var record = await _supplierRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Supplier.NotFound

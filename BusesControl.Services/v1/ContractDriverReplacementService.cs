@@ -1,11 +1,11 @@
 ﻿using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Models;
-using BusesControl.Entities.Requests;
+using BusesControl.Entities.Models.v1;
+using BusesControl.Entities.Requests.v1;
 using BusesControl.Filters.Notification;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
-using BusesControl.Persistence.v1.UnitOfWork;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
+using BusesControl.Persistence.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Http;
 
@@ -13,7 +13,7 @@ namespace BusesControl.Services.v1;
 
 public class ContractDriverReplacementService(
     IUnitOfWork _unitOfWork,
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     IContractDriverReplacementBusiness _contractDriverReplacementBusiness,
     IContractDriverReplacementRepository _contractDriverReplacementRepository
 ) : IContractDriverReplacementService
@@ -29,7 +29,7 @@ public class ContractDriverReplacementService(
         var record = await _contractDriverReplacementRepository.GetByIdAndContractWithDriverAsync(id, contractId);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.ContractDriverReplacement.NotFound
@@ -43,7 +43,7 @@ public class ContractDriverReplacementService(
     public async Task<bool> CreateAsync(Guid contractId, ContractDriverReplacementCreateRequest request)
     {
         await _contractDriverReplacementBusiness.ValidateForCreateAsync(contractId, request);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
@@ -56,7 +56,7 @@ public class ContractDriverReplacementService(
             TerminateDate = request.TerminateDate,
             ReasonDescription = request.ReasonDescription
         };
-        await _contractDriverReplacementRepository.CreateAsync(record);
+        await _contractDriverReplacementRepository.AddAsync(record);
         await _unitOfWork.CommitAsync();
 
         return true;
@@ -67,7 +67,7 @@ public class ContractDriverReplacementService(
         var record = await _contractDriverReplacementRepository.GetByIdAndContractAsync(id, contractId);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.ContractDriverReplacement.NotFound
@@ -75,7 +75,7 @@ public class ContractDriverReplacementService(
             return false;
         }
 
-        _contractDriverReplacementRepository.Delete(record);
+        _contractDriverReplacementRepository.Remove(record);
         await _unitOfWork.CommitAsync();
 
         return true;

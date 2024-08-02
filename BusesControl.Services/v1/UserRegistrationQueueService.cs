@@ -3,13 +3,14 @@ using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Enums;
+using BusesControl.Entities.Enums.v1;
 using BusesControl.Entities.Models;
-using BusesControl.Entities.Request;
-using BusesControl.Entities.Response;
+using BusesControl.Entities.Models.v1;
+using BusesControl.Entities.Requests.v1;
+using BusesControl.Entities.Responses.v1;
 using BusesControl.Filters.Notification;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
-using BusesControl.Persistence.v1.UnitOfWork;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
+using BusesControl.Persistence.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -21,7 +22,7 @@ public class UserRegistrationQueueService(
     UserManager<UserModel> _userManager,
     IMapper _mapper,
     IUnitOfWork _unitOfWork,
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     IEmailService _emailService,
     INotificationService _notificationService,
     IUserService _userService,
@@ -59,7 +60,7 @@ public class UserRegistrationQueueService(
     public async Task<SuccessResponse> CreateForEmployeeAsync(UserRegistrationCreateRequest request)
     {    
         var employeeRecord = await _userRegistrationQueueBusiness.GetForValidateForCreateAsync(request.EmployeeId);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return default!;
         }
@@ -70,7 +71,7 @@ public class UserRegistrationQueueService(
             EmployeeId = request.EmployeeId,
         };
 
-        await _userRegistrationQueueRepository.CreateAsync(record);
+        await _userRegistrationQueueRepository.AddAsync(record);
         await _unitOfWork.CommitAsync();
 
         _emailService.SendEmailForWelcomeUserRegistration(employeeRecord.Email, employeeRecord.Name);
@@ -83,7 +84,7 @@ public class UserRegistrationQueueService(
         request.Cpf = OnlyNumbers.ClearValue(request.Cpf);
 
         var record = await _userRegistrationQueueBusiness.GetForRegistrationUserStepCodeAsync(request);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return default!;
         }
@@ -91,7 +92,7 @@ public class UserRegistrationQueueService(
         _unitOfWork.BeginTransaction();
 
         var userRecord = await _userService.CreateForUserRegistrationAsync(_mapper.Map<UserCreateRequest>(record.Employee));
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return default!;
         }
@@ -102,7 +103,7 @@ public class UserRegistrationQueueService(
             UserId = userRecord.Id,
             Expires = DateTime.UtcNow.AddMinutes(_appSettings.SecurityCode.ExpireCode)    
         };
-        await _userRegistrationSecurityCodeRepository.CreateAsync(securityCodeRecord);
+        await _userRegistrationSecurityCodeRepository.AddAsync(securityCodeRecord);
         await _unitOfWork.CommitAsync();
 
         record.Status = UserRegistrationQueueStatusEnum.WaitingForPassword;
@@ -111,7 +112,7 @@ public class UserRegistrationQueueService(
         _userRegistrationQueueRepository.Update(record);
 
         _emailService.SendEmailStepCode(record.Employee.Email, record.Employee.Name, securityCodeRecord.Code);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return default!;
         }
@@ -126,7 +127,7 @@ public class UserRegistrationQueueService(
         var record = await _userRegistrationSecurityCodeRepository.GetByCodeAsync(request.Code);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.UserRegistration.CodeNotFound
@@ -138,7 +139,7 @@ public class UserRegistrationQueueService(
         var expires = TimeSpan.FromMinutes(_appSettings.SecurityCode.ExpireCode);
         if (difference >= expires)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.UserRegistration.CodeInvalid
@@ -149,7 +150,7 @@ public class UserRegistrationQueueService(
         var userRecord = await _userManager.FindByIdAsync(record.UserId.ToString());
         if (userRecord is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.User.NotFound
@@ -160,7 +161,7 @@ public class UserRegistrationQueueService(
         var tokenPassword = await _userManager.GeneratePasswordResetTokenAsync(userRecord);
         if (tokenPassword is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status500InternalServerError,
                 title: NotificationTitle.InternalError,
                 details: Message.UserRegistration.Unexpected
@@ -175,7 +176,7 @@ public class UserRegistrationQueueService(
     {
         if (request.NewPassword != request.ConfirmPassword)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.ResetUser.InvalidPassword
@@ -184,7 +185,7 @@ public class UserRegistrationQueueService(
         }
 
         var userRegistrationQueueRecord = await _userRegistrationQueueBusiness.GetForRegistrationUserStepPasswordAsync(request.UserId);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return default!;
         }
@@ -192,7 +193,7 @@ public class UserRegistrationQueueService(
         var userRecord = await _userManager.FindByIdAsync(request.UserId.ToString());
         if (userRecord is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.User.NotFound
@@ -205,7 +206,7 @@ public class UserRegistrationQueueService(
         var result = await _userManager.ResetPasswordAsync(userRecord, request.ResetToken, request.NewPassword);
         if (!result.Succeeded)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status500InternalServerError,
                 title: NotificationTitle.InternalError,
                 details: Message.User.Unexpected
@@ -231,7 +232,7 @@ public class UserRegistrationQueueService(
     public async Task<SuccessResponse> DeleteAsync(Guid id)
     {
         var record = await _userRegistrationQueueBusiness.GetForDeleteAsync(id);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return default!;
         }
@@ -241,13 +242,13 @@ public class UserRegistrationQueueService(
         if (record.UserId is not null)
         {
             await _userService.DeleteForUserRegistrationAsync(record.UserId.Value);
-            if (_notificationApi.HasNotification)
+            if (_notificationContext.HasNotification)
             {
                 return default!;
             }
         }
 
-        _userRegistrationQueueRepository.Delete(record);
+        _userRegistrationQueueRepository.Remove(record);
 
         await _unitOfWork.CommitAsync(true);
 
@@ -257,7 +258,7 @@ public class UserRegistrationQueueService(
     public async Task<SuccessResponse> AprrovedAsync(Guid id)
     {
         var record = await _userRegistrationQueueBusiness.GetForApprovedAsync(id);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return default!;
         }
@@ -265,7 +266,7 @@ public class UserRegistrationQueueService(
         _unitOfWork.BeginTransaction();
 
         await _userService.ActiveForAprrovedUserRegistrationAsync(record.UserId!.Value);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return default!;
         }

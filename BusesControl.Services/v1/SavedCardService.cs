@@ -1,6 +1,6 @@
-﻿using BusesControl.Entities.Models;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
-using BusesControl.Persistence.v1.UnitOfWork;
+﻿using BusesControl.Entities.Models.v1;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
+using BusesControl.Persistence.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
 
 namespace BusesControl.Services.v1;
@@ -19,7 +19,7 @@ public class SavedCardService(
             CreditCardBrand = creditCardBrand,
             CreditCardToken = creditCardToken
         };
-        await _savedCardRepository.CreateAsync(record);
+        await _savedCardRepository.AddAsync(record);
         await _unitOfWork.CommitAsync();
 
         return true;

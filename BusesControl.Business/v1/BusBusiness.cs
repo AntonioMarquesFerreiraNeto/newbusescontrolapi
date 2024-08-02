@@ -1,15 +1,15 @@
 ﻿using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Enums;
+using BusesControl.Entities.Enums.v1;
 using BusesControl.Filters.Notification;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
 using Microsoft.AspNetCore.Http;
 
 namespace BusesControl.Business.v1;
 
 public class BusBusiness(
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     IBusRepository _busRepository 
 ) : IBusBusiness
 {
@@ -18,7 +18,7 @@ public class BusBusiness(
         var exists = await _busRepository.ExistsByRenavamOrLicensePlateOrChassisAsync(renavam, licensePlate, chassi, id);
         if (exists)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status409Conflict,
                 title: NotificationTitle.Conflict,
                 details: Message.Bus.Exists
@@ -34,7 +34,7 @@ public class BusBusiness(
         var record = await _busRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Bus.NotFound
@@ -44,7 +44,7 @@ public class BusBusiness(
 
         if (record.Status != BusStatusEnum.Active)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Bus.NotActive
@@ -54,7 +54,7 @@ public class BusBusiness(
 
         if (record.Availability != AvailabilityEnum.Available)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Bus.NotAvailable

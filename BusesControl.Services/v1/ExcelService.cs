@@ -1,9 +1,9 @@
 ﻿using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Enums;
-using BusesControl.Entities.Responses;
+using BusesControl.Entities.Enums.v1;
+using BusesControl.Entities.Responses.v1;
 using BusesControl.Filters.Notification;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
 using BusesControl.Services.v1.Interfaces;
 using ClosedXML.Excel;
 using Humanizer;
@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Http;
 namespace BusesControl.Services.v1;
 
 public class ExcelService(
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     IContractRepository _contractRepository,
     IFinancialRepository _financialRepository,
     IInvoiceRepository _invoiceRepository,
@@ -26,7 +26,7 @@ public class ExcelService(
             var financialRecords = await _financialRepository.GetAllAsync();
             if (!financialRecords.Any())
             {
-                _notificationApi.SetNotification(
+                _notificationContext.SetNotification(
                     statusCode: StatusCodes.Status404NotFound,
                     title: NotificationTitle.NotFound,
                     details: Message.Financial.NotFound
@@ -95,7 +95,7 @@ public class ExcelService(
         }
         catch (Exception ex)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status500InternalServerError,
                 title: NotificationTitle.InternalError,
                 details: ex.Message
@@ -111,7 +111,7 @@ public class ExcelService(
             var contractRecords = await _contractRepository.GetAllAsync();
             if (!contractRecords.Any())
             {
-                _notificationApi.SetNotification(
+                _notificationContext.SetNotification(
                     statusCode: StatusCodes.Status404NotFound,
                     title: NotificationTitle.NotFound,
                     details: Message.Contract.NotFound
@@ -184,7 +184,7 @@ public class ExcelService(
         }
         catch (Exception ex)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status500InternalServerError,
                 title: NotificationTitle.InternalError,
                 details: ex.Message
@@ -200,7 +200,7 @@ public class ExcelService(
             var invoiceRecords = await _invoiceRepository.FindByFinancialAsync(financialId);
             if (!invoiceRecords.Any())
             {
-                _notificationApi.SetNotification(
+                _notificationContext.SetNotification(
                     statusCode: StatusCodes.Status404NotFound,
                     title: NotificationTitle.NotFound,
                     details: Message.Invoice.NotFound
@@ -216,11 +216,12 @@ public class ExcelService(
             sheet.Cell(1, "C").Value = "Situação";
             sheet.Cell(1, "D").Value = "Método de pagamento";
             sheet.Cell(1, "E").Value = "Data de vencimento";
-            sheet.Cell(1, "F").Value = "Juros";
-            sheet.Cell(1, "G").Value = "Valor";
-            sheet.Cell(1, "H").Value = "Valor Total";
+            sheet.Cell(1, "F").Value = "Data de pagamento";
+            sheet.Cell(1, "G").Value = "Juros";
+            sheet.Cell(1, "H").Value = "Valor";
+            sheet.Cell(1, "I").Value = "Valor Total";
 
-            var columns = new[] { "A", "B", "C", "D", "E", "F", "G", "H" };
+            var columns = new[] { "A", "B", "C", "D", "E", "F", "G", "H", "I" };
 
             foreach (var column in columns)
             {
@@ -243,9 +244,10 @@ public class ExcelService(
                 sheet.Cell(index, "C").Value = invoice.Status.Humanize();
                 sheet.Cell(index, "D").Value = invoice.PaymentMethod is not null ? invoice.PaymentMethod.Humanize() : "Não possui";
                 sheet.Cell(index, "E").Value = invoice.DueDate.ToString("dd/MM/yyyy");
-                sheet.Cell(index, "F").Value = invoice.InterestRate.ToString("C2");
-                sheet.Cell(index, "G").Value = invoice.Price.ToString("C2");
-                sheet.Cell(index, "H").Value = invoice.TotalPrice.ToString("C2");
+                sheet.Cell(index, "F").Value = invoice.PaymentDate is not null ? invoice.PaymentDate.Value.ToString("dd/MM/yyyy") : "Não possui";
+                sheet.Cell(index, "G").Value = invoice.InterestRate.ToString("C2");
+                sheet.Cell(index, "H").Value = invoice.Price.ToString("C2");
+                sheet.Cell(index, "I").Value = invoice.TotalPrice.ToString("C2");
 
                 index++;
             }
@@ -262,7 +264,7 @@ public class ExcelService(
         }
         catch (Exception ex)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status500InternalServerError,
                 title: NotificationTitle.InternalError,
                 details: ex.Message
@@ -278,7 +280,7 @@ public class ExcelService(
             var invoiceExpenseRecords = await _invoiceExpenseRepository.FindByFinancialAsync(financialId);
             if (!invoiceExpenseRecords.Any())
             {
-                _notificationApi.SetNotification(
+                _notificationContext.SetNotification(
                     statusCode: StatusCodes.Status404NotFound,
                     title: NotificationTitle.NotFound,
                     details: Message.InvoiceExpense.NotFound
@@ -294,11 +296,12 @@ public class ExcelService(
             sheet.Cell(1, "C").Value = "Situação";
             sheet.Cell(1, "D").Value = "Método de pagamento";
             sheet.Cell(1, "E").Value = "Data de vencimento";
-            sheet.Cell(1, "F").Value = "Juros";
-            sheet.Cell(1, "G").Value = "Valor";
-            sheet.Cell(1, "H").Value = "Valor Total";
+            sheet.Cell(1, "F").Value = "Data de pagamento";
+            sheet.Cell(1, "G").Value = "Juros";
+            sheet.Cell(1, "H").Value = "Valor";
+            sheet.Cell(1, "I").Value = "Valor Total";
 
-            var columns = new[] { "A", "B", "C", "D", "E", "F", "G", "H" };
+            var columns = new[] { "A", "B", "C", "D", "E", "F", "G", "H", "I" };
 
             foreach (var column in columns)
             {
@@ -321,9 +324,10 @@ public class ExcelService(
                 sheet.Cell(index, "C").Value = invoice.Status.Humanize();
                 sheet.Cell(index, "D").Value = invoice.PaymentMethod is not null ? invoice.PaymentMethod.Humanize() : "Não possui";
                 sheet.Cell(index, "E").Value = invoice.DueDate.ToString("dd/MM/yyyy");
-                sheet.Cell(index, "F").Value = invoice.InterestRate.ToString("C2");
-                sheet.Cell(index, "G").Value = invoice.Price.ToString("C2");
-                sheet.Cell(index, "H").Value = invoice.TotalPrice.ToString("C2");
+                sheet.Cell(index, "F").Value = invoice.PaymentDate is not null ? invoice.PaymentDate.Value.ToString("dd/MM/yyyy") : "Não possui";
+                sheet.Cell(index, "G").Value = invoice.InterestRate.ToString("C2");
+                sheet.Cell(index, "H").Value = invoice.Price.ToString("C2");
+                sheet.Cell(index, "I").Value = invoice.TotalPrice.ToString("C2");
 
                 index++;
             }
@@ -340,7 +344,7 @@ public class ExcelService(
         }
         catch (Exception ex)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status500InternalServerError,
                 title: NotificationTitle.InternalError,
                 details: ex.Message

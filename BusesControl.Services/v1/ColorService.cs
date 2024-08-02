@@ -1,11 +1,11 @@
 ﻿using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Models;
-using BusesControl.Entities.Requests;
+using BusesControl.Entities.Models.v1;
+using BusesControl.Entities.Requests.v1;
 using BusesControl.Filters.Notification;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
-using BusesControl.Persistence.v1.UnitOfWork;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
+using BusesControl.Persistence.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Http;
 
@@ -13,7 +13,7 @@ namespace BusesControl.Services.v1;
 
 public class ColorService(
     IUnitOfWork _unitOfWork,
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     IColorBusiness _colorBusiness,
     IColorRepository _colorRepository
 ) : IColorService
@@ -23,7 +23,7 @@ public class ColorService(
         var record = await _colorRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Color.NotFound
@@ -43,7 +43,7 @@ public class ColorService(
     public async Task<bool> CreateAsync(ColorCreateRequest request)
     {
         await _colorBusiness.ExistsAsync(request.Color);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
@@ -53,7 +53,7 @@ public class ColorService(
             Color = request.Color
         };
 
-        await _colorRepository.CreateAsync(record);
+        await _colorRepository.AddAsync(record);
         await _unitOfWork.CommitAsync();
 
         return true;
@@ -64,7 +64,7 @@ public class ColorService(
         var record = await _colorRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Color.NotFound
@@ -73,7 +73,7 @@ public class ColorService(
         }
 
         await _colorBusiness.ExistsAsync(request.Color);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
@@ -90,7 +90,7 @@ public class ColorService(
         var record = await _colorRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Color.NotFound

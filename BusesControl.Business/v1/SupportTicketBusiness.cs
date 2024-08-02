@@ -1,16 +1,16 @@
 ﻿using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Enums;
-using BusesControl.Entities.Models;
+using BusesControl.Entities.Enums.v1;
+using BusesControl.Entities.Models.v1;
 using BusesControl.Filters.Notification;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
 using Microsoft.AspNetCore.Http;
 
 namespace BusesControl.Business.v1;
 
 public class SupportTicketBusiness(
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     ISupportTicketRepository _supportTicketRepository
 ) : ISupportTicketBusiness
 {
@@ -19,7 +19,7 @@ public class SupportTicketBusiness(
         var record = await _supportTicketRepository.GetByIdOptionalEmployeeAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.SupportTicket.NotFound
@@ -29,7 +29,7 @@ public class SupportTicketBusiness(
 
         if (record.Status != SupportTicketStatusEnum.Open && record.Status != SupportTicketStatusEnum.InProgress)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.SupportTicket.NotOpenOrInProgress
@@ -45,7 +45,7 @@ public class SupportTicketBusiness(
         var record = await _supportTicketRepository.GetByIdOptionalEmployeeAsync(id, employeeId);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.SupportTicket.NotFound
@@ -55,7 +55,7 @@ public class SupportTicketBusiness(
 
         if (record.Status != SupportTicketStatusEnum.Open && record.Status != SupportTicketStatusEnum.InProgress)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.SupportTicket.NotOpenOrInProgress

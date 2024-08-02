@@ -1,10 +1,10 @@
 ﻿using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Enums;
-using BusesControl.Entities.Models;
+using BusesControl.Entities.Enums.v1;
+using BusesControl.Entities.Models.v1;
 using BusesControl.Filters.Notification;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
 using Microsoft.AspNetCore.Http;
 
 namespace BusesControl.Business.v1;
@@ -14,7 +14,7 @@ public class ContractBusiness(
     ICustomerContractRepository _customerContractRepository,
     IBusRepository _busRepository,
     IEmployeeRepository _employeeRepository,
-    INotificationApi _notificationApi
+    INotificationContext _notificationContext
 ) : IContractBusiness
 {
     public async Task<bool> ValidateBusAndEmployeeVinculationAsync(Guid busId, Guid driverId)
@@ -22,7 +22,7 @@ public class ContractBusiness(
         var busRecord = await _busRepository.GetByIdAsync(busId);
         if (busRecord is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Bus.NotFound
@@ -32,7 +32,7 @@ public class ContractBusiness(
 
         if (busRecord.Status == BusStatusEnum.Inactive)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Bus.NotActive
@@ -42,7 +42,7 @@ public class ContractBusiness(
 
         if (busRecord.Availability != AvailabilityEnum.Available)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Bus.NotAvailable
@@ -53,7 +53,7 @@ public class ContractBusiness(
         var employeeRecord = await _employeeRepository.GetByIdAsync(driverId);
         if (employeeRecord is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Employee.NotFound
@@ -63,7 +63,7 @@ public class ContractBusiness(
 
         if (employeeRecord.Status == EmployeeStatusEnum.Inactive)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Employee.NotActive
@@ -73,7 +73,7 @@ public class ContractBusiness(
 
         if (employeeRecord.Type != EmployeeTypeEnum.Driver)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Contract.EmployeeNotDriver
@@ -89,7 +89,7 @@ public class ContractBusiness(
         var customerContractRecord = await _customerContractRepository.GetByContractAndCustomerWithIncludesAsync(id, customerId);
         if (customerContractRecord is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.CustomerContract.NotFound
@@ -99,7 +99,7 @@ public class ContractBusiness(
 
         if (!customerContractRecord.Contract.IsApproved)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.CustomerContract.NotPdfContract
@@ -115,7 +115,7 @@ public class ContractBusiness(
         var customerContractRecord = await _customerContractRepository.GetByContractAndCustomerWithIncludesAsync(id, customerId);
         if (customerContractRecord is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.CustomerContract.NotFound
@@ -125,7 +125,7 @@ public class ContractBusiness(
 
         if (customerContractRecord.Contract.Status != ContractStatusEnum.InProgress)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.CustomerContract.NotPdfTermination
@@ -141,7 +141,7 @@ public class ContractBusiness(
         var contractRecord = await _contractRepository.GetByIdAsync(id);
         if (contractRecord is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Contract.NotFound
@@ -151,7 +151,7 @@ public class ContractBusiness(
 
         if (contractRecord.Status != ContractStatusEnum.WaitingReview && contractRecord.Status != ContractStatusEnum.Denied)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Contract.InvalidEditRequest
@@ -167,7 +167,7 @@ public class ContractBusiness(
         var record = await _contractRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Contract.NotFound
@@ -177,7 +177,7 @@ public class ContractBusiness(
 
         if (record.Status != ContractStatusEnum.WaitingReview)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Contract.NotIsWaitingReview
@@ -193,7 +193,7 @@ public class ContractBusiness(
         var record = await _contractRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Contract.NotFound
@@ -203,7 +203,7 @@ public class ContractBusiness(
 
         if (record.Status != ContractStatusEnum.Denied)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Contract.NotIsDenied
@@ -219,7 +219,7 @@ public class ContractBusiness(
         var record = await _contractRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Contract.NotFound
@@ -229,7 +229,7 @@ public class ContractBusiness(
 
         if (record.Status != ContractStatusEnum.WaitingReview)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Contract.NotIsWaitingReview
@@ -245,7 +245,7 @@ public class ContractBusiness(
         var record = await _contractRepository.GetByIdWithCustomersContractAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Contract.NotFound
@@ -255,7 +255,7 @@ public class ContractBusiness(
 
         if (!record.IsApproved)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Contract.NotIsApproved
@@ -265,7 +265,7 @@ public class ContractBusiness(
 
         if (record.Status != ContractStatusEnum.WaitingSignature)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Contract.NotIsWaitingSignature
@@ -281,7 +281,7 @@ public class ContractBusiness(
         var record = await _contractRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Contract.NotFound
@@ -291,7 +291,7 @@ public class ContractBusiness(
 
         if (record.Status != ContractStatusEnum.WaitingReview && record.Status != ContractStatusEnum.Denied)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Contract.InvalidRemoveRequest
@@ -307,7 +307,7 @@ public class ContractBusiness(
         var contractRecord = await _contractRepository.GetByIdWithSettingPanelAsync(contractId);
         if (contractRecord is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Contract.NotFound
@@ -317,7 +317,7 @@ public class ContractBusiness(
 
         if (contractRecord.Status != ContractStatusEnum.InProgress)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Contract.NotInProgress
@@ -334,7 +334,7 @@ public class ContractBusiness(
 
         if (dateNow >= terminateDate)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Contract.TerminationDateNotInFuture
@@ -348,7 +348,7 @@ public class ContractBusiness(
 
             if (terminateDate > dateLimit)
             {
-                _notificationApi.SetNotification(
+                _notificationContext.SetNotification(
                     statusCode: StatusCodes.Status400BadRequest,
                     title: NotificationTitle.BadRequest,
                     details: Message.Contract.TerminationDateExceedsLimit
@@ -365,7 +365,7 @@ public class ContractBusiness(
         var duplicateExists = customersId.GroupBy(x => x).Any(x => x.Count() > 1);
         if (duplicateExists)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status409Conflict,
                 title: NotificationTitle.Conflict,
                 details: Message.Contract.DuplicateCustomers

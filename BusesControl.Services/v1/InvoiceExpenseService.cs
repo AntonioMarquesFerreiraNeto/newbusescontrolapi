@@ -2,13 +2,13 @@
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.DTOs;
-using BusesControl.Entities.Enums;
-using BusesControl.Entities.Models;
-using BusesControl.Entities.Requests;
-using BusesControl.Entities.Response;
+using BusesControl.Entities.Enums.v1;
+using BusesControl.Entities.Models.v1;
+using BusesControl.Entities.Requests.v1;
+using BusesControl.Entities.Responses.v1;
 using BusesControl.Filters.Notification;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
-using BusesControl.Persistence.v1.UnitOfWork;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
+using BusesControl.Persistence.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System.Net.Http.Json;
@@ -18,7 +18,7 @@ namespace BusesControl.Services.v1;
 public class InvoiceExpenseService(
     AppSettings _appSettings,
     IUnitOfWork _unitOfWork,
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     IUserService _userService,
     IInvoiceExpenseBusiness _invoiceExpenseBusiness,
     IInvoiceExpenseRepository _invoiceExpenseRepository
@@ -74,7 +74,7 @@ public class InvoiceExpenseService(
         var httpResult = await httpClient.PostAsJsonAsync($"{_appSettings.Assas.Url}/transfers", paymentTedInAssas);
         if (!httpResult.IsSuccessStatusCode)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.InvoiceExpense.UnexpectedPay
@@ -85,7 +85,7 @@ public class InvoiceExpenseService(
         var response = await httpResult.Content.ReadFromJsonAsync<PaymentInvoiceExpenseInAssasDTO>();
         if (response is null || response.Status == "CANCELLED" || response.Status == "FAILED")
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.InvoiceExpense.UnexpectedPay
@@ -110,7 +110,7 @@ public class InvoiceExpenseService(
             TotalPrice = createInvoiceExpense.Price,
             DueDate = createInvoiceExpense.DueDate
         };
-        await _invoiceExpenseRepository.CreateAsync(record);
+        await _invoiceExpenseRepository.AddAsync(record);
         await _unitOfWork.CommitAsync();
 
         return true;
@@ -136,7 +136,7 @@ public class InvoiceExpenseService(
         string? externalId = null;
 
         var record = await _invoiceExpenseBusiness.GetForPaymentAsync(id);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return default!;
         }
@@ -144,7 +144,7 @@ public class InvoiceExpenseService(
         if (request.PaymentMethod != PaymentExpenseMethodEnum.JustCount)
         {
             await _invoiceExpenseBusiness.ValidateBalanceInAssasAsync(record.TotalPrice);
-            if (_notificationApi.HasNotification)
+            if (_notificationContext.HasNotification)
             {
                 return default!;
             }
@@ -155,7 +155,7 @@ public class InvoiceExpenseService(
             case PaymentExpenseMethodEnum.Pix:
             {
                 externalId = await HandlePaymentPixAsync(record, request.PixRequest!);
-                if (_notificationApi.HasNotification)
+                if (_notificationContext.HasNotification)
                 {
                     return default!;
                 }
@@ -167,7 +167,7 @@ public class InvoiceExpenseService(
             case PaymentExpenseMethodEnum.JustCount:
             {
                 _invoiceExpenseBusiness.ValidateLoggedUserForJustCountPayment(_userService.FindAuthenticatedUser());
-                if (_notificationApi.HasNotification)
+                if (_notificationContext.HasNotification)
                 {
                     return default!;
                 }
