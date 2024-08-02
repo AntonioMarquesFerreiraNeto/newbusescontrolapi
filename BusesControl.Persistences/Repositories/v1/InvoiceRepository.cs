@@ -35,7 +35,7 @@ public class InvoiceRepository(
     {
         var query = _context.Invoices.Include(x => x.Financial.SettingPanel).AsNoTracking();
 
-        query = query.Where(x => x.Status == status && x.DueDate <= DateOnly.FromDateTime(DateTime.UtcNow.AddDays(4)));
+        query = query.Where(x => x.Status == status && x.DueDate <= DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-2)));
 
         return await query.ToListAsync();
     }

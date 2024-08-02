@@ -75,6 +75,33 @@ public class CustomerService(
         return customerExternal.Id;
     }
 
+    private async Task<bool> UpdateInAssasAsync(string externalId, CustomerUpdateRequest customer)
+    {
+        var httpClient = new HttpClient();
+        httpClient.DefaultRequestHeaders.Add("access_token", _appSettings.Assas.Key);
+
+        var updateCustomerInAssas = new 
+        {
+            name = customer.Name,
+            cpfCnpj = customer.Cpf ?? customer.Cnpj,
+            mobilePhone = customer.PhoneNumber,
+            email = customer.Email
+        };
+
+        var httpResult = await httpClient.PutAsJsonAsync($"{_appSettings.Assas.Url}/customers/{externalId}", updateCustomerInAssas);
+        if (!httpResult.IsSuccessStatusCode)
+        {
+            _notificationContext.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.Customer.Unexpected
+            );
+            return false;
+        }
+
+        return true;
+    }
+
     public async Task<IEnumerable<CustomerModel>> FindBySearchAsync(int page, int pageSize, string? search = null)
     {
         var records = await _customerRepository.FindBySearchAsync(page, pageSize, search);
@@ -156,6 +183,12 @@ public class CustomerService(
         }
 
         await _customerBusiness.ExistsByRequestAsync(_mapper.Map<CustomerCreateRequest>(request), id);
+        if (_notificationContext.HasNotification)
+        {
+            return false;
+        }
+
+        await UpdateInAssasAsync(record.ExternalId, request);
         if (_notificationContext.HasNotification)
         {
             return false;
