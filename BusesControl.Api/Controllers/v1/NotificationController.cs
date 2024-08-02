@@ -18,7 +18,7 @@ public class NotificationController(
 ) : ControllerBase
 {
     /// <summary>
-    /// Busca notifications para admin
+    /// Retorna notifications para admin
     /// </summary>
     /// <response code="200">Retorna sucesso da requisição</response>
     /// <response code="401">Retorna erro de não autorizado</response>
@@ -35,7 +35,7 @@ public class NotificationController(
     }
 
     /// <summary>
-    /// Busca notificações pelo usuário logado
+    /// Retorna notificações pelo usuário logado
     /// </summary>
     /// <response code="200">Retorna sucesso da requisição</response>
     /// <response code="401">Retorna erro de não autorizado</response>
@@ -51,7 +51,7 @@ public class NotificationController(
     }
 
     /// <summary>
-    /// Busca notificação pelo ID
+    /// Retorna notificação pelo ID
     /// </summary>
     /// <response code="200">Retorna sucesso da requisição</response>
     /// <response code="401">Retorna erro de não autorizado</response>

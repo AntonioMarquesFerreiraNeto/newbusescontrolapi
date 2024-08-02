@@ -19,7 +19,7 @@ public class SettingPanelController(
 ) : ControllerBase
 {
     /// <summary>
-    /// Busca painel de configuração pelo ID
+    /// Retorna painel de configuração pelo ID
     /// </summary>
     /// <response code="200">Retorna sucesso da requisição</response>
     /// <response code="401">Retorna erro de não autorizado</response>
@@ -37,7 +37,7 @@ public class SettingPanelController(
     }
 
     /// <summary>
-    /// Busca paineis de configurações
+    /// Retorna paineis de configurações
     /// </summary>
     /// <response code="200">Retorna sucesso da requisição</response>
     /// <response code="401">Retorna erro de não autorizado</response>

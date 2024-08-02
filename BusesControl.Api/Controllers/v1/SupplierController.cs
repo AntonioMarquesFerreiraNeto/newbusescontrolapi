@@ -19,7 +19,7 @@ public class SupplierController(
 ) : ControllerBase
 {
     /// <summary>
-    /// Busca fornecedores
+    /// Retorna fornecedores
     /// </summary>
     /// <response code="200">Retorna sucesso da requisição</response>
     /// <response code="401">Retorna erro de não autorizado</response>
@@ -35,7 +35,7 @@ public class SupplierController(
     }
 
     /// <summary>
-    /// Busca fornecedor pelo ID
+    /// Retorna fornecedor pelo ID
     /// </summary>
     /// <response code="200">Retorna sucesso da requisição</response>
     /// <response code="401">Retorna erro de não autorizado</response>

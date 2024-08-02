@@ -18,7 +18,7 @@ public class ContractBusReplacementController(
 ) : ControllerBase
 {
     /// <summary>
-    /// Busca substituições de ônibus pelo contrato
+    /// Retorna substituições de ônibus pelo contrato
     /// </summary>
     /// <response code="200">Retorna sucesso da requisição</response>
     /// <response code="401">Retorna erro de não autorizado</response>

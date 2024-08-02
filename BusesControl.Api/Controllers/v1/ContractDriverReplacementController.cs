@@ -18,7 +18,7 @@ public class ContractDriverReplacementController(
 ) : ControllerBase
 {
     /// <summary>
-    /// Busca substituições de motorista pelo contrato
+    /// Retorna substituições de motorista pelo contrato
     /// </summary>
     /// <response code="200">Retorna sucesso da requisição</response>
     /// <response code="401">Retorna erro de não autorizado</response>
@@ -34,7 +34,7 @@ public class ContractDriverReplacementController(
     }
 
     /// <summary>
-    /// Busca substituição de motorista pelo contrato e ID
+    /// Retorna substituição de motorista pelo contrato e ID
     /// </summary>
     /// <response code="200">Retorna sucesso da requisição</response>
     /// <response code="400">Retorna erro de requisição inválida</response>

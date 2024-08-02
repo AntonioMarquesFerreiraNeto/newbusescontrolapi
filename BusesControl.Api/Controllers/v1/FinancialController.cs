@@ -21,7 +21,7 @@ public class FinancialController(
 ) : ControllerBase
 {
     /// <summary>
-    /// Busca financeiros
+    /// Retorna financeiros
     /// </summary>
     /// <response code="200">Retorna sucesso da requisição</response>
     /// <response code="401">Retorna erro de não autorizado</response>
@@ -37,7 +37,7 @@ public class FinancialController(
     }
 
     /// <summary>
-    /// Busca relatório em excel do financeiro
+    /// Retorna relatório em excel do financeiro
     /// </summary>
     /// <response code="200">Retorna sucesso da requisição</response>
     /// <response code="401">Retorna erro de não autorizado</response>
@@ -60,7 +60,7 @@ public class FinancialController(
     }
 
     /// <summary>
-    /// Busca financeiro pelo ID
+    /// Retorna financeiro pelo ID
     /// </summary>
     /// <response code="200">Retorna sucesso da requisição</response>
     /// <response code="401">Retorna erro de não autorizado</response>

@@ -23,7 +23,7 @@ public class ContractController(
 ) : ControllerBase
 {
     /// <summary>
-    /// Busca contratos pelo status
+    /// Retorna contratos pelo status
     /// </summary>
     /// <response code="200">Retorna sucesso da requisição</response>
     /// <response code="401">Retorna erro de não autorizado</response>
@@ -40,7 +40,7 @@ public class ContractController(
     }
 
     /// <summary>
-    /// Busca relatório em excel dos contratos
+    /// Retorna relatório em excel dos contratos
     /// </summary>
     /// <response code="200">Retorna sucesso da requisição</response>
     /// <response code="401">Retorna erro de não autorizado</response>
@@ -64,7 +64,7 @@ public class ContractController(
     }
 
     /// <summary>
-    /// Busca contrato pelo ID
+    /// Retorna contrato pelo ID
     /// </summary>
     /// <response code="200">Retorna sucesso da requisição</response>
     /// <response code="401">Retorna erro de não autorizado</response>
@@ -83,7 +83,7 @@ public class ContractController(
     }
 
     /// <summary>
-    /// Busca PDF do contrato pelo cliente e ID
+    /// Retorna PDF do contrato pelo cliente e ID
     /// </summary>
     /// <response code="200">Retorna sucesso da requisição</response>
     /// <response code="401">Retorna erro de não autorizado</response>

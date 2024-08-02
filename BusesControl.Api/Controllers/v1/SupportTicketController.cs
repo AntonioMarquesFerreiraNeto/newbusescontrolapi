@@ -19,7 +19,7 @@ public class SupportTicketController(
 ) : ControllerBase
 {
     /// <summary>
-    /// Busca tickets de suporte
+    /// Retorna tickets de suporte
     /// </summary>
     /// <response code="200">Retorna sucesso da requisição</response>
     /// <response code="401">Retorna erro de não autorizado</response>
@@ -36,7 +36,7 @@ public class SupportTicketController(
     }
 
     /// <summary>
-    /// Busca ticket de suporte pelo ID
+    /// Retorna ticket de suporte pelo ID
     /// </summary>
     /// <response code="200">Retorna sucesso da requisição</response>
     /// <response code="401">Retorna erro de não autorizado</response>

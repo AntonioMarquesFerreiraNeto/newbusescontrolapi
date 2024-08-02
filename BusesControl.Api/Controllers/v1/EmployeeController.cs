@@ -20,7 +20,7 @@ public class EmployeeController(
 ) : ControllerBase
 {
     /// <summary>
-    /// Busca funcionários
+    /// Retorna funcionários
     /// </summary>
     /// <response code="200">Retorna sucesso da requisição</response>
     /// <response code="401">Retorna erro de não autorizado</response>
@@ -38,7 +38,7 @@ public class EmployeeController(
     }
 
     /// <summary>
-    /// Busca funcionário pelo ID
+    /// Retorna funcionário pelo ID
     /// </summary>
     /// <response code="200">Retorna sucesso da requisição</response>
     /// <response code="401">Retorna erro de não autorizado</response>

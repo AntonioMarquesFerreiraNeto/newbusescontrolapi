@@ -21,7 +21,7 @@ public class InvoicesController(
 ) : ControllerBase
 {
     /// <summary>
-    /// Busca relatório em excel das faturas pelo financeiro
+    /// Retorna relatório em excel das faturas pelo financeiro
     /// </summary>
     /// <response code="200">Retorna sucesso da requisição</response>
     /// <response code="401">Retorna erro de não autorizado</response>

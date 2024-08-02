@@ -19,7 +19,7 @@ public class CustomerController(
 ) : ControllerBase
 {
     /// <summary>
-    /// Busca cliente pelo ID
+    /// Retorna cliente pelo ID
     /// </summary>
     /// <response code="200">Retorna sucesso da requisição</response>
     /// <response code="401">Retorna erro de não autorizado</response>
@@ -37,7 +37,7 @@ public class CustomerController(
     }
 
     /// <summary>
-    /// Busca clientes
+    /// Retorna clientes
     /// </summary>
     /// <response code="200">Retorna sucesso da requisição</response>
     /// <response code="401">Retorna erro de não autorizado</response>

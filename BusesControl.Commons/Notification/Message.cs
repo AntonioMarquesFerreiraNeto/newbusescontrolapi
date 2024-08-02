@@ -1,11 +1,10 @@
-﻿using static BusesControl.Commons.Notification.Message;
-
-namespace BusesControl.Commons.Notification;
+﻿namespace BusesControl.Commons.Notification;
 
 public class Message
 {
     public class Address
     {
+        public readonly static string NotFound = "Endereço não encontrado!";
         public readonly static string NotFoundOrInvalid = "Cep não informado ou inválido!";
         public readonly static string Invalid = "Cep informado é inválido!";
     }
