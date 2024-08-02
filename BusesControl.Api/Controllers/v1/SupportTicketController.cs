@@ -1,6 +1,6 @@
 ﻿using Asp.Versioning;
-using BusesControl.Entities.Enums;
-using BusesControl.Entities.Requests;
+using BusesControl.Entities.Enums.v1;
+using BusesControl.Entities.Requests.v1;
 using BusesControl.Services.v1.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;

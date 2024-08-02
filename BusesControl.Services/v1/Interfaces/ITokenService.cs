@@ -1,4 +1,4 @@
-﻿using BusesControl.Entities.Models;
+﻿using BusesControl.Entities.Models.v1;
 
 namespace BusesControl.Services.v1.Interfaces;
 

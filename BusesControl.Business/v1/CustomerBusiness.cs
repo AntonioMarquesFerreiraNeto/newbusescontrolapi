@@ -1,16 +1,16 @@
 ﻿using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Models;
-using BusesControl.Entities.Requests;
+using BusesControl.Entities.Models.v1;
+using BusesControl.Entities.Requests.v1;
 using BusesControl.Filters.Notification;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
 using Microsoft.AspNetCore.Http;
 
 namespace BusesControl.Business.v1;
 
 public class CustomerBusiness(
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     ICustomerRepository _customerRepository
 ) : ICustomerBusiness
 {
@@ -19,7 +19,7 @@ public class CustomerBusiness(
         var exists = await _customerRepository.ExistsByEmailOrPhoneNumberOrCpfOrCnpjAsync(request.Email, request.PhoneNumber, request.Cpf, request.Cnpj, id);
         if (exists)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status409Conflict,
                 title: NotificationTitle.Conflict,
                 details: Message.Customer.Exists
@@ -35,7 +35,7 @@ public class CustomerBusiness(
         var record = await _customerRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Customer.NotFound
@@ -45,7 +45,7 @@ public class CustomerBusiness(
 
         if (!record.Active)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Customer.NotActive

@@ -2,14 +2,14 @@
 using BusesControl.Commons;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Enums;
-using BusesControl.Entities.Models;
-using BusesControl.Entities.Request;
+using BusesControl.Entities.Enums.v1;
+using BusesControl.Entities.Models.v1;
 using BusesControl.Entities.Requests;
-using BusesControl.Entities.Response;
+using BusesControl.Entities.Requests.v1;
+using BusesControl.Entities.Responses.v1;
 using BusesControl.Filters.Notification;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
-using BusesControl.Persistence.v1.UnitOfWork;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
+using BusesControl.Persistence.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Http;
 
@@ -17,7 +17,7 @@ namespace BusesControl.Services.v1;
 
 public class EmployeeService(
     IUnitOfWork _unitOfWork,
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     IUserService _userService,
     IEmployeeBusiness _employeeBusiness,
     IEmployeeRepository _employeeRepository
@@ -34,7 +34,7 @@ public class EmployeeService(
         var record = await _employeeRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Employee.NotFound
@@ -51,7 +51,7 @@ public class EmployeeService(
         request.PhoneNumber = OnlyNumbers.ClearValue(request.PhoneNumber);
 
         await _employeeBusiness.ExistsByEmailOrPhoneNumberOrCpfAsync(request.Email, request.PhoneNumber, request.Cpf);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
@@ -72,7 +72,7 @@ public class EmployeeService(
             Type = request.Type,
             Gender = request.Gender
         };
-        await _employeeRepository.CreateAsync(record);
+        await _employeeRepository.AddAsync(record);
         await _unitOfWork.CommitAsync();
 
         return true;
@@ -86,7 +86,7 @@ public class EmployeeService(
         var record = await _employeeRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Employee.NotFound
@@ -95,7 +95,7 @@ public class EmployeeService(
         }
 
         await _employeeBusiness.ExistsByEmailOrPhoneNumberOrCpfAsync(request.Email, request.PhoneNumber, request.PhoneNumber, id);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
@@ -112,7 +112,7 @@ public class EmployeeService(
             };
 
             await _userService.UpdateForEmployeeAsync(userUpdateRequest);
-            if (_notificationApi.HasNotification)
+            if (_notificationContext.HasNotification)
             {
                 return false;
             }
@@ -144,7 +144,7 @@ public class EmployeeService(
         var record = await _employeeRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Employee.NotFound
@@ -162,7 +162,7 @@ public class EmployeeService(
     public async Task<SuccessResponse> ToggleTypeAsync(Guid id, EmployeeToggleTypeRequest request)
     {
         var record = await _employeeBusiness.GetForToggleTypeAsync(id, request);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return default!;
         }
@@ -174,7 +174,7 @@ public class EmployeeService(
         await _unitOfWork.CommitAsync();
 
         var message = await _userService.ToggleRoleForEmployeeAsync(record.Email, record.Type);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return default!;
         }

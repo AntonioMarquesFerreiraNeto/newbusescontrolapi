@@ -1,16 +1,16 @@
 ﻿using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Enums;
-using BusesControl.Entities.Models;
+using BusesControl.Entities.Enums.v1;
+using BusesControl.Entities.Models.v1;
 using BusesControl.Filters.Notification;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
 using Microsoft.AspNetCore.Http;
 
 namespace BusesControl.Business.v1;
 
 public class SettingPanelBusiness(
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     IContractRepository _contractRepository,
     IFinancialRepository _financialRepository,
     ISettingPanelRepository _settingPanelRepository
@@ -21,7 +21,7 @@ public class SettingPanelBusiness(
         var record = await _settingPanelRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.SettingPanel.NotFound
@@ -32,7 +32,7 @@ public class SettingPanelBusiness(
         var contractInIsApprovedExists = await _contractRepository.ExistsInIsApprovedBySettingPanelAsync(id);
         if (contractInIsApprovedExists)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.SettingPanel.NotUpdate
@@ -48,7 +48,7 @@ public class SettingPanelBusiness(
         var record = await _settingPanelRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.SettingPanel.NotFound
@@ -59,7 +59,7 @@ public class SettingPanelBusiness(
         var existsInContract = await _contractRepository.ExistsBySettingPanelAsync(id);
         if (existsInContract)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.SettingPanel.NotDelete
@@ -70,7 +70,7 @@ public class SettingPanelBusiness(
         var existsInFinancial = await _financialRepository.ExistsBySettingPanelAsync(id);
         if (existsInFinancial)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.SettingPanel.NotDelete
@@ -86,7 +86,7 @@ public class SettingPanelBusiness(
         var settingPanelRecord = await _settingPanelRepository.GetByIdAsync(settingPanelId);
         if (settingPanelRecord is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.SettingPanel.NotFound
@@ -96,7 +96,7 @@ public class SettingPanelBusiness(
 
         if (settingPanelRecord.Parent != SettingPanelParentEnum.Contract || !settingPanelRecord.Active)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.SettingPanel.NotDestine
@@ -112,7 +112,7 @@ public class SettingPanelBusiness(
         var settingPanelRecord = await _settingPanelRepository.GetByIdAsync(settingPanelId);
         if (settingPanelRecord is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.SettingPanel.NotFound
@@ -122,7 +122,7 @@ public class SettingPanelBusiness(
 
         if (settingPanelRecord.Parent != SettingPanelParentEnum.Revenue || !settingPanelRecord.Active)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.SettingPanel.NotDestine
@@ -138,7 +138,7 @@ public class SettingPanelBusiness(
         var settingPanelRecord = await _settingPanelRepository.GetByIdAsync(settingPanelId);
         if (settingPanelRecord is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.SettingPanel.NotFound
@@ -148,7 +148,7 @@ public class SettingPanelBusiness(
 
         if (settingPanelRecord.Parent != SettingPanelParentEnum.Expense || !settingPanelRecord.Active)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.SettingPanel.NotDestine

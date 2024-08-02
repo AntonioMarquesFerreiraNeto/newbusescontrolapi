@@ -1,5 +1,5 @@
 ﻿using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Requests;
+using BusesControl.Entities.Requests.v1;
 using BusesControl.Services.v1.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
@@ -15,7 +15,7 @@ public class FinancialController(
     IValidator<FinancialRevenueCreateRequest> _financialRevenueCreateRequestValidator,
     IValidator<FinancialUpdateDetailsRequest> _financialUpdateDetailsRequestValidator,
     IValidator<FinancialExpenseCreateRequest> _financialExpenseCreateRequestValidator,
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     IExcelService _excelService,
     IFinancialService _financialService
 ) : ControllerBase
@@ -51,9 +51,9 @@ public class FinancialController(
     public async Task<IActionResult> GetExcel()
     {
         var fileResponse = await _excelService.GenerateFinancialAsync();
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
-            return StatusCode(_notificationApi.StatusCodes!.Value, _notificationApi.Details);
+            return StatusCode(_notificationContext.StatusCodes!.Value, _notificationContext.Details);
         }
 
         return File(fileResponse.FileContent, fileResponse.ContentType, fileResponse.FileName);

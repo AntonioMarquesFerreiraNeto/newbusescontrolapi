@@ -1,11 +1,11 @@
 ﻿using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Models;
-using BusesControl.Entities.Requests;
+using BusesControl.Entities.Models.v1;
+using BusesControl.Entities.Requests.v1;
 using BusesControl.Filters.Notification;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
-using BusesControl.Persistence.v1.UnitOfWork;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
+using BusesControl.Persistence.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Http;
 
@@ -15,7 +15,7 @@ public class SettingPanelService(
     IUnitOfWork _unitOfWork,
     IUserService _userService,
     ISettingPanelBusiness _settingPanelBusiness,
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     ISettingPanelRepository _settingPanelRepository
 ) : ISettingPanelService
 {
@@ -43,7 +43,7 @@ public class SettingPanelService(
         var record = await _settingPanelRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.SettingPanel.NotFound
@@ -77,7 +77,7 @@ public class SettingPanelService(
             Active = request.Active
         };
 
-        await _settingPanelRepository.CreateAsync(record);
+        await _settingPanelRepository.AddAsync(record);
         await _unitOfWork.CommitAsync();
 
         return true;
@@ -86,7 +86,7 @@ public class SettingPanelService(
     public async Task<bool> UpdateAsync(Guid id, SettingPanelUpdateRequest request)
     {
         var record = await _settingPanelBusiness.GetForUpdateAsync(id, request.Parent);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
@@ -111,12 +111,12 @@ public class SettingPanelService(
     public async Task<bool> DeleteAsync(Guid id)
     {
         var record = await _settingPanelBusiness.GetForDeleteAsync(id);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
 
-        _settingPanelRepository.Delete(record);
+        _settingPanelRepository.Remove(record);
         await _unitOfWork.CommitAsync();
 
         return true;

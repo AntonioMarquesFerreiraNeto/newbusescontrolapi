@@ -1,8 +1,7 @@
-﻿using BusesControl.Entities.Enums;
-using BusesControl.Entities.Models;
-using BusesControl.Entities.Requests;
-using BusesControl.Entities.Response;
-using BusesControl.Entities.Responses;
+﻿using BusesControl.Entities.Enums.v1;
+using BusesControl.Entities.Models.v1;
+using BusesControl.Entities.Requests.v1;
+using BusesControl.Entities.Responses.v1;
 
 namespace BusesControl.Services.v1.Interfaces;
 

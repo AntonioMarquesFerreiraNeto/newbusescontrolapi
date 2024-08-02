@@ -1,16 +1,16 @@
 ﻿using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Enums;
-using BusesControl.Entities.Models;
+using BusesControl.Entities.Enums.v1;
+using BusesControl.Entities.Models.v1;
 using BusesControl.Filters.Notification;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
 using Microsoft.AspNetCore.Http;
 
 namespace BusesControl.Business.v1;
 
 public class TerminationBusiness(
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     IContractRepository _contractRepository,
     ICustomerContractRepository _customerContractRepository
 ) : ITerminationBusiness
@@ -20,7 +20,7 @@ public class TerminationBusiness(
         var contractRecord = await _contractRepository.GetByIdWithSettingPanelAsync(contractId);
         if (contractRecord is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Contract.NotFound
@@ -30,7 +30,7 @@ public class TerminationBusiness(
 
         if (contractRecord.Status != ContractStatusEnum.InProgress)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Contract.NotInProgress
@@ -46,7 +46,7 @@ public class TerminationBusiness(
         var customerContractRecord = await _customerContractRepository.GetByContractAndCustomerAsync(contractId, customerId);
         if (customerContractRecord is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.CustomerContract.NotFound
@@ -56,7 +56,7 @@ public class TerminationBusiness(
 
         if (!customerContractRecord.ProcessTermination)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Termination.NotProcess
@@ -66,7 +66,7 @@ public class TerminationBusiness(
 
         if (!customerContractRecord.Active)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Termination.NotActive

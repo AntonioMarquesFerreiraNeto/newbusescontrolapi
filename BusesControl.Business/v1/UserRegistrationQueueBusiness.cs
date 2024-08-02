@@ -1,17 +1,17 @@
 ﻿using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Enums;
-using BusesControl.Entities.Models;
-using BusesControl.Entities.Request;
+using BusesControl.Entities.Enums.v1;
+using BusesControl.Entities.Models.v1;
+using BusesControl.Entities.Requests.v1;
 using BusesControl.Filters.Notification;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
 using Microsoft.AspNetCore.Http;
 
 namespace BusesControl.Business.v1;
 
 public class UserRegistrationQueueBusiness(
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     IEmployeeRepository _employeeRepository,
     IUserRegistrationQueueRepository _userRegistrationQueueRepository
 ) : IUserRegistrationQueueBusiness
@@ -21,7 +21,7 @@ public class UserRegistrationQueueBusiness(
         var employeeRecord = await _employeeRepository.GetByIdAsync(employeeId);
         if (employeeRecord is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Employee.NotFound
@@ -31,7 +31,7 @@ public class UserRegistrationQueueBusiness(
 
         if (employeeRecord.Type == EmployeeTypeEnum.Driver || employeeRecord.Status == EmployeeStatusEnum.Inactive)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.UserRegistration.RequestDenied
@@ -42,7 +42,7 @@ public class UserRegistrationQueueBusiness(
         var exists = await _userRegistrationQueueRepository.ExistsByEmployee(employeeId);
         if (exists)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.UserRegistration.Exists
@@ -58,7 +58,7 @@ public class UserRegistrationQueueBusiness(
         var record = await _userRegistrationQueueRepository.GetByEmployeeAttributesAsync(request.Email, request.Cpf, request.BirthDate);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.UserRegistration.NotFound
@@ -68,7 +68,7 @@ public class UserRegistrationQueueBusiness(
 
         if (record.Status != UserRegistrationQueueStatusEnum.Started && record.Status != UserRegistrationQueueStatusEnum.WaitingForPassword)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.UserRegistration.InvalidStepCode
@@ -84,7 +84,7 @@ public class UserRegistrationQueueBusiness(
         var record = await _userRegistrationQueueRepository.GetByUserWithEmployeeAsync(userId);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.UserRegistration.NotFound
@@ -94,7 +94,7 @@ public class UserRegistrationQueueBusiness(
 
         if (record.Status != UserRegistrationQueueStatusEnum.WaitingForPassword)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.UserRegistration.InvalidStepPassword
@@ -110,7 +110,7 @@ public class UserRegistrationQueueBusiness(
         var record = await _userRegistrationQueueRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.UserRegistration.NotFound
@@ -120,7 +120,7 @@ public class UserRegistrationQueueBusiness(
 
         if (record.Status == UserRegistrationQueueStatusEnum.Approved)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.UserRegistration.InvalidDelete
@@ -136,7 +136,7 @@ public class UserRegistrationQueueBusiness(
         var record = await _userRegistrationQueueRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.UserRegistration.NotFound
@@ -146,7 +146,7 @@ public class UserRegistrationQueueBusiness(
 
         if (record.Status != UserRegistrationQueueStatusEnum.Finished)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.UserRegistration.InvalidApproved

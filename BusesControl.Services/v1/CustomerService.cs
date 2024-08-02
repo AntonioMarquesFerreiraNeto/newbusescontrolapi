@@ -4,12 +4,12 @@ using BusesControl.Commons;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.DTOs;
-using BusesControl.Entities.Enums;
-using BusesControl.Entities.Models;
-using BusesControl.Entities.Requests;
+using BusesControl.Entities.Enums.v1;
+using BusesControl.Entities.Models.v1;
+using BusesControl.Entities.Requests.v1;
 using BusesControl.Filters.Notification;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
-using BusesControl.Persistence.v1.UnitOfWork;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
+using BusesControl.Persistence.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System.Net.Http.Json;
@@ -20,7 +20,7 @@ public class CustomerService(
     AppSettings _appSettings,
     IMapper _mapper,
     IUnitOfWork _unitOfWork,
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     ICustomerBusiness _customerBusiness,
     ICustomerRepository _customerRepository
 ) : ICustomerService
@@ -53,7 +53,7 @@ public class CustomerService(
         var httpResult = await httpClient.PostAsJsonAsync($"{_appSettings.Assas.Url}/customers", createCustomerInAssas);
         if (!httpResult.IsSuccessStatusCode)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Customer.Unexpected
@@ -64,7 +64,7 @@ public class CustomerService(
         var customerExternal = await httpResult.Content.ReadFromJsonAsync<CreateCustomerInAssasDTO>();
         if (customerExternal is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Customer.Unexpected
@@ -86,7 +86,7 @@ public class CustomerService(
         var record = await _customerRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Customer.NotFound
@@ -102,7 +102,7 @@ public class CustomerService(
         ClearCustomerRequest(request);
 
         await _customerBusiness.ExistsByRequestAsync(request);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
@@ -127,13 +127,13 @@ public class CustomerService(
         };
 
         var externalId = await CreateInAssasAsync(record);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
 
         record.ExternalId = externalId;
-        await _customerRepository.CreateAsync(record);
+        await _customerRepository.AddAsync(record);
         await _unitOfWork.CommitAsync();
 
         return true;
@@ -147,7 +147,7 @@ public class CustomerService(
         var record = await _customerRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Customer.NotFound
@@ -156,7 +156,7 @@ public class CustomerService(
         }
 
         await _customerBusiness.ExistsByRequestAsync(_mapper.Map<CustomerCreateRequest>(request), id);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
@@ -188,7 +188,7 @@ public class CustomerService(
         var record = await _customerRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Customer.NotFound

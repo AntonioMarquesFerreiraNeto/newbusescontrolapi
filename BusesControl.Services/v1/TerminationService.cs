@@ -1,18 +1,18 @@
 ﻿using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Models;
-using BusesControl.Entities.Requests;
-using BusesControl.Entities.Response;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
-using BusesControl.Persistence.v1.UnitOfWork;
+using BusesControl.Entities.Models.v1;
+using BusesControl.Entities.Requests.v1;
+using BusesControl.Entities.Responses.v1;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
+using BusesControl.Persistence.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
 
 namespace BusesControl.Services.v1;
 
 public class TerminationService(
     IUnitOfWork _unitOfWork,
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     ICustomerContractService _customerContractService,
     IFinancialService _financialService,
     ITerminationBusiness _terminationBusiness,
@@ -28,13 +28,13 @@ public class TerminationService(
     public async Task<SuccessResponse> CreateAsync(Guid contractId, TerminationCreateRequest request)
     {
         var contractRecord = await _terminationBusiness.GetContractForCreateAsync(contractId);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return default!;
         }
 
         var customerContractRecord = await _terminationBusiness.GetCustomerContractForCreateAsync(contractId, request.CustomerId);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return default!;
         }
@@ -42,7 +42,7 @@ public class TerminationService(
         _unitOfWork.BeginTransaction();
 
         await _financialService.InactiveInternalAsync(contractId, request.CustomerId);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return default!;
         }
@@ -55,7 +55,7 @@ public class TerminationService(
             CustomerId = request.CustomerId,
             Price = Math.Round(contractRecord.TotalPrice * contractRecord.SettingPanel.TerminationFee / 100, 2)
         };
-        await _terminationRepository.CreateAsync(record);
+        await _terminationRepository.AddAsync(record);
         await _unitOfWork.CommitAsync();
 
         await _unitOfWork.CommitAsync(true);

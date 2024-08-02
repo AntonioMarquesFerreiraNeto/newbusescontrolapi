@@ -1,15 +1,15 @@
 ﻿using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Models;
+using BusesControl.Entities.Models.v1;
 using BusesControl.Filters.Notification;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
 using Microsoft.AspNetCore.Http;
 
 namespace BusesControl.Business.v1;
 
 public class ContractDescriptionBusiness(
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     IContractRepository _contractRepository,
     IContractDescriptionRepository _contractDescriptionRepository
 ) : IContractDescriptionBusiness
@@ -19,7 +19,7 @@ public class ContractDescriptionBusiness(
         var record = await _contractDescriptionRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.ContractDescription.NotFound
@@ -30,7 +30,7 @@ public class ContractDescriptionBusiness(
         var usingInContractApproved = await _contractRepository.ExistsInIsApprovedByContractDescriptionAsync(id);
         if (usingInContractApproved)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.ContractDescription.NotUpdate
@@ -46,7 +46,7 @@ public class ContractDescriptionBusiness(
         var record = await _contractDescriptionRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.ContractDescription.NotFound
@@ -57,7 +57,7 @@ public class ContractDescriptionBusiness(
         var usingInContract = await _contractRepository.ExistsByContractDescriptionAsync(id);
         if (usingInContract)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.ContractDescription.NotDelete

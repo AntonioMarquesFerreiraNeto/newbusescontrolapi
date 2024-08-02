@@ -4,14 +4,13 @@ using BusesControl.Commons;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.DTOs;
-using BusesControl.Entities.Enums;
-using BusesControl.Entities.Models;
-using BusesControl.Entities.Requests;
-using BusesControl.Entities.Response;
-using BusesControl.Entities.Responses;
+using BusesControl.Entities.Enums.v1;
+using BusesControl.Entities.Models.v1;
+using BusesControl.Entities.Requests.v1;
+using BusesControl.Entities.Responses.v1;
 using BusesControl.Filters.Notification;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
-using BusesControl.Persistence.v1.UnitOfWork;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
+using BusesControl.Persistence.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System.Net.Http.Json;
@@ -23,7 +22,7 @@ public class WebhookService(
     AppSettings _appSettings,
     IMapper _mapper,
     IUnitOfWork _unitOfWork,
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     INotificationService _notificationService,
     IInvoiceBusiness _invoiceBusiness,
     IWebhookBusiness _webhookBusiness,
@@ -52,7 +51,7 @@ public class WebhookService(
         var httpResult = await httpClient.PostAsJsonAsync($"{_appSettings.Assas.Url}/webhooks", webhookInAssas);
         if (!httpResult.IsSuccessStatusCode)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Webhook.Unexpected
@@ -63,7 +62,7 @@ public class WebhookService(
         var webhookExternal = await httpResult.Content.ReadFromJsonAsync<CreateWebhookInAssasDTO>();
         if (webhookExternal is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Webhook.Unexpected
@@ -83,7 +82,7 @@ public class WebhookService(
         var httpResult = await httpClient.DeleteAsync($"{_appSettings.Assas.Url}/webhooks/{externalId}");
         if (!httpResult.IsSuccessStatusCode)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Webhook.Unexpected
@@ -106,7 +105,7 @@ public class WebhookService(
         var record = await _webhookRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Webhook.NotFound
@@ -122,7 +121,7 @@ public class WebhookService(
         var exists = await _webhookRepository.ExistsByNameOrUrlOrTypeAsync(request.Name, request.Url, request.Type);
         if (exists)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status409Conflict,
                 title: NotificationTitle.Conflict,
                 details: Message.Webhook.ExistsByNameOrUrlOrType
@@ -145,12 +144,12 @@ public class WebhookService(
         };
 
         record.ExternalId = await CreateInAssasAsync(record);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
 
-        await _webhookRepository.CreateAsync(record);
+        await _webhookRepository.AddAsync(record);
         await _unitOfWork.CommitAsync();
 
         return true;
@@ -194,7 +193,7 @@ public class WebhookService(
         var record = await _webhookRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Webhook.NotFound
@@ -203,12 +202,12 @@ public class WebhookService(
         }
 
         await DeleteInAssasAsync(record.ExternalId);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return default!;
         }
 
-        _webhookRepository.Delete(record);
+        _webhookRepository.Remove(record);
         await _unitOfWork.CommitAsync();
 
         return new SuccessResponse(Message.Webhook.SuccessDelete);
@@ -217,14 +216,14 @@ public class WebhookService(
     public async Task<bool> PaymentPixAsync(string? accessToken, PaymentPixRequest request)
     {
         await _webhookBusiness.ValidateTokenAsync(authToken: accessToken, type: WebhookTypeEnum.Received);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
 
         if (request.Payment is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Webhook.RequestRequired
@@ -234,7 +233,7 @@ public class WebhookService(
 
         if (request.Event != "PAYMENT_RECEIVED")
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Webhook.EventNotAccepted
@@ -243,7 +242,7 @@ public class WebhookService(
         }
 
         var record = await _invoiceBusiness.GetForPaymentPixAsync(request.Payment.ExternalReference, request.Payment.Id);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }

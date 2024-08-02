@@ -1,6 +1,6 @@
 ﻿using Asp.Versioning;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Requests;
+using BusesControl.Entities.Requests.v1;
 using BusesControl.Services.v1.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
@@ -15,7 +15,7 @@ namespace BusesControl.Api.Controllers.v1;
 [Route("api/v1/invoices/expense")]
 public class InvoicesExpenseController(
     IValidator<InvoiceExpensePaymentRequest> _invoiceExpensePaymentRequestValidator,
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     IExcelService _excelService,
     IInvoiceExpenseService _invoiceExpenseService
 ) : ControllerBase
@@ -35,9 +35,9 @@ public class InvoicesExpenseController(
     public async Task<IActionResult> GetExcelByFinancial([FromRoute] Guid financialId)
     {
         var fileResponse = await _excelService.GenerateInvoiceExpenseByFinancialAsync(financialId);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
-            return StatusCode(_notificationApi.StatusCodes!.Value, _notificationApi.Details);
+            return StatusCode(_notificationContext.StatusCodes!.Value, _notificationContext.Details);
         }
 
         return File(fileResponse.FileContent, fileResponse.ContentType, fileResponse.FileName);

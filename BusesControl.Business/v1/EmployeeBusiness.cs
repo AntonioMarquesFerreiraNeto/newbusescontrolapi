@@ -1,17 +1,17 @@
 ﻿using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Enums;
-using BusesControl.Entities.Models;
-using BusesControl.Entities.Request;
+using BusesControl.Entities.Enums.v1;
+using BusesControl.Entities.Models.v1;
+using BusesControl.Entities.Requests.v1;
 using BusesControl.Filters.Notification;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
 using Microsoft.AspNetCore.Http;
 
 namespace BusesControl.Business.v1;
 
 public class EmployeeBusiness(
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     IEmployeeRepository _employeeRepository
 ) : IEmployeeBusiness
 {
@@ -20,7 +20,7 @@ public class EmployeeBusiness(
         var exists = await _employeeRepository.ExistsByEmailOrPhoneNumberOrCpfAsync(email, phoneNumber, cpf, id);
         if (exists) 
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status409Conflict,
                 title: NotificationTitle.Conflict,
                 details: Message.Employee.Exists
@@ -36,7 +36,7 @@ public class EmployeeBusiness(
         var record = await _employeeRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Employee.NotFound
@@ -46,7 +46,7 @@ public class EmployeeBusiness(
 
         if (record.Type == request.Type)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Employee.NoChangeNeeded
@@ -62,7 +62,7 @@ public class EmployeeBusiness(
         var record = await _employeeRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Employee.NotFound
@@ -72,7 +72,7 @@ public class EmployeeBusiness(
 
         if (record.Type != EmployeeTypeEnum.Driver)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Employee.NotDriver
@@ -82,7 +82,7 @@ public class EmployeeBusiness(
 
         if (record.Status != EmployeeStatusEnum.Active)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Employee.NotActive

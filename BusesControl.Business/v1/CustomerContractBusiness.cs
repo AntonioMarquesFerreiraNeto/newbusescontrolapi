@@ -2,13 +2,13 @@
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Filters.Notification;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
 using Microsoft.AspNetCore.Http;
 
 namespace BusesControl.Business.v1;
 
 public class CustomerContractBusiness(
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     ICustomerRepository _customerRepository
 ) : ICustomerContractBusiness
 {
@@ -17,7 +17,7 @@ public class CustomerContractBusiness(
         var customerRecord = await _customerRepository.GetByIdAsync(customerId);
         if (customerRecord is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Customer.NotFound
@@ -27,7 +27,7 @@ public class CustomerContractBusiness(
 
         if (!customerRecord.Active)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Customer.NotActive

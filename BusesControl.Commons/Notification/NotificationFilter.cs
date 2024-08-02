@@ -8,20 +8,20 @@ namespace BusesControl.Commons.Notification;
 
 public class NotificationFilter : IAsyncResultFilter
 {
-    private readonly INotificationApi _notificationApi;
+    private readonly INotificationContext _notificationContext;
     private readonly JsonSerializerOptions _jsonSerializerOptions;
 
-    public NotificationFilter(INotificationApi notificationApi, JsonSerializerOptions jsonSerializerOptions)
+    public NotificationFilter(INotificationContext notificationContext, JsonSerializerOptions jsonSerializerOptions)
     {
-        _notificationApi = notificationApi;
+        _notificationContext = notificationContext;
         _jsonSerializerOptions = jsonSerializerOptions;
     }
 
     public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
     {
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
-            var code = _notificationApi.StatusCodes;
+            var code = _notificationContext.StatusCodes;
 
             context.HttpContext.Response.ContentType = "application/json";
             context.HttpContext.Response.StatusCode = code!.Value;
@@ -30,9 +30,9 @@ public class NotificationFilter : IAsyncResultFilter
             result = new ProblemDetails
             {
                 Type = $"Método HTTP - {context.HttpContext.Request.Method}",
-                Title = _notificationApi.Title,
-                Detail = _notificationApi.Details,
-                Status = _notificationApi.StatusCodes,
+                Title = _notificationContext.Title,
+                Detail = _notificationContext.Details,
+                Status = _notificationContext.StatusCodes,
                 Instance = context.HttpContext.Request.Path
             };
             await context.HttpContext.Response.WriteAsync(JsonSerializer.Serialize(result, _jsonSerializerOptions));

@@ -3,13 +3,13 @@ using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.DTOs;
-using BusesControl.Entities.Enums;
-using BusesControl.Entities.Models;
-using BusesControl.Entities.Requests;
-using BusesControl.Entities.Responses;
+using BusesControl.Entities.Enums.v1;
+using BusesControl.Entities.Models.v1;
+using BusesControl.Entities.Requests.v1;
+using BusesControl.Entities.Responses.v1;
 using BusesControl.Filters.Notification;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
-using BusesControl.Persistence.v1.UnitOfWork;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
+using BusesControl.Persistence.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System.Globalization;
@@ -19,7 +19,7 @@ namespace BusesControl.Services.v1;
 public class FinancialService(
     IMapper _mapper,
     IUnitOfWork _unitOfWork,
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     IInvoiceService _invoiceService,
     IInvoiceExpenseService _invoiceExpenseService,
     IFinancialBusiness _financialBusiness,
@@ -78,7 +78,7 @@ public class FinancialService(
         var record = await _financialRepository.GetByIdWithIncludesAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Financial.NotFound
@@ -92,19 +92,19 @@ public class FinancialService(
     public async Task<bool> CreateRevenueAsync(FinancialRevenueCreateRequest request)
     {
         var customerRecord = await _customerBusiness.GetWithValidateActiveAsync(request.CustomerId);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
 
         var settingPanelRecord = await _settingPanelBusiness.GetForCreateFinancialRevenueAsync(request.SettingPanelId);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
 
         _financialBusiness.ValidateTerminationDate(settingPanelRecord, request.TerminateDate);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
@@ -128,7 +128,7 @@ public class FinancialService(
             TerminateDate = request.TerminateDate,
             InstallmentsCount = installments
         };
-        await _financialRepository.CreateAsync(record);
+        await _financialRepository.AddAsync(record);
         await _unitOfWork.CommitAsync();
 
         for (var index = 1; index <= installments; index++)
@@ -147,7 +147,7 @@ public class FinancialService(
             };
 
             await _invoiceService.CreateInternalAsync(createInvoice);
-            if (_notificationApi.HasNotification)
+            if (_notificationContext.HasNotification)
             {
                 return false;
             }
@@ -161,19 +161,19 @@ public class FinancialService(
     public async Task<bool> CreateExpenseAsync(FinancialExpenseCreateRequest request)
     {
         var supplierRecord = await _supplierBusiness.GetWithValidateActiveAsync(request.SupplierId);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
 
         var settingPanelRecord = await _settingPanelBusiness.GetForCreateFinancialExpenseAsync(request.SettingPanelId);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
 
         _financialBusiness.ValidateTerminationDate(settingPanelRecord, request.TerminateDate);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
@@ -197,7 +197,7 @@ public class FinancialService(
             PaymentType = request.PaymentType,
             Type = FinancialTypeEnum.Expense
         };
-        await _financialRepository.CreateAsync(record);
+        await _financialRepository.AddAsync(record);
         await _unitOfWork.CommitAsync();
 
         for (var index = 1; index <= installments; index++)
@@ -223,7 +223,7 @@ public class FinancialService(
     public async Task<bool> InactiveRevenueAsync(Guid id)
     {
         var record = await _financialBusiness.GetForInactiveRevenueAsync(id);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
@@ -235,7 +235,7 @@ public class FinancialService(
         foreach (var invoice in invoices)
         {
             await _invoiceService.CancelInternalAsync(invoice);
-            if (_notificationApi.HasNotification)
+            if (_notificationContext.HasNotification)
             {
                 return false;
             }
@@ -254,7 +254,7 @@ public class FinancialService(
     public async Task<bool> InactiveExpenseAsync(Guid id)
     {
         var record = await _financialBusiness.GetForInactiveExpenseAsync(id);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
@@ -262,7 +262,7 @@ public class FinancialService(
         _unitOfWork.BeginTransaction();
 
         await _invoiceExpenseService.CancelInternalAsync(record.InvoiceExpenses);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
@@ -280,7 +280,7 @@ public class FinancialService(
     public async Task<bool> UpdateDetailsAsync(Guid id, FinancialUpdateDetailsRequest request)
     {
         var record = await _financialBusiness.GetForUpdateDetailsAsync(id);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
@@ -318,7 +318,7 @@ public class FinancialService(
                 Type = FinancialTypeEnum.Revenue,
                 PaymentType = contractRecord.PaymentType
             };
-            await _financialRepository.CreateAsync(record);
+            await _financialRepository.AddAsync(record);
             await _unitOfWork.CommitAsync();
 
             for (int index = 1; index <= record.InstallmentsCount; index++)
@@ -337,7 +337,7 @@ public class FinancialService(
                 };
 
                 await _invoiceService.CreateInternalAsync(createInvoice);
-                if (_notificationApi.HasNotification)
+                if (_notificationContext.HasNotification)
                 {
                     return false;
                 }
@@ -352,7 +352,7 @@ public class FinancialService(
         var record = await _financialRepository.GetByContractAndCustomerWithInvoicesAsync(contractId, customerId);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Financial.NotFound
@@ -365,7 +365,7 @@ public class FinancialService(
         foreach (var invoice in invoices)
         {
             await _invoiceService.CancelInternalAsync(invoice);
-            if (_notificationApi.HasNotification)
+            if (_notificationContext.HasNotification)
             {
                 return false;
             }

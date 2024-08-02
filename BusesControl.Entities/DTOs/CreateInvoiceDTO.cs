@@ -1,4 +1,4 @@
-﻿using BusesControl.Entities.Enums;
+﻿using BusesControl.Entities.Enums.v1;
 
 namespace BusesControl.Entities.DTOs;
 

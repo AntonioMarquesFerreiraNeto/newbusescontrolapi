@@ -2,13 +2,13 @@
 using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Enums;
-using BusesControl.Entities.Models;
-using BusesControl.Entities.Requests;
-using BusesControl.Entities.Responses;
+using BusesControl.Entities.Enums.v1;
+using BusesControl.Entities.Models.v1;
+using BusesControl.Entities.Requests.v1;
+using BusesControl.Entities.Responses.v1;
 using BusesControl.Filters.Notification;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
-using BusesControl.Persistence.v1.UnitOfWork;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
+using BusesControl.Persistence.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Http;
 
@@ -17,7 +17,7 @@ namespace BusesControl.Services.v1;
 public class SupportTicketService(
     IMapper _mapper,
     IUnitOfWork _unitOfWork,
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     IUserService _userService,
     ISupportTicketMessageService _supportTicketMessageService,
     ISupportTicketBusiness _supportTicketBusiness,
@@ -61,7 +61,7 @@ public class SupportTicketService(
         var record = await _supportTicketRepository.GetByIdOptionalEmployeeWithIncludesAsync(id, employeeId);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.SupportTicket.NotFound
@@ -79,7 +79,7 @@ public class SupportTicketService(
         var user = _userService.FindAuthenticatedUser();
         if (user.EmployeeId is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Employee.NotFound
@@ -96,7 +96,7 @@ public class SupportTicketService(
             Title = request.Title,
             Type = request.Type
         };
-        await _supportTicketRepository.CreateAsync(record);
+        await _supportTicketRepository.AddAsync(record);
         await _unitOfWork.CommitAsync();
 
         await _supportTicketMessageService.CreateInternalAsync(record.Id, request.Message);
@@ -109,7 +109,7 @@ public class SupportTicketService(
     public async Task<bool> CloseAsync(Guid id)
     {
         var record = await _supportTicketBusiness.GetForCancelOrCloseAsync(id);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
@@ -126,7 +126,7 @@ public class SupportTicketService(
     public async Task<bool> CancelAsync(Guid id)
     {
         var record = await _supportTicketBusiness.GetForCancelOrCloseAsync(id);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }

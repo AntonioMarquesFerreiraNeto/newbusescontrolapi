@@ -1,16 +1,15 @@
-﻿using Azure.Core;
-using BusesControl.Business.v1.Interfaces;
+﻿using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Enums;
+using BusesControl.Entities.Enums.v1;
 using BusesControl.Filters.Notification;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
 using Microsoft.AspNetCore.Http;
 
 namespace BusesControl.Business.v1;
 
 public class WebhookBusiness(
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     IWebhookRepository _webhookRepository
 ) : IWebhookBusiness
 {
@@ -19,7 +18,7 @@ public class WebhookBusiness(
         var record = await _webhookRepository.GetByTypeAsync(type);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Webhook.NotFound
@@ -29,7 +28,7 @@ public class WebhookBusiness(
 
         if (authToken is null || !record.AuthToken.Equals(authToken))
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status401Unauthorized,
                 title: NotificationTitle.Unauthorized,
                 details: Message.Webhook.Unauthorized

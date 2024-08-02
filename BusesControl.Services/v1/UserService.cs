@@ -1,14 +1,13 @@
 ﻿using BusesControl.Commons;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Enums;
-using BusesControl.Entities.Models;
-using BusesControl.Entities.Request;
-using BusesControl.Entities.Requests;
-using BusesControl.Entities.Response;
+using BusesControl.Entities.Enums.v1;
+using BusesControl.Entities.Models.v1;
+using BusesControl.Entities.Requests.v1;
+using BusesControl.Entities.Responses.v1;
 using BusesControl.Filters.Notification;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
-using BusesControl.Persistence.v1.UnitOfWork;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
+using BusesControl.Persistence.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -21,7 +20,7 @@ public class UserService(
     AppSettings _appSettings,
     IHttpContextAccessor _httpContextAccessor,
     IUnitOfWork _unitOfWork,
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     IEmailService _emailService,
     ITokenService _tokenService,
     IUserRepository _userRepository,
@@ -85,7 +84,7 @@ public class UserService(
         var record = await _userManager.FindByEmailAsync(request.Username);
         if (record is null || record.Status == UserStatusEnum.Inactive)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status401Unauthorized,
                 title: NotificationTitle.Unauthorized,
                 details: Message.User.CredentialsInvalid
@@ -96,7 +95,7 @@ public class UserService(
         var result = await _userManager.CheckPasswordAsync(record, request.Password);
         if (result == false)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                  statusCode: StatusCodes.Status401Unauthorized,
                  title: NotificationTitle.Unauthorized,
                  details: Message.User.CredentialsInvalid
@@ -105,7 +104,7 @@ public class UserService(
         }
 
         var token = await _tokenService.GenerateTokenAcess(record);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return default!;
         }
@@ -122,7 +121,7 @@ public class UserService(
         var record = await _userRepository.GetByEmailAndCpfAndBirthDateAsync(request.Email, request.Cpf, request.BirthDate);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.User.NotFound
@@ -146,10 +145,10 @@ public class UserService(
             Expires = DateTime.UtcNow.AddMinutes(_appSettings.ResetPassword.ExpireCode)
         };
 
-        await _resetPasswordSecurityCodeRepository.Create(newResetPasswordCodeRecord);
+        await _resetPasswordSecurityCodeRepository.AddAsync(newResetPasswordCodeRecord);
 
         _emailService.SendEmailStepCode(request.Email, record.Employee!.Name, newResetPasswordCodeRecord.Code);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return default!;
         }
@@ -164,7 +163,7 @@ public class UserService(
         var resetPasswordRecord = await _resetPasswordSecurityCodeRepository.GetByCodeAsync(request.Code);
         if (resetPasswordRecord is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.ResetUser.UnexpectedToken
@@ -176,7 +175,7 @@ public class UserService(
         var expireCode = TimeSpan.FromMinutes(_appSettings.ResetPassword.ExpireCode);
         if (difference >= expireCode)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.ResetUser.CodeInvalid
@@ -187,7 +186,7 @@ public class UserService(
         var userRecord = await _userManager.FindByIdAsync(resetPasswordRecord.UserId.ToString());
         if (userRecord is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.User.NotFound
@@ -198,7 +197,7 @@ public class UserService(
         var resetToken = await _userManager.GeneratePasswordResetTokenAsync(userRecord);
         if (resetToken is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.ResetUser.UnexpectedToken
@@ -214,7 +213,7 @@ public class UserService(
         var record = await _userManager.FindByIdAsync(request.UserId.ToString());
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.User.NotFound
@@ -224,7 +223,7 @@ public class UserService(
 
         if (request.NewPassword != request.ConfirmPassword)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.ResetUser.InvalidPassword
@@ -235,7 +234,7 @@ public class UserService(
         var result = await _userManager.ResetPasswordAsync(record, request.ResetToken, request.NewPassword);
         if (!result.Succeeded)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status500InternalServerError,
                 title: NotificationTitle.InternalError,
                 details: Message.User.Unexpected
@@ -250,7 +249,7 @@ public class UserService(
     {
         if (request.NewPassword != request.ConfirmPassword)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.ResetUser.InvalidPassword
@@ -260,7 +259,7 @@ public class UserService(
 
         if (request.NewPassword == request.CurrentPassword)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.User.InvalidNewPassword
@@ -273,7 +272,7 @@ public class UserService(
         var userRecord = await _userManager.FindByIdAsync(userId);
         if (userRecord is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.User.NotFound
@@ -284,7 +283,7 @@ public class UserService(
         var result = await _userManager.CheckPasswordAsync(userRecord, request.CurrentPassword);
         if (!result)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.User.InvalidCurrentPassword
@@ -295,7 +294,7 @@ public class UserService(
         var changePasswordResult = await _userManager.ChangePasswordAsync(userRecord, request.CurrentPassword, request.NewPassword);
         if (!changePasswordResult.Succeeded)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status500InternalServerError,
                 title: NotificationTitle.InternalError,
                 details: Message.User.Unexpected
@@ -316,7 +315,7 @@ public class UserService(
 
         if (request.Role == "Driver")
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.User.InvalidRole
@@ -337,7 +336,7 @@ public class UserService(
         var result = await _userManager.CreateAsync(record, passwordDefault);
         if (!result.Succeeded)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status500InternalServerError,
                 title: NotificationTitle.InternalError,
                 details: Message.User.Unexpected
@@ -348,7 +347,7 @@ public class UserService(
         var role = await _userManager.AddToRoleAsync(record, request.Role);
         if (!role.Succeeded)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status500InternalServerError,
                 title: NotificationTitle.InternalError,
                 details: Message.User.Unexpected
@@ -366,7 +365,7 @@ public class UserService(
         var record = await _userManager.FindByIdAsync(userId);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.User.NotFound
@@ -379,7 +378,7 @@ public class UserService(
         var result = await _userManager.UpdateAsync(record);
         if (!result.Succeeded)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status500InternalServerError,
                 title: NotificationTitle.InternalError,
                 details: Message.User.Unexpected
@@ -395,7 +394,7 @@ public class UserService(
         var record = await _userManager.FindByIdAsync(id.ToString());
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.User.NotFound
@@ -407,7 +406,7 @@ public class UserService(
         var result = await _userManager.UpdateAsync(record);
         if (!result.Succeeded)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status500InternalServerError,
                 title: NotificationTitle.InternalError,
                 details: Message.User.Unexpected
@@ -423,7 +422,7 @@ public class UserService(
         var record = await _userManager.FindByIdAsync(id.ToString());
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.User.NotFound
@@ -435,7 +434,7 @@ public class UserService(
         var result = await _userManager.UpdateAsync(record);
         if (!result.Succeeded)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status500InternalServerError,
                 title: NotificationTitle.InternalError,
                 details: Message.User.Unexpected
@@ -451,7 +450,7 @@ public class UserService(
         var record = await _userManager.FindByIdAsync(id.ToString());
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.User.NotFound
@@ -462,7 +461,7 @@ public class UserService(
         var result = await _userManager.DeleteAsync(record);
         if (!result.Succeeded)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status500InternalServerError,
                 title: NotificationTitle.InternalError,
                 details: Message.User.Unexpected
@@ -489,7 +488,7 @@ public class UserService(
         var roles = await _userManager.GetRolesAsync(user);
         if (roles is null || roles.Count == 0)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status500InternalServerError,
                 title: NotificationTitle.InternalError,
                 details: Message.User.Unexpected
@@ -503,7 +502,7 @@ public class UserService(
         var roleRemoveResult = await _userManager.RemoveFromRoleAsync(user, oldRole);
         if (!roleRemoveResult.Succeeded)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status500InternalServerError,
                 title: NotificationTitle.InternalError,
                 details: Message.User.Unexpected
@@ -514,7 +513,7 @@ public class UserService(
         var roleAddResult = await _userManager.AddToRoleAsync(user, newRole);
         if (!roleAddResult.Succeeded)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status500InternalServerError,
                 title: NotificationTitle.InternalError,
                 details: Message.User.Unexpected
@@ -540,7 +539,7 @@ public class UserService(
         var result = await _userManager.UpdateAsync(userRecord);
         if (!result.Succeeded)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.User.Unexpected

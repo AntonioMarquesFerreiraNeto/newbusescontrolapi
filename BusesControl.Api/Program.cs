@@ -7,12 +7,12 @@ using BusesControl.Services;
 using BusesControl.Commons;
 using BusesControl.Commons.Notification;
 using FluentValidation;
-using BusesControl.Entities.Validators;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using BusesControl.Entities.Validators.v1;
 
 namespace BusesControl.Api;
 

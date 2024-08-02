@@ -12,7 +12,7 @@ namespace BusesControl.Services.v1;
 
 public class EmailService(
     AppSettings _appSettings,
-    INotificationApi _notificationApi
+    INotificationContext _notificationContext
 ) : IEmailService
 {
     private bool SendEmail(SendEmailDTO sendEmail)
@@ -42,7 +42,7 @@ public class EmailService(
         }
         catch (Exception)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status500InternalServerError,
                 title: NotificationTitle.InternalError,
                 details: Message.Email.Unexpected

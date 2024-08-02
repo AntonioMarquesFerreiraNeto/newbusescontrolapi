@@ -1,11 +1,11 @@
 ﻿using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Models;
-using BusesControl.Entities.Requests;
+using BusesControl.Entities.Models.v1;
+using BusesControl.Entities.Requests.v1;
 using BusesControl.Filters.Notification;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
-using BusesControl.Persistence.v1.UnitOfWork;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
+using BusesControl.Persistence.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Http;
 
@@ -13,7 +13,7 @@ namespace BusesControl.Services.v1;
 
 public class ContractDescriptionService(
     IUnitOfWork _unitOfWork,
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     IContractDescriptionRepository _contractDescriptionRepository,
     IContractDescriptionBusiness _contractDescriptionBusiness
 ) : IContractDescriptionService
@@ -42,7 +42,7 @@ public class ContractDescriptionService(
         var record = await _contractDescriptionRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.ContractDescription.NotFound
@@ -74,7 +74,7 @@ public class ContractDescriptionService(
             Copyright = request.Copyright
         };
 
-        await _contractDescriptionRepository.CreateAsync(record);
+        await _contractDescriptionRepository.AddAsync(record);
         await _unitOfWork.CommitAsync();
 
         return true;
@@ -83,7 +83,7 @@ public class ContractDescriptionService(
     public async Task<bool> UpdateAsync(Guid id, ContractDescriptionUpdateRequest request)
     {
         var record = await _contractDescriptionBusiness.GetForUpdateAsync(id);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
@@ -106,7 +106,7 @@ public class ContractDescriptionService(
         var contractDescriptionExists = await _contractDescriptionRepository.ExitsAsync(id);
         if (!contractDescriptionExists)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.ContractDescription.NotFound
@@ -120,12 +120,12 @@ public class ContractDescriptionService(
     public async Task<bool> DeleteAsync(Guid id)
     {
         var record = await _contractDescriptionBusiness.GetForDeleteAsync(id);
-        if (_notificationApi.HasNotification)
+        if (_notificationContext.HasNotification)
         {
             return false;
         }
 
-        _contractDescriptionRepository.Delete(record);
+        _contractDescriptionRepository.Remove(record);
         await _unitOfWork.CommitAsync();
 
         return true;

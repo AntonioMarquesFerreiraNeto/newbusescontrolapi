@@ -1,15 +1,15 @@
 ﻿using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
-using BusesControl.Entities.Models;
+using BusesControl.Entities.Models.v1;
 using BusesControl.Filters.Notification;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
 using Microsoft.AspNetCore.Http;
 
 namespace BusesControl.Business.v1;
 
 public class ColorBusiness(
-    INotificationApi _notificationApi,
+    INotificationContext _notificationContext,
     IBusRepository _busRepository,
     IColorRepository _colorRepository
 ) : IColorBusiness
@@ -19,7 +19,7 @@ public class ColorBusiness(
         var record = await _colorRepository.GetByIdAsync(id);
         if (record is null) 
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Color.NotFound
@@ -29,7 +29,7 @@ public class ColorBusiness(
 
         if (!record.Active)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Color.NotActive
@@ -45,7 +45,7 @@ public class ColorBusiness(
         var exists = await _colorRepository.ExistsAsync(color, id: id);
         if (exists)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status409Conflict,
                 title: NotificationTitle.Conflict,
                 details: Message.Color.Exists
@@ -61,7 +61,7 @@ public class ColorBusiness(
         var record = await _colorRepository.GetByIdAsync(id);
         if (record is null)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Color.NotFound
@@ -72,7 +72,7 @@ public class ColorBusiness(
         var exists = await _busRepository.ExistsByColorAsync(id);
         if (exists)
         {
-            _notificationApi.SetNotification(
+            _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
                 details: Message.Color.ExistsInBus

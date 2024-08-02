@@ -1,5 +1,5 @@
-﻿using BusesControl.Entities.Enums;
-using BusesControl.Entities.Models;
+﻿using BusesControl.Entities.Enums.v1;
+using BusesControl.Entities.Models.v1;
 
 namespace BusesControl.Business.v1.Interfaces;
 

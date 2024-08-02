@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using BusesControl.Persistence.v1.Repositories;
-using BusesControl.Persistence.v1.Repositories.Interfaces;
-using BusesControl.Entities.Models;
 using Microsoft.AspNetCore.Identity;
-using BusesControl.Persistence.v1.UnitOfWork;
+using BusesControl.Persistence.UnitOfWork;
+using BusesControl.Persistence.Repositories.v1;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
+using BusesControl.Entities.Models.v1;
 
 namespace BusesControl.Persistence;
 
@@ -15,7 +15,7 @@ public class RegisterPersistence
 {
     public static void Register(WebApplicationBuilder builder)
     {
-        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+        builder.Services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
 
         builder.Services.AddScoped<IBusRepository, BusRepository>();
         builder.Services.AddScoped<IColorRepository, ColorRepository>();
