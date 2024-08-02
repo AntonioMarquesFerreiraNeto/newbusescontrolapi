@@ -42,9 +42,9 @@ public class ViaCepIntegrationService(
         if (response is null)
         {
             _notificationApi.SetNotification(
-                statusCode: StatusCodes.Status400BadRequest,
-                title: NotificationTitle.BadRequest,
-                details: Message.Address.Invalid
+                statusCode: StatusCodes.Status404NotFound,
+                title: NotificationTitle.NotFound,
+                details: Message.Address.NotFound
             );
             return default!;
         }

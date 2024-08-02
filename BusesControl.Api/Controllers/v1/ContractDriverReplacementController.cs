@@ -17,6 +17,15 @@ public class ContractDriverReplacementController(
     IContractDriverReplacementService _contractDriverReplacementService
 ) : ControllerBase
 {
+    /// <summary>
+    /// Retorna substituições de motorista pelo contrato
+    /// </summary>
+    /// <response code="200">Retorna sucesso da requisição</response>
+    /// <response code="401">Retorna erro de não autorizado</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet]
     public async Task<IActionResult> FindByContract([FromRoute] Guid contractId)
     {
@@ -24,6 +33,19 @@ public class ContractDriverReplacementController(
         return Ok(response);
     }
 
+    /// <summary>
+    /// Retorna substituição de motorista pelo contrato e ID
+    /// </summary>
+    /// <response code="200">Retorna sucesso da requisição</response>
+    /// <response code="400">Retorna erro de requisição inválida</response>
+    /// <response code="401">Retorna erro de não autorizado</response>
+    /// <response code="404">Retorna erro de não encontrado</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById([FromRoute] Guid contractId, [FromRoute] Guid id)
     {
@@ -31,6 +53,19 @@ public class ContractDriverReplacementController(
         return Ok(response);
     }
 
+    /// <summary>
+    /// Cria uma nova substituição de motorista para o contrato
+    /// </summary>
+    /// <response code="204">Retorna sucesso da requisição</response>
+    /// <response code="400">Retorna erro de requisição inválida</response>
+    /// <response code="401">Retorna erro de não autorizado</response>
+    /// <response code="404">Retorna erro de não não encontrado</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost]
     public async Task<IActionResult> Create([FromRoute] Guid contractId, [FromBody] ContractDriverReplacementCreateRequest request)
     {
@@ -44,6 +79,17 @@ public class ContractDriverReplacementController(
         return NoContent();
     }
 
+    /// <summary>
+    /// Remove substituição de motorista pelo contrato e ID
+    /// </summary>
+    /// <response code="204">Retorna sucesso da requisição</response>
+    /// <response code="401">Retorna erro de não autorizado</response>
+    /// <response code="404">Retorna erro de não encontrado</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete([FromRoute] Guid contractId, [FromRoute] Guid id)
     {
