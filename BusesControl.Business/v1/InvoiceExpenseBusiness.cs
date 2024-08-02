@@ -74,8 +74,8 @@ public class InvoiceExpenseBusiness(
         if (response.Balance < pricePayment)
         {
             _notificationContext.SetNotification(
-                statusCode: StatusCodes.Status500InternalServerError,
-                title: NotificationTitle.InternalError,
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
                 details: Message.InvoiceExpense.InsufficientBalance
             );
             return false;

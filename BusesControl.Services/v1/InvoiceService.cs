@@ -56,7 +56,11 @@ public class InvoiceService(
             dueDate = createInvoice.DueDate,
             value = createInvoice.Price,
             description = descriptionInvoice,
-            externalReference = id
+            externalReference = id,
+            fine = new 
+            { 
+                type = "PERCENTAGE"
+            }
         };
 
         var httpResult = await httpClient.PostAsJsonAsync($"{_appSettings.Assas.Url}/payments", createInvoiceInAssas);
