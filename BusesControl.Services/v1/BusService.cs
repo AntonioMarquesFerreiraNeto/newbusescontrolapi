@@ -20,6 +20,22 @@ public class BusService(
     IBusRepository _busRepository
 ) : IBusService
 {
+    private bool ValidateManufactureDate(DateOnly manufactureDate)
+    {
+        var dateNow = DateOnly.FromDateTime(DateTime.UtcNow);
+        if (manufactureDate > dateNow)
+        {
+            _notificationContext.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.Bus.ManufactureDateInvalid
+            );
+            return false;
+        }
+
+        return true;
+    }
+
     public async Task<IEnumerable<BusModel>> FindBySearchAsync(int page, int pageSize, string? search = null)
     {
         var records = await _busRepository.FindBySearchAsync(page, pageSize, search);
@@ -45,6 +61,12 @@ public class BusService(
     public async Task<bool> CreateAsync(BusCreateRequest request)
     {
         request.LicensePlate = request.LicensePlate.Replace("-", "");
+
+        ValidateManufactureDate(request.ManufactureDate);
+        if (_notificationContext.HasNotification)
+        {
+            return false;
+        }
 
         await _colorBusiness.ValidateActiveAsync(request.ColorId);
         if (_notificationContext.HasNotification)
@@ -79,6 +101,12 @@ public class BusService(
     public async Task<bool> UpdateAsync(Guid id, BusUpdateRequest request)
     {
         request.LicensePlate = request.LicensePlate.Replace("-", "");
+
+        ValidateManufactureDate(request.ManufactureDate);
+        if (_notificationContext.HasNotification)
+        {
+            return false;
+        }
 
         var record = await _busRepository.GetByIdAsync(id);
         if (record is null)

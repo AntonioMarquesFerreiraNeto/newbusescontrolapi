@@ -122,6 +122,12 @@ public class Program
             app.UseSwaggerUI();
         }
 
+        app.UseCors(x => {
+            x.AllowAnyOrigin();
+            x.AllowAnyMethod();
+            x.AllowAnyHeader();
+        });
+
         app.UseAuthorization();
 
         app.MapControllers();

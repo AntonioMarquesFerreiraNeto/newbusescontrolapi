@@ -89,7 +89,8 @@ public class Message
         public readonly static string NotActive = "Ônibus não está ativo!";
         public readonly static string Invalid = "Operação inválida!";
         public readonly static string Exists = "Ônibus já se encontra registrado!";
-        public readonly static string NotAvailable = "Ônibus não está disponível para novos contratos";
+        public readonly static string NotAvailable = "Ônibus não está disponível para novos contratos!";
+        public readonly static string ManufactureDateInvalid = "Data de fabricação não pode ser maior que a data atual!";
     }
 
     public class Employee
