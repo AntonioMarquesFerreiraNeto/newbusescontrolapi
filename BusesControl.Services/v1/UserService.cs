@@ -82,9 +82,11 @@ public class UserService(
             await _cacheService.SetAsync($"user:{userId}", user, cacheOptions);
         }
 
-        return _mapper.Map<UserResponse>(user);
-    }
+        var response = _mapper.Map<UserResponse>(user);
+        response.Role = _userManager.GetRolesAsync(user).Result.First();
 
+        return response;
+    }
 
     public UserAuthResponse FindAuthenticatedUser()
     {

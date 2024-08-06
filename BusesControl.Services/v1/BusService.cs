@@ -160,6 +160,11 @@ public class BusService(
         }
 
         record.Status = record.Status != BusStatusEnum.Active ? BusStatusEnum.Active : BusStatusEnum.Inactive;
+        if (record.Status == BusStatusEnum.Inactive)
+        {
+            record.Availability = AvailabilityEnum.Unavailable;
+        }
+
         _busRepository.Update(record);
         await _unitOfWork.CommitAsync();
 
@@ -175,6 +180,16 @@ public class BusService(
                 statusCode: StatusCodes.Status404NotFound,
                 title: NotificationTitle.NotFound,
                 details: Message.Bus.NotFound
+            );
+            return false;
+        }
+
+        if (record.Status != BusStatusEnum.Active)
+        {
+            _notificationContext.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: Message.Bus.NotActive
             );
             return false;
         }
