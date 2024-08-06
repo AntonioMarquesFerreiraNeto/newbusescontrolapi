@@ -1,4 +1,5 @@
-﻿using BusesControl.Commons;
+﻿using AutoMapper;
+using BusesControl.Commons;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.Enums.v1;
@@ -18,6 +19,7 @@ namespace BusesControl.Services.v1;
 
 public class UserService(
     AppSettings _appSettings,
+    IMapper _mapper,
     IHttpContextAccessor _httpContextAccessor,
     IUnitOfWork _unitOfWork,
     INotificationContext _notificationContext,
@@ -54,6 +56,22 @@ public class UserService(
         var password = pwd.Next();
 
         return password;
+    }
+
+    public async Task<UserResponse> GetByLoggedUserAsync()
+    {
+        var record = await _userRepository.GetByIdWithEmployeeAsync(FindAuthenticatedUser().Id);
+        if (record is null)
+        {
+            _notificationContext.SetNotification(
+                statusCode: StatusCodes.Status404NotFound,
+                title: NotificationTitle.NotFound,
+                details: Message.User.NotFound
+            );
+            return default!;
+        }
+
+        return _mapper.Map<UserResponse>(record);
     }
 
     public UserAuthResponse FindAuthenticatedUser()

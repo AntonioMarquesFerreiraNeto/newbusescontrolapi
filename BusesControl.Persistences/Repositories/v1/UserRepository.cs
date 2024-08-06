@@ -20,4 +20,9 @@ public class UserRepository(
 
         return await _context.Users.AsNoTracking().Include(x => x.Employee).SingleOrDefaultAsync(criteria);
     }
+
+    public async Task<UserModel?> GetByIdWithEmployeeAsync(Guid id)
+    {
+        return await _context.Users.AsNoTracking().Include(x => x.Employee).SingleOrDefaultAsync(x => x.Id == id);
+    }
 }

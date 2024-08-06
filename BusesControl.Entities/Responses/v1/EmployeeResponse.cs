@@ -18,4 +18,5 @@ public class EmployeeResponse
     public string State { get; set; } = default!;
     public EmployeeTypeEnum Type { get; set; }
     public EmployeeStatusEnum Status { get; set; }
+    public PersonGenderEnum Gender { get; set; }
 }

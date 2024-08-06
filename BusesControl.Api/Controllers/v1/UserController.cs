@@ -22,6 +22,25 @@ public class UserController(
 ) : ControllerBase
 {
     /// <summary>
+    /// Busca informações do perfil do usuário logado
+    /// </summary>
+    /// <response code="200">Retorna sucesso da requisição</response>
+    /// <response code="401">Retorna erro de não autorizado</response>
+    /// <response code="404">Retorna erro de não encontrado</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+    [Authorize]
+    [HttpGet("my/profile")]
+    public async Task<IActionResult> GetByLoggedUser()
+    {
+        var response = await _userService.GetByLoggedUserAsync();
+        return Ok(response);
+    }
+
+    /// <summary>
     /// Reset password step code
     /// </summary>
     /// <response code="200">Retorna sucesso da requisição</response>

@@ -8,6 +8,7 @@ namespace BusesControl.Services.v1.Interfaces;
 public interface IUserService
 {
     string GeneratePassword();
+    Task<UserResponse> GetByLoggedUserAsync();
     UserAuthResponse FindAuthenticatedUser();
     Task<LoginResponse> LoginAsync(LoginRequest request);
     Task<SuccessResponse> ResetPasswordStepCodeAsync(UserResetPasswordStepCodeRequest request);
