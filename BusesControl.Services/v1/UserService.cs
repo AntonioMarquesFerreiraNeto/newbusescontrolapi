@@ -12,6 +12,7 @@ using BusesControl.Persistence.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Caching.Distributed;
 using PasswordGenerator;
 using System.Security.Claims;
 
@@ -23,6 +24,7 @@ public class UserService(
     IHttpContextAccessor _httpContextAccessor,
     IUnitOfWork _unitOfWork,
     INotificationContext _notificationContext,
+    ICacheService _cacheService,
     IEmailService _emailService,
     ITokenService _tokenService,
     IUserRepository _userRepository,
@@ -60,19 +62,29 @@ public class UserService(
 
     public async Task<UserResponse> GetByLoggedUserAsync()
     {
-        var record = await _userRepository.GetByIdWithEmployeeAsync(FindAuthenticatedUser().Id);
-        if (record is null)
+        var userId = FindAuthenticatedUser().Id;
+
+        var user = await _cacheService.GetAsync<UserModel>($"user:{userId}");
+        if (user is null)
         {
-            _notificationContext.SetNotification(
-                statusCode: StatusCodes.Status404NotFound,
-                title: NotificationTitle.NotFound,
-                details: Message.User.NotFound
-            );
-            return default!;
+            user = await _userRepository.GetByIdWithEmployeeAsync(userId);
+            if (user is null)
+            {
+                _notificationContext.SetNotification(
+                    statusCode: StatusCodes.Status404NotFound,
+                    title: NotificationTitle.NotFound,
+                    details: Message.User.NotFound
+                );
+                return default!;
+            }
+
+            var cacheOptions = new DistributedCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(_appSettings.Redis.Expire));
+            await _cacheService.SetAsync($"user:{userId}", user, cacheOptions);
         }
 
-        return _mapper.Map<UserResponse>(record);
+        return _mapper.Map<UserResponse>(user);
     }
+
 
     public UserAuthResponse FindAuthenticatedUser()
     {
@@ -344,6 +356,7 @@ public class UserService(
         var record = new UserModel
         {
             EmployeeId = request.EmployeeId,
+            NickName = request.Name.Split(' ')[0],
             UserName = request.Email,
             Email = request.Email,
             PhoneNumber = request.PhoneNumber
@@ -391,7 +404,7 @@ public class UserService(
             return false;
         }
 
-        record.Nickname = request.Nickname;
+        record.NickName = request.NickName;
 
         var result = await _userManager.UpdateAsync(record);
         if (!result.Succeeded)

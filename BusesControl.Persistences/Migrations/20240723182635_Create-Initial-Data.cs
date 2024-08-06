@@ -68,7 +68,7 @@ public partial class CreateInitialData : Migration
         [
             "Id",
             "EmployeeId",
-            "Nickname",
+            "NickName",
             "PhoneNumber",
             "Status",
             "UserName",

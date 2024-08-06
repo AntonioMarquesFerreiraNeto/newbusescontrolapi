@@ -10,6 +10,6 @@ public class UserModel : IdentityUser<Guid>
     public Guid? EmployeeId { get; set; }
     public EmployeeModel? Employee { get; set; } = default!;
     [MaxLength(20)]
-    public string? Nickname { get; set; } = default!;
+    public string? NickName { get; set; } = default!;
     public UserStatusEnum Status { get; set; } = UserStatusEnum.Inactive;
 }

@@ -2,5 +2,5 @@
 
 public class UserSetNickNameRequest
 {
-    public string Nickname { get; set; } = default!;
+    public string NickName { get; set; } = default!;
 }
