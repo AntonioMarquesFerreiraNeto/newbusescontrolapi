@@ -27,7 +27,13 @@ public class RegisterServices
             options.TokenLifespan = TimeSpan.FromMinutes(appSettingsValue!.ResetPassword.ExpireResetToken);
         });
 
+        builder.Services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = appSettingsValue!.Redis.Host;
+        });
+
         builder.Services.AddScoped<IBusService, BusService>();
+        builder.Services.AddScoped<ICacheService, CacheService>();
         builder.Services.AddScoped<IColorService, ColorService>();
         builder.Services.AddScoped<IContractService, ContractService>();
         builder.Services.AddScoped<IContractDescriptionService, ContractDescriptionService>();

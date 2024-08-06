@@ -51,6 +51,7 @@ O projeto utiliza diversas tecnologias, algumas das quais foram definidas e reut
 - **ClosedXML**: Para geração de relatórios em Excel.
 - **SQL Server com Docker**: Utilizado como banco de dados, facilitando o ambiente de desenvolvimento e deploy.
 - **Docker**: Possivelmente utilizado também para a API em futuras atualizações.
+- **Redis**:  Para armazenar dados em memória para acesso rápido, ideal para caching, redução de carga em bancos de dados e melhoria de performance nas requisições.
 - **UserManager**: Para gerenciamento de usuários e controle de autenticação e autorização.
 - **AutoMapper**: Utilizado para mapeamento de objetos em aplicações .NET, facilitando a transferência de dados entre models, DTOs, requests e responses.
 - **JWT**: Utilizado para geração e validação de tokens de autenticação, garantindo segurança na comunicação entre cliente e servidor.

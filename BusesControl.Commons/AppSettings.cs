@@ -1,5 +1,6 @@
 ﻿public class AppSettings
 {
+    public AppSettingsRedis Redis { get; set; } = default!;
     public AppSettingsViaCep ViaCep { get; set; } = default!;
     public AppSettingsJWT JWT { get; set; } = default!;
     public AppSettingsPdfCo PdfCo { get; set; } = default!;
@@ -10,6 +11,12 @@
     public AppSettingsSecurityCode SecurityCode { get; set; } = default!;
     public AppSettingsTermination Termination { get; set; } = default!;
     public AppSettingsUserSystem UserSystem { get; set; } = default!;
+}
+
+public class AppSettingsRedis 
+{
+    public int Expire { get; set; }
+    public string Host { get; set; } = default!;
 }
 
 public class AppSettingsViaCep
