@@ -6,7 +6,7 @@ namespace BusesControl.Services.v1.Interfaces;
 
 public interface IEmployeeService
 {
-    Task<IEnumerable<EmployeeModel>> FindBySearchAsync(int page, int pageSize, string? search = null);
+    Task<PaginationResponse<EmployeeModel>> FindBySearchAsync(PaginationRequest request);
     Task<EmployeeModel> GetByIdAsync(Guid id);
     Task<bool> CreateAsync(EmployeeCreateRequest request);
     Task<bool> UpdateAsync(Guid id, EmployeeUpdateRequest request);

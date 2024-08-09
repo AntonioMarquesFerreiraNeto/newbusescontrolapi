@@ -30,6 +30,18 @@ public class ColorRepository(
         return records;
     }
 
+    public async Task<int> CountBySearchAsync(string? search = null)
+    {
+        var query = _context.Colors.AsNoTracking();
+
+        if (search is not null)
+        {
+            query = query.Where(x => x.Color.Contains(search));
+        }
+
+        return await query.CountAsync();
+    }
+
     public async Task<ColorModel?> GetByIdAsync(Guid id)
     {
         return await _context.Colors.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);

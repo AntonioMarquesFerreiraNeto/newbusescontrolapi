@@ -93,11 +93,15 @@ public class WebhookService(
         return true;
     }
 
-    public async Task<IEnumerable<WebhookResponse>> GetAllAsync()
+    public async Task<PaginationResponse<WebhookResponse>> GetAllAsync()
     {
         var records = await _webhookRepository.GetAllAsync();
 
-        return _mapper.Map<IEnumerable<WebhookResponse>>(records);
+        return new PaginationResponse<WebhookResponse> 
+        { 
+            Response = _mapper.Map<IEnumerable<WebhookResponse>>(records),
+            TotalSize = records.Count()
+        };
     }
 
     public async Task<WebhookResponse> GetByIdAsync(Guid id)

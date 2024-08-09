@@ -10,7 +10,7 @@ public interface IContractService
     Task<ContractResponse> GetByIdAsync(Guid id);
     Task<PdfCoResponse> GetGeneratedContractForCustomerAsync(Guid id, Guid customerId);
     Task<PdfCoResponse> StartProcessTerminationAsync(Guid id, Guid customerId);
-    Task<IEnumerable<ContractModel>> FindByOptionalStatusAsync(int page, int pageSize, ContractStatusEnum? status);
+    Task<PaginationResponse<ContractModel>> FindByOptionalStatusAsync(int page, int pageSize, ContractStatusEnum? status);
     Task<bool> CreateAsync(ContractCreateRequest request);
     Task<bool> UpdateAsync(Guid id, ContractUpdateRequest request);
     Task<bool> DeleteAsync(Guid id);

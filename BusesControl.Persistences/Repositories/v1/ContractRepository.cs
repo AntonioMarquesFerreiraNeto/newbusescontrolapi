@@ -68,6 +68,18 @@ public class ContractRepository(
         return await query.ToListAsync();
     }
 
+    public async Task<int> CountByOptionalStatusAsync(ContractStatusEnum? status = null)
+    {
+        var query = _context.Contracts.AsNoTracking();
+
+        if (status is not null)
+        {
+            query = query.Where(x => x.Status == status);
+        }
+
+        return await query.CountAsync();
+    }
+
     public async Task<IEnumerable<ContractModel>> FindByContractAndTerminateDateAsync(ContractStatusEnum status, DateOnly terminateDate)
     {
         return await _context.Contracts.AsNoTracking().Where(x => x.Status == status && x.TerminateDate <= terminateDate).ToListAsync();

@@ -3,6 +3,7 @@ using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.Models.v1;
 using BusesControl.Entities.Requests.v1;
+using BusesControl.Entities.Responses.v1;
 using BusesControl.Filters.Notification;
 using BusesControl.Persistence.Repositories.Interfaces.v1;
 using BusesControl.Persistence.UnitOfWork;
@@ -18,10 +19,15 @@ public class ContractDriverReplacementService(
     IContractDriverReplacementRepository _contractDriverReplacementRepository
 ) : IContractDriverReplacementService
 {
-    public async Task<IEnumerable<ContractDriverReplacementModel>> FindByContractAsync(Guid contractId)
+    public async Task<PaginationResponse<ContractDriverReplacementModel>> FindByContractAsync(Guid contractId)
     {
         var records = await _contractDriverReplacementRepository.FindByContractAsync(contractId);
-        return records;
+
+        return new PaginationResponse<ContractDriverReplacementModel> 
+        { 
+            Response = records,
+            TotalSize = records.Count()
+        };
     }
 
     public async Task<ContractDriverReplacementModel> GetByIdAsync(Guid id, Guid contractId)

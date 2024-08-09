@@ -43,14 +43,19 @@ public class SupportTicketService(
         return reference;
     }
 
-    public async Task<IEnumerable<SupportTicketModel>> FindByStatusAsync(PaginationRequest request, SupportTicketStatusEnum? status = null)
+    public async Task<PaginationResponse<SupportTicketModel>> FindByStatusAsync(PaginationRequest request, SupportTicketStatusEnum? status = null)
     {
         var user = _userService.FindAuthenticatedUser();
         var employeeId = (user.Role != "SupportAgent") ? user.EmployeeId : null;
 
         var records = await _supportTicketRepository.FindByStatusAsync(employeeId, status, request.Page, request.PageSize);
-        
-        return records;
+        var count = await _supportTicketRepository.CountByOptionalStatusAsync(employeeId, status);
+
+        return new PaginationResponse<SupportTicketModel> 
+        { 
+            Response = records,
+            TotalSize = count
+        };
     }
 
     public async Task<SupportTicketResponse> GetByIdAsync(Guid id)

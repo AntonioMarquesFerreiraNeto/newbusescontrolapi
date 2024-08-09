@@ -49,6 +49,22 @@ public class NotificationRepository(
         return await query.ToListAsync();
     }
 
+    public async Task<int> CountByOptionRoleAsync(string? role = null)
+    {
+        var query = _context.Notifications.AsNoTracking();
+
+        if (role == "Admin")
+        {
+            query = query.Where(x => x.AccessLevel == NotificationAccessLevelEnum.Admin || x.AccessLevel == NotificationAccessLevelEnum.Public);
+        }
+        else if (role == "Assistant")
+        {
+            query = query.Where(x => x.AccessLevel == NotificationAccessLevelEnum.Assistant || x.AccessLevel == NotificationAccessLevelEnum.Public);
+        }
+
+        return await query.CountAsync();
+    }
+
     public async Task<NotificationModel?> GetByIdAsync(Guid id)
     {
         return await _context.Notifications.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);

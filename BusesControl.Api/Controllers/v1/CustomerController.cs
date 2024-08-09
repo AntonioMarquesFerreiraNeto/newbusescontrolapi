@@ -46,9 +46,9 @@ public class CustomerController(
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet]
-    public async Task<IActionResult> FindBySearch([FromQuery] int page, [FromQuery] int pageSize, [FromQuery] string? search)
+    public async Task<IActionResult> FindBySearch([FromQuery] PaginationRequest request)
     {
-        var result = await _customerService.FindBySearchAsync(page, pageSize, search);
+        var result = await _customerService.FindBySearchAsync(request);
         return Ok(result);
     }
 

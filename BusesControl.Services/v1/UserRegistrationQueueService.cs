@@ -51,10 +51,16 @@ public class UserRegistrationQueueService(
         return code;
     }
 
-    public async Task<IEnumerable<UserRegistrationQueueModel>> FindBySearchAsync(int page, int pageSize, string? search)
+    public async Task<PaginationResponse<UserRegistrationQueueModel>> FindBySearchAsync(PaginationRequest request)
     {
-        var records = await _userRegistrationQueueRepository.FindAsync(page, pageSize, search);
-        return records;
+        var records = await _userRegistrationQueueRepository.FindAsync(request.Page, request.PageSize, request.Search);
+        var count = await _userRegistrationQueueRepository.CountAsync(request.Search);
+
+        return new PaginationResponse<UserRegistrationQueueModel> 
+        { 
+            Response = records,
+            TotalSize = count
+        };
     }
 
     public async Task<SuccessResponse> CreateForEmployeeAsync(UserRegistrationCreateRequest request)

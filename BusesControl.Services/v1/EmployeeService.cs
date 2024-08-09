@@ -4,7 +4,6 @@ using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.Enums.v1;
 using BusesControl.Entities.Models.v1;
-using BusesControl.Entities.Requests;
 using BusesControl.Entities.Requests.v1;
 using BusesControl.Entities.Responses.v1;
 using BusesControl.Filters.Notification;
@@ -23,10 +22,16 @@ public class EmployeeService(
     IEmployeeRepository _employeeRepository
 ) : IEmployeeService
 {
-    public async Task<IEnumerable<EmployeeModel>> FindBySearchAsync(int page, int pageSize, string? search = null)
+    public async Task<PaginationResponse<EmployeeModel>> FindBySearchAsync(PaginationRequest request)
     {
-        var records = await _employeeRepository.FindBySearchAsync(page, pageSize, search);
-        return records;
+        var records = await _employeeRepository.FindBySearchAsync(request.Page, request.PageSize, request.Search);
+        var count = await _employeeRepository.CountBySearchAsync(request.Search);
+
+        return new PaginationResponse<EmployeeModel> 
+        { 
+            Response = records,
+            TotalSize = count
+        };
     }
 
     public async Task<EmployeeModel> GetByIdAsync(Guid id)

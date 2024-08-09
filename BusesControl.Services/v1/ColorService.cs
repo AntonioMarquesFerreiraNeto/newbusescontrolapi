@@ -3,6 +3,7 @@ using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.Models.v1;
 using BusesControl.Entities.Requests.v1;
+using BusesControl.Entities.Responses.v1;
 using BusesControl.Filters.Notification;
 using BusesControl.Persistence.Repositories.Interfaces.v1;
 using BusesControl.Persistence.UnitOfWork;
@@ -18,6 +19,18 @@ public class ColorService(
     IColorRepository _colorRepository
 ) : IColorService
 {
+    public async Task<PaginationResponse<ColorModel>> FindBySearchAsync(PaginationRequest request)
+    {
+        var records = await _colorRepository.FindBySearchAsync(request.Page, request.PageSize, request.Search);
+        var count = await _colorRepository.CountBySearchAsync(request.Search);
+
+        return new PaginationResponse<ColorModel>
+        {
+            Response = records,
+            TotalSize = count
+        };
+    }
+
     public async Task<ColorModel> GetByIdAsync(Guid id)
     {
         var record = await _colorRepository.GetByIdAsync(id);
@@ -32,12 +45,6 @@ public class ColorService(
         }
 
         return record;
-    }
-
-    public async Task<IEnumerable<ColorModel>> FindBySearchAsync(int page, int pageSize, string? search = null)
-    {
-        var records = await _colorRepository.FindBySearchAsync(page, pageSize, search);
-        return records;
     }
 
     public async Task<bool> CreateAsync(ColorCreateRequest request)

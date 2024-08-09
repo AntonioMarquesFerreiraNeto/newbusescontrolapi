@@ -27,6 +27,18 @@ public class EmployeeRepository(
         return records;
     }
 
+    public async Task<int> CountBySearchAsync(string? search = null)
+    {
+        var query = _context.Employees.AsNoTracking();
+
+        if (search is not null)
+        {
+            query = query.Where(x => x.Name.Contains(search) || x.Cpf.Contains(search) || x.Email.Contains(search));
+        }
+
+        return await query.CountAsync();
+    }
+
     public async Task<EmployeeModel?> GetByIdAsync(Guid id)
     {
         return await _context.Employees.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
