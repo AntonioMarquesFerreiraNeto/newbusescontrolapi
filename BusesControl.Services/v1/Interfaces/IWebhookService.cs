@@ -6,7 +6,7 @@ namespace BusesControl.Services.v1.Interfaces;
 
 public interface IWebhookService
 {
-    Task<IEnumerable<WebhookResponse>> GetAllAsync();
+    Task<PaginationResponse<WebhookResponse>> GetAllAsync();
     Task<WebhookResponse> GetByIdAsync(Guid id);
     Task<bool> CreateAsync(WebhookCreateRequest request);
     Task<WebhookChangeTokenResponse> ChangeInternalAsync(WebhookModel record);

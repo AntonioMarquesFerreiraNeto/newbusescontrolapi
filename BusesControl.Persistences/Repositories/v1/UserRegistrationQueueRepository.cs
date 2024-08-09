@@ -27,6 +27,18 @@ public class UserRegistrationQueueRepository(
         return records;
     }
 
+    public async Task<int> CountAsync(string? search = null)
+    {
+        var query = _context.UsersRegistrationQueue.Include(x => x.Employee).AsNoTracking();
+
+        if (search is not null)
+        {
+            query = query.Where(x => x.Employee.Name.Contains(search));
+        }
+
+        return await query.CountAsync();
+    }
+
     public async Task<UserRegistrationQueueModel?> GetByIdAsync(Guid id)
     {
         return await _context.UsersRegistrationQueue.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);

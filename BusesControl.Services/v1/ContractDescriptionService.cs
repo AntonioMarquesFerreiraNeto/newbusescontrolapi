@@ -3,6 +3,7 @@ using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.Models.v1;
 using BusesControl.Entities.Requests.v1;
+using BusesControl.Entities.Responses.v1;
 using BusesControl.Filters.Notification;
 using BusesControl.Persistence.Repositories.Interfaces.v1;
 using BusesControl.Persistence.UnitOfWork;
@@ -53,10 +54,16 @@ public class ContractDescriptionService(
         return record;
     }
 
-    public async Task<IEnumerable<ContractDescriptionModel>> FindAsync(int page, int pageSize)
+    public async Task<PaginationResponse<ContractDescriptionModel>> FindAsync(PaginationRequest request)
     {
-        var records = await _contractDescriptionRepository.FindAsync(page, pageSize);
-        return records;
+        var records = await _contractDescriptionRepository.FindAsync(request.Page, request.PageSize);
+        var count = await _contractDescriptionRepository.CountAsync();
+
+        return new PaginationResponse<ContractDescriptionModel> 
+        { 
+            Response = records,
+            TotalSize = count
+        };
     }
 
     public async Task<bool> CreateAsync(ContractDescriptionCreateRequest request)

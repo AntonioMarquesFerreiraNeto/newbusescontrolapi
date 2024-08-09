@@ -7,6 +7,7 @@ using BusesControl.Entities.DTOs;
 using BusesControl.Entities.Enums.v1;
 using BusesControl.Entities.Models.v1;
 using BusesControl.Entities.Requests.v1;
+using BusesControl.Entities.Responses.v1;
 using BusesControl.Filters.Notification;
 using BusesControl.Persistence.Repositories.Interfaces.v1;
 using BusesControl.Persistence.UnitOfWork;
@@ -102,10 +103,16 @@ public class CustomerService(
         return true;
     }
 
-    public async Task<IEnumerable<CustomerModel>> FindBySearchAsync(int page, int pageSize, string? search = null)
+    public async Task<PaginationResponse<CustomerModel>> FindBySearchAsync(PaginationRequest request)
     {
-        var records = await _customerRepository.FindBySearchAsync(page, pageSize, search);
-        return records;
+        var records = await _customerRepository.FindBySearchAsync(request.Page, request.PageSize, request.Search);
+        var count = await _customerRepository.CountBySearchAsync(request.Search);
+        
+        return new PaginationResponse<CustomerModel> 
+        { 
+            Response = records,
+            TotalSize = count
+        };
     }
 
     public async Task<CustomerModel> GetByIdAsync(Guid id)
@@ -148,7 +155,7 @@ public class CustomerService(
             ComplementResidential = request.ComplementResidential,
             Neighborhood = request.Neighborhood,
             City = request.City,
-            State = request.State,
+            State = request.State.ToUpper(),
             Type = request.Type,
             Gender = request.Gender
         };
@@ -206,7 +213,7 @@ public class CustomerService(
         record.ComplementResidential = request.ComplementResidential;
         record.Neighborhood = request.Neighborhood;
         record.City = request.City;
-        record.State = request.State;
+        record.State = request.State.ToUpper();
         record.Type = request.Type;
         record.Gender = request.Gender;
 

@@ -28,9 +28,9 @@ public class BusController(
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet("find")]
-    public async Task<IActionResult> FindBySearch([FromQuery] int page, [FromQuery] int pageSize, [FromQuery] string? search = null)
+    public async Task<IActionResult> FindBySearch([FromQuery] PaginationRequest request)
     {
-        var response = await _busService.FindBySearchAsync(page, pageSize, search);
+        var response = await _busService.FindBySearchAsync(request);
         return Ok(response);
     }
 

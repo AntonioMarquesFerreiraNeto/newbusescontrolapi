@@ -28,6 +28,18 @@ public class SupplierRepository(
         return await query.ToListAsync();
     }
 
+    public async Task<int> CountBySearchAsync(string? search = null)
+    {
+        var query = _context.Suppliers.AsNoTracking();
+
+        if (search is not null)
+        {
+            query = query.Where(x => x.Name.Contains(search) || x.Cnpj.Contains(search) || x.PhoneNumber.Contains(search) || x.Email.Contains(search));
+        }
+
+        return await query.CountAsync();
+    }
+
     public async Task<SupplierModel?> GetByIdAsync(Guid id)
     {
         return await _context.Suppliers.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);

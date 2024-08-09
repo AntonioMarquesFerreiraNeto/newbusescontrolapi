@@ -27,9 +27,9 @@ public class ColorController(
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet]
-    public async Task<IActionResult> FindBySearch([FromQuery] int page, [FromQuery] int pageSize, [FromQuery] string? search)
+    public async Task<IActionResult> FindBySearch([FromQuery] PaginationRequest request)
     {
-        var response = await _colorService.FindBySearchAsync(page, pageSize, search);
+        var response = await _colorService.FindBySearchAsync(request);
         return Ok(response);
     }
 

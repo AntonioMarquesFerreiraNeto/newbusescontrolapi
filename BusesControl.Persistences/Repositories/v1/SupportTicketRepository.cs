@@ -50,6 +50,23 @@ public class SupportTicketRepository(
         return await query.ToListAsync();
     }
 
+    public async Task<int> CountByOptionalStatusAsync(Guid? employeeId = null, SupportTicketStatusEnum? status = null)
+    {
+        var query = _context.SupportTickets.Include(x => x.Employee).Include(x => x.SupportAgent).AsNoTracking();
+
+        if (employeeId is not null)
+        {
+            query = query.Where(x => x.EmployeeId == employeeId);
+        }
+
+        if (status is not null)
+        {
+            query = query.Where(x => x.Status == status);
+        }
+
+        return await query.CountAsync();
+    }
+
     public async Task<bool> ExistsByReferenceAsync(string reference)
     {
         return await _context.SupportTickets.AnyAsync(x => x.Reference == reference);

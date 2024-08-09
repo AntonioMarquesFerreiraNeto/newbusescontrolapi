@@ -31,6 +31,11 @@ public class SettingPanelRepository(
         return records;
     }
 
+    public async Task<int> CountAsync()
+    {
+        return await _context.SettingsPanel.CountAsync();
+    }
+
     public async Task<bool> ExistsByParentExceptionContract(SettingPanelParentEnum parent, Guid? id = null)
     {
         return await _context.SettingsPanel.AnyAsync(x => x.Parent == parent && x.Id != id && x.Parent != SettingPanelParentEnum.Contract);

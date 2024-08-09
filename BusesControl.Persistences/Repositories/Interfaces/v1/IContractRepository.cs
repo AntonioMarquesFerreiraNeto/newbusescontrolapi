@@ -12,6 +12,7 @@ public interface IContractRepository : IGenericRepository<ContractModel>
     Task<IEnumerable<ContractModel>> GetAllAsync();
     Task<IEnumerable<ContractModel>> FindByOptionalStatusAsync(int page = 0, int pageSize = 0, ContractStatusEnum? status = null);
     Task<IEnumerable<ContractModel>> FindByContractAndTerminateDateAsync(ContractStatusEnum status, DateOnly terminateDate);
+    Task<int> CountByOptionalStatusAsync(ContractStatusEnum? status = null);
     Task<bool> ExistsInIsApprovedBySettingPanelAsync(Guid settingPanelId);
     Task<bool> ExistsBySettingPanelAsync(Guid settingPanelId);
     Task<bool> ExistsInIsApprovedByContractDescriptionAsync(Guid contractDescriptionId);

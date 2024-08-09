@@ -28,6 +28,18 @@ public class BusRepository(
         return await query.ToListAsync();
     }
 
+    public async Task<int> CountBySearchAsync(string? search = null)
+    {
+        var query = _context.Buses.Include(x => x.Color).AsNoTracking();
+
+        if (search is not null)
+        {
+            query = query.Where(x => x.Name.Contains(search) || x.Brand.Contains(search) || x.Chassi.Contains(search) || x.Color.Color.Contains(search) || x.LicensePlate.Contains(search));
+        }
+
+        return await query.CountAsync();
+    }
+
     public async Task<BusModel?> GetByIdAsync(Guid id)
     {
         return await _context.Buses.Include(x => x.Color).SingleOrDefaultAsync(x => x.Id == id);

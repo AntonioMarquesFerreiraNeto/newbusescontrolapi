@@ -38,6 +38,18 @@ public class FinancialRepository(
         return await query.ToListAsync();
     }
 
+    public async Task<int> CountBySearchAsync(string? search = null)
+    {
+        var query = _context.Financials.Include(x => x.Customer).Include(x => x.Supplier).AsNoTracking();
+
+        if (search is not null)
+        {
+            query = query.Where(x => x.Customer!.Name.Contains(search) || x.Supplier!.Name.Contains(search));
+        }
+
+        return await query.CountAsync();
+    }
+
     public async Task<FinancialModel?> GetByIdAsync(Guid id)
     {
         return await _context.Financials.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);

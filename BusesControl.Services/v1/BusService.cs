@@ -4,6 +4,7 @@ using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.Enums.v1;
 using BusesControl.Entities.Models.v1;
 using BusesControl.Entities.Requests.v1;
+using BusesControl.Entities.Responses.v1;
 using BusesControl.Filters.Notification;
 using BusesControl.Persistence.Repositories.Interfaces.v1;
 using BusesControl.Persistence.UnitOfWork;
@@ -36,10 +37,16 @@ public class BusService(
         return true;
     }
 
-    public async Task<IEnumerable<BusModel>> FindBySearchAsync(int page, int pageSize, string? search = null)
+    public async Task<PaginationResponse<BusModel>> FindBySearchAsync(PaginationRequest request)
     {
-        var records = await _busRepository.FindBySearchAsync(page, pageSize, search);
-        return records;
+        var records = await _busRepository.FindBySearchAsync(request.Page, request.PageSize, request.Search);
+        var count = await _busRepository.CountBySearchAsync(request.Search);
+        
+        return new PaginationResponse<BusModel> 
+        { 
+            Response = records,
+            TotalSize = count
+        };
     }
 
     public async Task<BusModel> GetByIdAsync(Guid id)

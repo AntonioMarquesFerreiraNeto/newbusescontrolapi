@@ -30,6 +30,19 @@ public class CustomerRepository(
         return records;
     }
 
+    public async Task<int> CountBySearchAsync(string? search = null)
+    {
+        var query = _context.Customers.AsNoTracking();
+
+        if (search is not null)
+        {
+            query = query.Where(x => x.Name.Contains(search) || x.Email.Contains(search));
+        }
+
+        return await query.CountAsync();
+    }
+
+
     public async Task<CustomerModel?> GetByIdAsync(Guid id)
     {
         return await _context.Customers.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);

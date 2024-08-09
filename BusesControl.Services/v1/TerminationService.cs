@@ -19,10 +19,15 @@ public class TerminationService(
     ITerminationRepository _terminationRepository
 ) : ITerminationService
 {
-    public async Task<IEnumerable<TerminationModel>> FindByContractAsync(Guid contractId, string? search)
+    public async Task<PaginationResponse<TerminationModel>> FindByContractAsync(Guid contractId, string? search)
     {
         var records = await _terminationRepository.FindByContractAsync(contractId, search);
-        return records;
+
+        return new PaginationResponse<TerminationModel> 
+        { 
+            Response = records,
+            TotalSize = records.Count()
+        };
     }
 
     public async Task<SuccessResponse> CreateAsync(Guid contractId, TerminationCreateRequest request)

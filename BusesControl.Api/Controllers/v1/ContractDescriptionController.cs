@@ -46,9 +46,9 @@ public class ContractDescriptionController(
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet]
-    public async Task<IActionResult> Find([FromQuery] int page, [FromQuery] int pageSize)
+    public async Task<IActionResult> Find([FromQuery] PaginationRequest request)
     {
-        var response = await _contractDescriptionService.FindAsync(page, pageSize);
+        var response = await _contractDescriptionService.FindAsync(request);
         return Ok(response);
     }
 

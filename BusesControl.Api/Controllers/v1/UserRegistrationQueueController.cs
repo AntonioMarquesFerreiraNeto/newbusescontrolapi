@@ -31,9 +31,9 @@ public class UserRegistrationQueueController(
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [Authorize(Roles = "Admin")]
     [HttpGet]
-    public async Task<IActionResult> FindBySearch([FromQuery] int page, [FromQuery] int pageSize, [FromQuery] string? search = null)
+    public async Task<IActionResult> FindBySearch([FromQuery] PaginationRequest request)
     {
-        var response = await _userRegistrationQueueService.FindBySearchAsync(page, pageSize, search);
+        var response = await _userRegistrationQueueService.FindBySearchAsync(request);
         return Ok(response);
     }
 

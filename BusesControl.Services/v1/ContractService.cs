@@ -93,10 +93,16 @@ public class ContractService(
         return response;
     }
 
-    public async Task<IEnumerable<ContractModel>> FindByOptionalStatusAsync(int page, int pageSize, ContractStatusEnum? status)
+    public async Task<PaginationResponse<ContractModel>> FindByOptionalStatusAsync(int page, int pageSize, ContractStatusEnum? status)
     {
         var records = await _contractRepository.FindByOptionalStatusAsync(page, pageSize, status);
-        return records;
+        var count = await _contractRepository.CountByOptionalStatusAsync(status);
+
+        return new PaginationResponse<ContractModel> 
+        { 
+            Response = records,
+            TotalSize = count
+        };
     }
 
     public async Task<bool> CreateAsync(ContractCreateRequest request)

@@ -8,5 +8,6 @@ public interface ISupportTicketRepository : IGenericRepository<SupportTicketMode
     Task<SupportTicketModel?> GetByIdOptionalEmployeeAsync(Guid id, Guid? employeeId = null);
     Task<SupportTicketModel?> GetByIdOptionalEmployeeWithIncludesAsync(Guid id, Guid? employeeId = null);
     Task<IEnumerable<SupportTicketModel>> FindByStatusAsync(Guid? employeeId = null, SupportTicketStatusEnum? status = null, int page = 0, int pageSize = 0);
+    Task<int> CountByOptionalStatusAsync(Guid? employeeId = null, SupportTicketStatusEnum? status = null);
     Task<bool> ExistsByReferenceAsync(string reference);
 }

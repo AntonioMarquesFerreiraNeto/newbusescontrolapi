@@ -6,6 +6,6 @@ namespace BusesControl.Services.v1.Interfaces;
 
 public interface ITerminationService
 {
-    Task<IEnumerable<TerminationModel>> FindByContractAsync(Guid contractId, string? search);
+    Task<PaginationResponse<TerminationModel>> FindByContractAsync(Guid contractId, string? search);
     Task<SuccessResponse> CreateAsync(Guid contractId, TerminationCreateRequest request);
 }

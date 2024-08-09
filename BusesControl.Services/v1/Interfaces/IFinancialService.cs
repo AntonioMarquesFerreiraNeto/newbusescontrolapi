@@ -6,7 +6,7 @@ namespace BusesControl.Services.v1.Interfaces;
 
 public interface IFinancialService
 {
-    Task<IEnumerable<FinancialModel>> FindBySearchAsync(PaginationRequest request);
+    Task<PaginationResponse<FinancialModel>> FindBySearchAsync(PaginationRequest request);
     Task<FinancialResponse> GetByIdAsync(Guid id);
     Task<bool> CreateRevenueAsync(FinancialRevenueCreateRequest request);
     Task<bool> InactiveRevenueAsync(Guid id);

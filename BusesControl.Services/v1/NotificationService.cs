@@ -3,6 +3,7 @@ using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.Enums.v1;
 using BusesControl.Entities.Models.v1;
 using BusesControl.Entities.Requests.v1;
+using BusesControl.Entities.Responses.v1;
 using BusesControl.Filters.Notification;
 using BusesControl.Persistence.Repositories.Interfaces.v1;
 using BusesControl.Persistence.UnitOfWork;
@@ -18,18 +19,29 @@ public class NotificationService(
     INotificationRepository _notificationRepository
 ) : INotificationService
 {
-    public async Task<IEnumerable<NotificationModel>> GetAllForAdminAsync(PaginationRequest request)
+    public async Task<PaginationResponse<NotificationModel>> GetAllForAdminAsync(PaginationRequest request)
     {
         var records = await _notificationRepository.GetAllAsync(request.Page, request.PageSize);
-        return records;
+        var count = await _notificationRepository.CountByOptionRoleAsync();
+
+        return new PaginationResponse<NotificationModel> 
+        { 
+            Response = records,
+            TotalSize = count
+        };
     }
 
-    public async Task<IEnumerable<NotificationModel>> FindMyNotificationsAsync(PaginationRequest request)
+    public async Task<PaginationResponse<NotificationModel>> FindMyNotificationsAsync(PaginationRequest request)
     {
         var loggedUser = _userService.FindAuthenticatedUser();
         var records = await _notificationRepository.FindMyNotificationsAsync(loggedUser.Role, request.Page, request.PageSize);
-        
-        return records;
+        var count = await _notificationRepository.CountByOptionRoleAsync(loggedUser.Role);
+
+        return new PaginationResponse<NotificationModel> 
+        { 
+            Response = records,
+            TotalSize = count
+        };
     }
 
     public async Task<NotificationModel> GetByIdAsync(Guid id)

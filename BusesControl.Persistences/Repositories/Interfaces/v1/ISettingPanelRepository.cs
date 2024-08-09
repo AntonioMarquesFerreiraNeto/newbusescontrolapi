@@ -7,6 +7,7 @@ public interface ISettingPanelRepository : IGenericRepository<SettingPanelModel>
 {
     Task<SettingPanelModel?> GetByIdAsync(Guid id);
     Task<IEnumerable<SettingPanelModel>> FindAsync(int page = 0, int pageSize = 0);
+    Task<int> CountAsync();
     Task<bool> ExistsByParentExceptionContract(SettingPanelParentEnum parent, Guid? id = null);
     Task<bool> ExitsByReferenceAsync(string reference);
 }

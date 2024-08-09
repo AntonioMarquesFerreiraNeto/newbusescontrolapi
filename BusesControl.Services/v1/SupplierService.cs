@@ -4,6 +4,7 @@ using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.Models.v1;
 using BusesControl.Entities.Requests.v1;
+using BusesControl.Entities.Responses.v1;
 using BusesControl.Filters.Notification;
 using BusesControl.Persistence.Repositories.Interfaces.v1;
 using BusesControl.Persistence.UnitOfWork;
@@ -27,10 +28,16 @@ public class SupplierService(
         return (cnpj, phoneNumber);
     }
 
-    public async Task<IEnumerable<SupplierModel>> FindBySearchAsync(PaginationRequest request)
+    public async Task<PaginationResponse<SupplierModel>> FindBySearchAsync(PaginationRequest request)
     {
         var records = await _supplierRepository.FindBySearchAsync(request.Page, request.PageSize, request.Search);
-        return records;
+        var count = await _supplierRepository.CountBySearchAsync(request.Search);
+
+        return new PaginationResponse<SupplierModel> 
+        { 
+            Response = records,
+            TotalSize = count
+        };
     }
 
     public async Task<SupplierModel> GetByIdAsync(Guid id)

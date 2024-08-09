@@ -67,10 +67,16 @@ public class FinancialService(
         return monthDifference;
     }
 
-    public async Task<IEnumerable<FinancialModel>> FindBySearchAsync(PaginationRequest request)
+    public async Task<PaginationResponse<FinancialModel>> FindBySearchAsync(PaginationRequest request)
     {
         var records = await _financialRepository.FindBySearchAsync(request.Page, request.PageSize, request.Search);
-        return records;
+        var count = await _financialRepository.CountBySearchAsync(request.Search);
+
+        return new PaginationResponse<FinancialModel> 
+        { 
+            Response = records,
+            TotalSize = count
+        };
     }
 
     public async Task<FinancialResponse> GetByIdAsync(Guid id)

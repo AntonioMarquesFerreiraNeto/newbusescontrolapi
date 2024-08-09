@@ -11,11 +11,6 @@ public class ContractDescriptionRepository(
 {
     private readonly AppDbContext _context = context;
 
-    public async Task<ContractDescriptionModel?> GetByIdAsync(Guid id)
-    {
-        return await _context.ContractDescriptions.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
-    }
-
     public async Task<IEnumerable<ContractDescriptionModel>> FindAsync(int page = 0, int pageSize = 0)
     {
         var query = _context.ContractDescriptions.AsNoTracking();
@@ -28,6 +23,16 @@ public class ContractDescriptionRepository(
         var records = await query.ToListAsync();
 
         return records;
+    }
+
+    public async Task<int> CountAsync()
+    {
+        return await _context.ContractDescriptions.CountAsync();
+    }
+
+    public async Task<ContractDescriptionModel?> GetByIdAsync(Guid id)
+    {
+        return await _context.ContractDescriptions.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
     }
 
     public async Task<bool> ExitsAsync(Guid id)
