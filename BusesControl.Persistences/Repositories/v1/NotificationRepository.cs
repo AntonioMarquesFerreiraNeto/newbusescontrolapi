@@ -14,7 +14,7 @@ public class NotificationRepository(
 
     public async Task<IEnumerable<NotificationModel>> GetAllAsync(int page = 0, int pageSize = 0)
     {
-        var query = _context.Notifications.AsNoTracking();
+        var query = _context.Notifications.Include(x => x.Sender).AsNoTracking();
 
         query = query.OrderByDescending(x => x.CreatedAt);
 
@@ -28,7 +28,7 @@ public class NotificationRepository(
 
     public async Task<IEnumerable<NotificationModel>> FindMyNotificationsAsync(string role, int page = 0, int pageSize = 0)
     {
-        var query = _context.Notifications.AsNoTracking();
+        var query = _context.Notifications.Include(x => x.Sender).AsNoTracking();
 
         if (role == "Admin")
         {
