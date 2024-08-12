@@ -29,9 +29,9 @@ public class WebhookController(
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] string? search = null)
     {
-        var response = await _webhookService.GetAllAsync();
+        var response = await _webhookService.GetAllAsync(search);
         return Ok(response);
     }
 

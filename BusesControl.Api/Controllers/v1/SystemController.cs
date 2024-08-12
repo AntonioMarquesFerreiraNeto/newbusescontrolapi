@@ -7,7 +7,7 @@ namespace BusesControl.Api.Controllers.v1;
 
 [ApiController]
 [ApiVersion("1.0")]
-[Authorize(Roles = "System")]
+[Authorize(Roles = "System, Admin")]
 [Route("api/v1/system")]
 public class SystemController(
     ISystemService _systemService

@@ -93,9 +93,9 @@ public class WebhookService(
         return true;
     }
 
-    public async Task<PaginationResponse<WebhookResponse>> GetAllAsync()
+    public async Task<PaginationResponse<WebhookResponse>> GetAllAsync(string? search)
     {
-        var records = await _webhookRepository.GetAllAsync();
+        var records = await _webhookRepository.GetAllAsync(search);
 
         return new PaginationResponse<WebhookResponse> 
         { 

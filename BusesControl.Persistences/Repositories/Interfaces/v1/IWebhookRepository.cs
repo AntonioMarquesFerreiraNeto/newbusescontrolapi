@@ -5,7 +5,7 @@ namespace BusesControl.Persistence.Repositories.Interfaces.v1;
 
 public interface IWebhookRepository : IGenericRepository<WebhookModel>
 {
-    Task<IEnumerable<WebhookModel>> GetAllAsync();
+    Task<IEnumerable<WebhookModel>> GetAllAsync(string? search = null);
     Task<WebhookModel?> GetByIdAsync(Guid id);
     Task<WebhookModel?> GetByTypeAsync(WebhookTypeEnum type);
     Task<bool> ExistsByNameOrUrlOrTypeAsync(string name, string url, WebhookTypeEnum type);

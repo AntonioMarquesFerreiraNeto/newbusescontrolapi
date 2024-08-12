@@ -12,9 +12,16 @@ public class WebhookRepository(
 {
     private readonly AppDbContext _context = context;
 
-    public async Task<IEnumerable<WebhookModel>> GetAllAsync()
+    public async Task<IEnumerable<WebhookModel>> GetAllAsync(string? search = null)
     {
-        return await _context.Webhooks.AsNoTracking().ToListAsync();
+        var query = _context.Webhooks.AsNoTracking();
+
+        if (search is not null)
+        {
+            query = query.Where(x => x.Name.Contains(search));
+        }
+
+        return await query.ToListAsync();
     }
 
     public async Task<WebhookModel?> GetByIdAsync(Guid id)
