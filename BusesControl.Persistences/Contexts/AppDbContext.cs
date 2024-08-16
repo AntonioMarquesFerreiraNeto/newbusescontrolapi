@@ -70,6 +70,24 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
             entity.ToTable("UserTokens");
         });
 
+        builder.Entity<UserRegistrationQueueModel>()
+            .HasOne(x => x.Requester)
+            .WithMany()
+            .HasForeignKey(x => x.RequesterId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.Entity<UserRegistrationQueueModel>()
+            .HasOne(x => x.Approved)
+            .WithMany()
+            .HasForeignKey(x => x.ApprovedId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.Entity<UserRegistrationQueueModel>()
+            .HasOne(x => x.Employee)
+            .WithMany()
+            .HasForeignKey(x => x.EmployeeId)
+            .OnDelete(DeleteBehavior.NoAction);
+
         builder.Entity<BusModel>()
             .HasOne(x => x.Color)
             .WithMany()
