@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BusesControl.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240727224625_Update-Invoice-And-InvoiceExpense-Migration")]
-    partial class UpdateInvoiceAndInvoiceExpenseMigration
+    [Migration("20240816220129_Create-Initial-Data")]
+    partial class CreateInitialData
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace BusesControl.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("BusesControl.Entities.Models.BusModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.BusModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -77,7 +77,7 @@ namespace BusesControl.Persistence.Migrations
                     b.ToTable("Buses");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.ColorModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.ColorModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -96,7 +96,41 @@ namespace BusesControl.Persistence.Migrations
                     b.ToTable("Colors");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.ContractDescriptionModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.ContractBusReplacementModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BusId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ContractId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ReasonDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateOnly>("StartDate")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly>("TerminateDate")
+                        .HasColumnType("date");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BusId");
+
+                    b.HasIndex("ContractId");
+
+                    b.ToTable("ContractBusReplacements");
+                });
+
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.ContractDescriptionModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -142,7 +176,41 @@ namespace BusesControl.Persistence.Migrations
                     b.ToTable("ContractDescriptions");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.ContractModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.ContractDriverReplacementModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ContractId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("DriverId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ReasonDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateOnly>("StartDate")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly>("TerminateDate")
+                        .HasColumnType("date");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContractId");
+
+                    b.HasIndex("DriverId");
+
+                    b.ToTable("ContractDriverReplacements");
+                });
+
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.ContractModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -218,7 +286,7 @@ namespace BusesControl.Persistence.Migrations
                     b.ToTable("Contracts");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.CustomerContractModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.CustomerContractModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -248,7 +316,7 @@ namespace BusesControl.Persistence.Migrations
                     b.ToTable("CustomersContract");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.CustomerModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.CustomerModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -331,7 +399,7 @@ namespace BusesControl.Persistence.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.EmployeeModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.EmployeeModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -404,7 +472,7 @@ namespace BusesControl.Persistence.Migrations
                     b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.FinancialModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.FinancialModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -484,7 +552,7 @@ namespace BusesControl.Persistence.Migrations
                     b.ToTable("Financials");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.InvoiceExpenseModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.InvoiceExpenseModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -546,7 +614,7 @@ namespace BusesControl.Persistence.Migrations
                     b.ToTable("InvoicesExpense");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.InvoiceModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.InvoiceModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -608,7 +676,7 @@ namespace BusesControl.Persistence.Migrations
                     b.ToTable("Invoices");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.NotificationModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.NotificationModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -641,7 +709,7 @@ namespace BusesControl.Persistence.Migrations
                     b.ToTable("Notifications");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.ResetPasswordSecurityCodeModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.ResetPasswordSecurityCodeModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -664,7 +732,7 @@ namespace BusesControl.Persistence.Migrations
                     b.ToTable("ResetPasswordsSecurityCode");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.SavedCardModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.SavedCardModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -694,7 +762,7 @@ namespace BusesControl.Persistence.Migrations
                     b.ToTable("SavedCards");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.SettingPanelModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.SettingPanelModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -741,7 +809,7 @@ namespace BusesControl.Persistence.Migrations
                     b.ToTable("SettingsPanel");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.SupplierModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.SupplierModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -808,7 +876,80 @@ namespace BusesControl.Persistence.Migrations
                     b.ToTable("Suppliers");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.TerminationModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.SupportTicketMessageModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsSupportAgent")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("SupportAgentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SupportTicketId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SupportAgentId");
+
+                    b.HasIndex("SupportTicketId");
+
+                    b.ToTable("SupportTicketMessages");
+                });
+
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.SupportTicketModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Reference")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("SupportAgentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdateAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("SupportAgentId");
+
+                    b.ToTable("SupportTickets");
+                });
+
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.TerminationModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -836,7 +977,7 @@ namespace BusesControl.Persistence.Migrations
                     b.ToTable("Terminations");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.UserModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.UserModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -865,7 +1006,7 @@ namespace BusesControl.Persistence.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Nickname")
+                    b.Property<string>("NickName")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
@@ -914,7 +1055,7 @@ namespace BusesControl.Persistence.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.UserRegistrationQueueModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.UserRegistrationQueueModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -929,7 +1070,7 @@ namespace BusesControl.Persistence.Migrations
                     b.Property<Guid>("EmployeeId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("RequestId")
+                    b.Property<Guid>("RequesterId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Status")
@@ -943,12 +1084,16 @@ namespace BusesControl.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ApprovedId");
+
                     b.HasIndex("EmployeeId");
+
+                    b.HasIndex("RequesterId");
 
                     b.ToTable("UsersRegistrationQueue");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.UserRegistrationSecurityCodeModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.UserRegistrationSecurityCodeModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -971,7 +1116,7 @@ namespace BusesControl.Persistence.Migrations
                     b.ToTable("UsersRegistrationSecurityCode");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.WebhookModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.WebhookModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1159,9 +1304,9 @@ namespace BusesControl.Persistence.Migrations
                     b.ToTable("UserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.BusModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.BusModel", b =>
                 {
-                    b.HasOne("BusesControl.Entities.Models.ColorModel", "Color")
+                    b.HasOne("BusesControl.Entities.Models.v1.ColorModel", "Color")
                         .WithMany()
                         .HasForeignKey("ColorId")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -1170,31 +1315,69 @@ namespace BusesControl.Persistence.Migrations
                     b.Navigation("Color");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.ContractModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.ContractBusReplacementModel", b =>
                 {
-                    b.HasOne("BusesControl.Entities.Models.EmployeeModel", "Approver")
-                        .WithMany()
-                        .HasForeignKey("ApproverId");
-
-                    b.HasOne("BusesControl.Entities.Models.BusModel", "Bus")
+                    b.HasOne("BusesControl.Entities.Models.v1.BusModel", "Bus")
                         .WithMany()
                         .HasForeignKey("BusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BusesControl.Entities.Models.ContractDescriptionModel", "ContractDescription")
+                    b.HasOne("BusesControl.Entities.Models.v1.ContractModel", "Contract")
                         .WithMany()
-                        .HasForeignKey("ContractDescriptionId")
+                        .HasForeignKey("ContractId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("BusesControl.Entities.Models.EmployeeModel", "Driver")
+                    b.Navigation("Bus");
+
+                    b.Navigation("Contract");
+                });
+
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.ContractDriverReplacementModel", b =>
+                {
+                    b.HasOne("BusesControl.Entities.Models.v1.ContractModel", "Contract")
+                        .WithMany()
+                        .HasForeignKey("ContractId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("BusesControl.Entities.Models.v1.EmployeeModel", "Driver")
                         .WithMany()
                         .HasForeignKey("DriverId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BusesControl.Entities.Models.SettingPanelModel", "SettingPanel")
+                    b.Navigation("Contract");
+
+                    b.Navigation("Driver");
+                });
+
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.ContractModel", b =>
+                {
+                    b.HasOne("BusesControl.Entities.Models.v1.EmployeeModel", "Approver")
+                        .WithMany()
+                        .HasForeignKey("ApproverId");
+
+                    b.HasOne("BusesControl.Entities.Models.v1.BusModel", "Bus")
+                        .WithMany()
+                        .HasForeignKey("BusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BusesControl.Entities.Models.v1.ContractDescriptionModel", "ContractDescription")
+                        .WithMany()
+                        .HasForeignKey("ContractDescriptionId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("BusesControl.Entities.Models.v1.EmployeeModel", "Driver")
+                        .WithMany()
+                        .HasForeignKey("DriverId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BusesControl.Entities.Models.v1.SettingPanelModel", "SettingPanel")
                         .WithMany()
                         .HasForeignKey("SettingPanelId")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -1211,15 +1394,15 @@ namespace BusesControl.Persistence.Migrations
                     b.Navigation("SettingPanel");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.CustomerContractModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.CustomerContractModel", b =>
                 {
-                    b.HasOne("BusesControl.Entities.Models.ContractModel", "Contract")
+                    b.HasOne("BusesControl.Entities.Models.v1.ContractModel", "Contract")
                         .WithMany("CustomersContract")
                         .HasForeignKey("ContractId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BusesControl.Entities.Models.CustomerModel", "Customer")
+                    b.HasOne("BusesControl.Entities.Models.v1.CustomerModel", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1230,22 +1413,22 @@ namespace BusesControl.Persistence.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.FinancialModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.FinancialModel", b =>
                 {
-                    b.HasOne("BusesControl.Entities.Models.ContractModel", "Contract")
+                    b.HasOne("BusesControl.Entities.Models.v1.ContractModel", "Contract")
                         .WithMany()
                         .HasForeignKey("ContractId");
 
-                    b.HasOne("BusesControl.Entities.Models.CustomerModel", "Customer")
+                    b.HasOne("BusesControl.Entities.Models.v1.CustomerModel", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId");
 
-                    b.HasOne("BusesControl.Entities.Models.SettingPanelModel", "SettingPanel")
+                    b.HasOne("BusesControl.Entities.Models.v1.SettingPanelModel", "SettingPanel")
                         .WithMany()
                         .HasForeignKey("SettingPanelId")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("BusesControl.Entities.Models.SupplierModel", "Supplier")
+                    b.HasOne("BusesControl.Entities.Models.v1.SupplierModel", "Supplier")
                         .WithMany()
                         .HasForeignKey("SupplierId");
 
@@ -1258,9 +1441,9 @@ namespace BusesControl.Persistence.Migrations
                     b.Navigation("Supplier");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.InvoiceExpenseModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.InvoiceExpenseModel", b =>
                 {
-                    b.HasOne("BusesControl.Entities.Models.FinancialModel", "Financial")
+                    b.HasOne("BusesControl.Entities.Models.v1.FinancialModel", "Financial")
                         .WithMany("InvoiceExpenses")
                         .HasForeignKey("FinancialId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1269,9 +1452,9 @@ namespace BusesControl.Persistence.Migrations
                     b.Navigation("Financial");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.InvoiceModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.InvoiceModel", b =>
                 {
-                    b.HasOne("BusesControl.Entities.Models.FinancialModel", "Financial")
+                    b.HasOne("BusesControl.Entities.Models.v1.FinancialModel", "Financial")
                         .WithMany("Invoices")
                         .HasForeignKey("FinancialId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1280,18 +1463,18 @@ namespace BusesControl.Persistence.Migrations
                     b.Navigation("Financial");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.NotificationModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.NotificationModel", b =>
                 {
-                    b.HasOne("BusesControl.Entities.Models.EmployeeModel", "Sender")
+                    b.HasOne("BusesControl.Entities.Models.v1.EmployeeModel", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId");
 
                     b.Navigation("Sender");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.ResetPasswordSecurityCodeModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.ResetPasswordSecurityCodeModel", b =>
                 {
-                    b.HasOne("BusesControl.Entities.Models.UserModel", "User")
+                    b.HasOne("BusesControl.Entities.Models.v1.UserModel", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1300,9 +1483,9 @@ namespace BusesControl.Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.SavedCardModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.SavedCardModel", b =>
                 {
-                    b.HasOne("BusesControl.Entities.Models.CustomerModel", "Customer")
+                    b.HasOne("BusesControl.Entities.Models.v1.CustomerModel", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1311,9 +1494,9 @@ namespace BusesControl.Persistence.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.SettingPanelModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.SettingPanelModel", b =>
                 {
-                    b.HasOne("BusesControl.Entities.Models.EmployeeModel", "Requester")
+                    b.HasOne("BusesControl.Entities.Models.v1.EmployeeModel", "Requester")
                         .WithMany()
                         .HasForeignKey("RequesterId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1322,15 +1505,49 @@ namespace BusesControl.Persistence.Migrations
                     b.Navigation("Requester");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.TerminationModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.SupportTicketMessageModel", b =>
                 {
-                    b.HasOne("BusesControl.Entities.Models.ContractModel", "Contract")
+                    b.HasOne("BusesControl.Entities.Models.v1.EmployeeModel", "SupportAgent")
+                        .WithMany()
+                        .HasForeignKey("SupportAgentId");
+
+                    b.HasOne("BusesControl.Entities.Models.v1.SupportTicketModel", "SupportTicket")
+                        .WithMany("SupportTicketMessages")
+                        .HasForeignKey("SupportTicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SupportAgent");
+
+                    b.Navigation("SupportTicket");
+                });
+
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.SupportTicketModel", b =>
+                {
+                    b.HasOne("BusesControl.Entities.Models.v1.EmployeeModel", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("BusesControl.Entities.Models.v1.EmployeeModel", "SupportAgent")
+                        .WithMany()
+                        .HasForeignKey("SupportAgentId");
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("SupportAgent");
+                });
+
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.TerminationModel", b =>
+                {
+                    b.HasOne("BusesControl.Entities.Models.v1.ContractModel", "Contract")
                         .WithMany("Terminations")
                         .HasForeignKey("ContractId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BusesControl.Entities.Models.CustomerModel", "Customer")
+                    b.HasOne("BusesControl.Entities.Models.v1.CustomerModel", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1341,29 +1558,44 @@ namespace BusesControl.Persistence.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.UserModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.UserModel", b =>
                 {
-                    b.HasOne("BusesControl.Entities.Models.EmployeeModel", "Employee")
+                    b.HasOne("BusesControl.Entities.Models.v1.EmployeeModel", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId");
 
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.UserRegistrationQueueModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.UserRegistrationQueueModel", b =>
                 {
-                    b.HasOne("BusesControl.Entities.Models.EmployeeModel", "Employee")
+                    b.HasOne("BusesControl.Entities.Models.v1.EmployeeModel", "Approved")
+                        .WithMany()
+                        .HasForeignKey("ApprovedId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("BusesControl.Entities.Models.v1.EmployeeModel", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("BusesControl.Entities.Models.v1.EmployeeModel", "Requester")
+                        .WithMany()
+                        .HasForeignKey("RequesterId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Approved");
+
                     b.Navigation("Employee");
+
+                    b.Navigation("Requester");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.UserRegistrationSecurityCodeModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.UserRegistrationSecurityCodeModel", b =>
                 {
-                    b.HasOne("BusesControl.Entities.Models.UserModel", "User")
+                    b.HasOne("BusesControl.Entities.Models.v1.UserModel", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1383,7 +1615,7 @@ namespace BusesControl.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("BusesControl.Entities.Models.UserModel", null)
+                    b.HasOne("BusesControl.Entities.Models.v1.UserModel", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1392,7 +1624,7 @@ namespace BusesControl.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("BusesControl.Entities.Models.UserModel", null)
+                    b.HasOne("BusesControl.Entities.Models.v1.UserModel", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1407,7 +1639,7 @@ namespace BusesControl.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BusesControl.Entities.Models.UserModel", null)
+                    b.HasOne("BusesControl.Entities.Models.v1.UserModel", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1416,25 +1648,30 @@ namespace BusesControl.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("BusesControl.Entities.Models.UserModel", null)
+                    b.HasOne("BusesControl.Entities.Models.v1.UserModel", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.ContractModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.ContractModel", b =>
                 {
                     b.Navigation("CustomersContract");
 
                     b.Navigation("Terminations");
                 });
 
-            modelBuilder.Entity("BusesControl.Entities.Models.FinancialModel", b =>
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.FinancialModel", b =>
                 {
                     b.Navigation("InvoiceExpenses");
 
                     b.Navigation("Invoices");
+                });
+
+            modelBuilder.Entity("BusesControl.Entities.Models.v1.SupportTicketModel", b =>
+                {
+                    b.Navigation("SupportTicketMessages");
                 });
 #pragma warning restore 612, 618
         }

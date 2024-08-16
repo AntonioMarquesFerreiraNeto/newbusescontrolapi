@@ -13,7 +13,7 @@ public class UserRegistrationQueueRepository(
 
     public async Task<IEnumerable<UserRegistrationQueueModel>> FindAsync(int page, int pageSize, string? search = null)
     {
-        var query = _context.UsersRegistrationQueue.Include(x => x.Employee).AsNoTracking();
+        var query = _context.UsersRegistrationQueue.Include(x => x.Employee).Include(x => x.Requester).Include(x => x.Approved).AsNoTracking();
 
         if (search is not null)
         {

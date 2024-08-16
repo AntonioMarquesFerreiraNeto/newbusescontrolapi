@@ -1067,7 +1067,7 @@ namespace BusesControl.Persistence.Migrations
                     b.Property<Guid>("EmployeeId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("RequestId")
+                    b.Property<Guid>("RequesterId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Status")
@@ -1081,7 +1081,11 @@ namespace BusesControl.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ApprovedId");
+
                     b.HasIndex("EmployeeId");
+
+                    b.HasIndex("RequesterId");
 
                     b.ToTable("UsersRegistrationQueue");
                 });
@@ -1562,13 +1566,28 @@ namespace BusesControl.Persistence.Migrations
 
             modelBuilder.Entity("BusesControl.Entities.Models.v1.UserRegistrationQueueModel", b =>
                 {
+                    b.HasOne("BusesControl.Entities.Models.v1.EmployeeModel", "Approved")
+                        .WithMany()
+                        .HasForeignKey("ApprovedId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
                     b.HasOne("BusesControl.Entities.Models.v1.EmployeeModel", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("BusesControl.Entities.Models.v1.EmployeeModel", "Requester")
+                        .WithMany()
+                        .HasForeignKey("RequesterId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Approved");
+
                     b.Navigation("Employee");
+
+                    b.Navigation("Requester");
                 });
 
             modelBuilder.Entity("BusesControl.Entities.Models.v1.UserRegistrationSecurityCodeModel", b =>

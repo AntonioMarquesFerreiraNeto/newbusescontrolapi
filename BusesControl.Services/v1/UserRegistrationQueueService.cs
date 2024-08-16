@@ -73,7 +73,7 @@ public class UserRegistrationQueueService(
 
         var record = new UserRegistrationQueueModel
         {
-            RequestId = _userService.FindAuthenticatedUser().Id,
+            RequesterId = _userService.FindAuthenticatedUser().EmployeeId!.Value,
             EmployeeId = request.EmployeeId,
         };
 
@@ -278,7 +278,7 @@ public class UserRegistrationQueueService(
         }
 
         record.Status = UserRegistrationQueueStatusEnum.Approved;
-        record.ApprovedId = _userService.FindAuthenticatedUser().Id;
+        record.ApprovedId = _userService.FindAuthenticatedUser().EmployeeId!.Value;
         record.UpdatedAt = DateTime.UtcNow;
         _userRegistrationQueueRepository.Update(record);
 

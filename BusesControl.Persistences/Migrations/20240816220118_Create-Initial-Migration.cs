@@ -62,6 +62,7 @@ namespace BusesControl.Persistence.Migrations
                     State = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
                     Active = table.Column<bool>(type: "bit", nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
+                    Gender = table.Column<int>(type: "int", nullable: true),
                     ExternalId = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -86,6 +87,7 @@ namespace BusesControl.Persistence.Migrations
                     City = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
                     State = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
+                    Gender = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -105,6 +107,29 @@ namespace BusesControl.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Roles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Suppliers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(90)", maxLength: 90, nullable: false),
+                    Cnpj = table.Column<string>(type: "nvarchar(14)", maxLength: 14, nullable: false),
+                    OpenDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: false),
+                    HomeNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Logradouro = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
+                    ComplementResidential = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
+                    Neighborhood = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
+                    City = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
+                    State = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
+                    Active = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Suppliers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -180,6 +205,28 @@ namespace BusesControl.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Notifications",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SenderId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AccessLevel = table.Column<int>(type: "int", nullable: false),
+                    SenderType = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notifications", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Notifications_Employees_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "Employees",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SettingsPanel",
                 columns: table => new
                 {
@@ -207,12 +254,41 @@ namespace BusesControl.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SupportTickets",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Reference = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: false),
+                    EmployeeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SupportAgentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdateAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SupportTickets", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SupportTickets_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employees",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_SupportTickets_Employees_SupportAgentId",
+                        column: x => x.SupportAgentId,
+                        principalTable: "Employees",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     EmployeeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Nickname = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    NickName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -245,7 +321,7 @@ namespace BusesControl.Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     EmployeeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RequestId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RequesterId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ApprovedId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -256,11 +332,20 @@ namespace BusesControl.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_UsersRegistrationQueue", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_UsersRegistrationQueue_Employees_ApprovedId",
+                        column: x => x.ApprovedId,
+                        principalTable: "Employees",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_UsersRegistrationQueue_Employees_EmployeeId",
                         column: x => x.EmployeeId,
                         principalTable: "Employees",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_UsersRegistrationQueue_Employees_RequesterId",
+                        column: x => x.RequesterId,
+                        principalTable: "Employees",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -337,6 +422,33 @@ namespace BusesControl.Persistence.Migrations
                         column: x => x.SettingPanelId,
                         principalTable: "SettingsPanel",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SupportTicketMessages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SupportTicketId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SupportAgentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsSupportAgent = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SupportTicketMessages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SupportTicketMessages_Employees_SupportAgentId",
+                        column: x => x.SupportAgentId,
+                        principalTable: "Employees",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_SupportTicketMessages_SupportTickets_SupportTicketId",
+                        column: x => x.SupportTicketId,
+                        principalTable: "SupportTickets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -465,6 +577,62 @@ namespace BusesControl.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ContractBusReplacements",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ContractId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StartDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    TerminateDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    ReasonDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ContractBusReplacements", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ContractBusReplacements_Buses_BusId",
+                        column: x => x.BusId,
+                        principalTable: "Buses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ContractBusReplacements_Contracts_ContractId",
+                        column: x => x.ContractId,
+                        principalTable: "Contracts",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ContractDriverReplacements",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ContractId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DriverId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StartDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    TerminateDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    ReasonDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ContractDriverReplacements", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ContractDriverReplacements_Contracts_ContractId",
+                        column: x => x.ContractId,
+                        principalTable: "Contracts",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ContractDriverReplacements_Employees_DriverId",
+                        column: x => x.DriverId,
+                        principalTable: "Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CustomersContract",
                 columns: table => new
                 {
@@ -497,8 +665,11 @@ namespace BusesControl.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Reference = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: false),
                     ContractId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    SettingPanelId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    SupplierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TotalPrice = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
@@ -525,6 +696,16 @@ namespace BusesControl.Persistence.Migrations
                         name: "FK_Financials_Customers_CustomerId",
                         column: x => x.CustomerId,
                         principalTable: "Customers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Financials_SettingsPanel_SettingPanelId",
+                        column: x => x.SettingPanelId,
+                        principalTable: "SettingsPanel",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Financials_Suppliers_SupplierId",
+                        column: x => x.SupplierId,
+                        principalTable: "Suppliers",
                         principalColumn: "Id");
                 });
 
@@ -570,8 +751,9 @@ namespace BusesControl.Persistence.Migrations
                     Status = table.Column<int>(type: "int", nullable: false),
                     DueDate = table.Column<DateOnly>(type: "date", nullable: false),
                     ExternalId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PaymentDate = table.Column<DateOnly>(type: "date", nullable: true),
+                    PaymentMethod = table.Column<int>(type: "int", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
@@ -585,10 +767,61 @@ namespace BusesControl.Persistence.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "InvoicesExpense",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Reference = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: false),
+                    FinancialId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TotalPrice = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
+                    InterestRate = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    DueDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    ExternalId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PaymentDate = table.Column<DateOnly>(type: "date", nullable: true),
+                    PaymentMethod = table.Column<int>(type: "int", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InvoicesExpense", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_InvoicesExpense_Financials_FinancialId",
+                        column: x => x.FinancialId,
+                        principalTable: "Financials",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Buses_ColorId",
                 table: "Buses",
                 column: "ColorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ContractBusReplacements_BusId",
+                table: "ContractBusReplacements",
+                column: "BusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ContractBusReplacements_ContractId",
+                table: "ContractBusReplacements",
+                column: "ContractId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ContractDriverReplacements_ContractId",
+                table: "ContractDriverReplacements",
+                column: "ContractId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ContractDriverReplacements_DriverId",
+                table: "ContractDriverReplacements",
+                column: "DriverId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Contracts_ApproverId",
@@ -636,9 +869,29 @@ namespace BusesControl.Persistence.Migrations
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Financials_SettingPanelId",
+                table: "Financials",
+                column: "SettingPanelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Financials_SupplierId",
+                table: "Financials",
+                column: "SupplierId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Invoices_FinancialId",
                 table: "Invoices",
                 column: "FinancialId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InvoicesExpense_FinancialId",
+                table: "InvoicesExpense",
+                column: "FinancialId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Notifications_SenderId",
+                table: "Notifications",
+                column: "SenderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ResetPasswordsSecurityCode_UserId",
@@ -666,6 +919,26 @@ namespace BusesControl.Persistence.Migrations
                 name: "IX_SettingsPanel_RequesterId",
                 table: "SettingsPanel",
                 column: "RequesterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SupportTicketMessages_SupportAgentId",
+                table: "SupportTicketMessages",
+                column: "SupportAgentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SupportTicketMessages_SupportTicketId",
+                table: "SupportTicketMessages",
+                column: "SupportTicketId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SupportTickets_EmployeeId",
+                table: "SupportTickets",
+                column: "EmployeeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SupportTickets_SupportAgentId",
+                table: "SupportTickets",
+                column: "SupportAgentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Terminations_ContractId",
@@ -710,9 +983,19 @@ namespace BusesControl.Persistence.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UsersRegistrationQueue_ApprovedId",
+                table: "UsersRegistrationQueue",
+                column: "ApprovedId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UsersRegistrationQueue_EmployeeId",
                 table: "UsersRegistrationQueue",
                 column: "EmployeeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UsersRegistrationQueue_RequesterId",
+                table: "UsersRegistrationQueue",
+                column: "RequesterId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UsersRegistrationSecurityCode_UserId",
@@ -724,10 +1007,22 @@ namespace BusesControl.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "ContractBusReplacements");
+
+            migrationBuilder.DropTable(
+                name: "ContractDriverReplacements");
+
+            migrationBuilder.DropTable(
                 name: "CustomersContract");
 
             migrationBuilder.DropTable(
                 name: "Invoices");
+
+            migrationBuilder.DropTable(
+                name: "InvoicesExpense");
+
+            migrationBuilder.DropTable(
+                name: "Notifications");
 
             migrationBuilder.DropTable(
                 name: "ResetPasswordsSecurityCode");
@@ -737,6 +1032,9 @@ namespace BusesControl.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "SavedCards");
+
+            migrationBuilder.DropTable(
+                name: "SupportTicketMessages");
 
             migrationBuilder.DropTable(
                 name: "Terminations");
@@ -766,6 +1064,9 @@ namespace BusesControl.Persistence.Migrations
                 name: "Financials");
 
             migrationBuilder.DropTable(
+                name: "SupportTickets");
+
+            migrationBuilder.DropTable(
                 name: "Roles");
 
             migrationBuilder.DropTable(
@@ -776,6 +1077,9 @@ namespace BusesControl.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "Customers");
+
+            migrationBuilder.DropTable(
+                name: "Suppliers");
 
             migrationBuilder.DropTable(
                 name: "Buses");
