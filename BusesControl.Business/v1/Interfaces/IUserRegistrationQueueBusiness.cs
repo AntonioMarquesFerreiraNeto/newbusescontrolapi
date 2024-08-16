@@ -9,5 +9,5 @@ public interface IUserRegistrationQueueBusiness
     Task<UserRegistrationQueueModel> GetForRegistrationUserStepCodeAsync(UserRegistrationStepCodeRequest request);
     Task<UserRegistrationQueueModel> GetForRegistrationUserStepPasswordAsync(Guid userId);
     Task<UserRegistrationQueueModel> GetForDeleteAsync(Guid id);
-    Task<UserRegistrationQueueModel> GetForApprovedAsync(Guid id);
+    Task<UserRegistrationQueueModel> GetForApproveAsync(Guid id);
 }

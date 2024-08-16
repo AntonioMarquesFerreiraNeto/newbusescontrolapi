@@ -12,5 +12,5 @@ public interface IUserRegistrationQueueService
     Task<UserRegistrationStepTokenResponse> RegistrationUserStepTokenAsync(UserRegistrationStepTokenRequest request);
     Task<SuccessResponse> RegistrationUserStepPasswordAsync(UserRegistrationStepPasswordRequest request);
     Task<SuccessResponse> DeleteAsync(Guid id);
-    Task<SuccessResponse> AprrovedAsync(Guid id);
+    Task<SuccessResponse> AprroveAsync(Guid id);
 }

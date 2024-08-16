@@ -10,7 +10,7 @@ public class NotificationCreateRequestValidator : AbstractValidator<Notification
         RuleFor(x => x.Title)
             .NotEmpty().WithMessage("Título é um campo obrigatório")
             .MinimumLength(3).WithMessage("Título deve ter no mínimo 3 caracteres")
-            .MaximumLength(25).WithMessage("Títul deve ter no máximo 25 caracteres");
+            .MaximumLength(30).WithMessage("Títul deve ter no máximo 30 caracteres");
 
         RuleFor(x => x.Message)
             .NotEmpty().WithMessage("Mensagem é um campo obrigatório")

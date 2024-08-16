@@ -131,7 +131,7 @@ public class UserRegistrationQueueBusiness(
         return record;
     }
 
-    public async Task<UserRegistrationQueueModel> GetForApprovedAsync(Guid id)
+    public async Task<UserRegistrationQueueModel> GetForApproveAsync(Guid id)
     {
         var record = await _userRegistrationQueueRepository.GetByIdAsync(id);
         if (record is null)
@@ -149,7 +149,7 @@ public class UserRegistrationQueueBusiness(
             _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,
                 title: NotificationTitle.BadRequest,
-                details: Message.UserRegistration.InvalidApproved
+                details: Message.UserRegistration.InvalidApprove
             );
             return default!;
         }

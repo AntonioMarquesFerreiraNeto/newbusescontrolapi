@@ -19,7 +19,7 @@ public class SettingPanelRepository(
 
     public async Task<IEnumerable<SettingPanelModel>> FindAsync(int page = 0, int pageSize = 0)
     {
-        var query = _context.SettingsPanel.AsNoTracking();
+        var query = _context.SettingsPanel.Include(x => x.Requester).AsNoTracking();
 
         if (page > 0 & pageSize > 0)
         {

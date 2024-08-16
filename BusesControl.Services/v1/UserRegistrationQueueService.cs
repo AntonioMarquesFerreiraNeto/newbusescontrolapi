@@ -261,9 +261,9 @@ public class UserRegistrationQueueService(
         return new SuccessResponse(Message.UserRegistration.SuccessDelete);
     }
 
-    public async Task<SuccessResponse> AprrovedAsync(Guid id)
+    public async Task<SuccessResponse> AprroveAsync(Guid id)
     {
-        var record = await _userRegistrationQueueBusiness.GetForApprovedAsync(id);
+        var record = await _userRegistrationQueueBusiness.GetForApproveAsync(id);
         if (_notificationContext.HasNotification)
         {
             return default!;

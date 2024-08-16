@@ -21,7 +21,6 @@ public class SettingPanelCreateRequestValidator : AbstractValidator<SettingPanel
             .When(x => x.LimitDateTerminate is not null);
 
         RuleFor(x => x.LateFeeInterestRate)
-            .GreaterThanOrEqualTo(1).WithMessage("Taxa de juros não pode ser menor que 1%")
             .LessThanOrEqualTo(10).WithMessage("Taxa de juros não pode ultrapassar 10%");
     }
 }

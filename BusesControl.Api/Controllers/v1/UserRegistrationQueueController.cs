@@ -171,10 +171,10 @@ public class UserRegistrationQueueController(
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [Authorize(Roles = "Admin")]
-    [HttpPatch("{id}/approved")]
-    public async Task<IActionResult> Approved([FromRoute] Guid id)
+    [HttpPatch("{id}/approve")]
+    public async Task<IActionResult> Approve([FromRoute] Guid id)
     {
-        var response = await _userRegistrationQueueService.AprrovedAsync(id);
+        var response = await _userRegistrationQueueService.AprroveAsync(id);
         return Ok(response);
     }
 }

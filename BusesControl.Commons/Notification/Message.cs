@@ -147,8 +147,8 @@ public class Message
         public readonly static string Success = "Senha definida com sucesso, aguarde sua aprovação pelo administrador para realizar o login!";
         public readonly static string InvalidDelete = "Solicitação de cancelamento negada por já estar aprovada!";
         public readonly static string RequestDenied = "Solicitação de registro de usuário negada.";
-        public readonly static string Exists = "Já existe uma solicitação.";
-        public readonly static string InvalidApproved = "Para aprovar o registro do usuário, é necessário que ele tenha finalizado o processo de criação!";
+        public readonly static string Exists = "Já existe uma solicitação de registro de usuário para esse funcionário.";
+        public readonly static string InvalidApprove = "Para aprovar o registro do usuário, é necessário que ele tenha finalizado o processo de criação!";
     }
 
     public class ResetUser 

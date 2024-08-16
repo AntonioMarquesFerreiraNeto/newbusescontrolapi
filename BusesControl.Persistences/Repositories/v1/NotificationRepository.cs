@@ -67,6 +67,6 @@ public class NotificationRepository(
 
     public async Task<NotificationModel?> GetByIdAsync(Guid id)
     {
-        return await _context.Notifications.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
+        return await _context.Notifications.AsNoTracking().Include(x => x.Sender).SingleOrDefaultAsync(x => x.Id == id);
     }
 }
