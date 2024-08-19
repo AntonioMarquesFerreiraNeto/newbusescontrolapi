@@ -98,7 +98,7 @@ public class SystemService(
         
         date ??= DateTime.UtcNow;
 
-        var invoiceRecords = await _invoiceRepository.FindByDueDateForSystemAsync(DateOnly.FromDateTime(date.Value), true);
+        var invoiceRecords = await _invoiceRepository.FindByDueDateForSystemAsync(DateOnly.FromDateTime(date.Value));
         if (!invoiceRecords.Any())
         {
             systemResponse.NoOperation = Message.Commons.NoOperation;

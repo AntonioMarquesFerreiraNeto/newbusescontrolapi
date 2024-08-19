@@ -64,7 +64,7 @@ public class SystemController(
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPatch("invoice/automated-payment")]
-    public async Task<IActionResult> AutomatedPayment([FromQuery] DateTime date)
+    public async Task<IActionResult> AutomatedPayment([FromQuery] DateTime? date)
     {
         var response = await _systemService.AutomatedPaymentAsync(date);
         return Ok(response);

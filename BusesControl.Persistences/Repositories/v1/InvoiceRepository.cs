@@ -17,16 +17,11 @@ public class InvoiceRepository(
         return await _context.Invoices.Where(x => x.FinancialId == financialId).ToListAsync();
     }
 
-    public async Task<IEnumerable<InvoiceModel>> FindByDueDateForSystemAsync(DateOnly date, bool expenseOnly)
+    public async Task<IEnumerable<InvoiceModel>> FindByDueDateForSystemAsync(DateOnly date)
     {
         var query = _context.Invoices.Include(x => x.Financial).AsNoTracking();
 
         query = query.Where(x => x.DueDate == date && x.Status != InvoiceStatusEnum.Paid && x.Status != InvoiceStatusEnum.Canceled);
-
-        if (expenseOnly)
-        {
-            query = query.Where(x => x.Financial.Type == FinancialTypeEnum.Expense);
-        }
 
         return await query.ToListAsync();
     }

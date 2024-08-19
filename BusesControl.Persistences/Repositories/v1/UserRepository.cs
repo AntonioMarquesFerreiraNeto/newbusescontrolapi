@@ -12,6 +12,25 @@ public class UserRepository(
 {
     private readonly AppDbContext _context = context;
 
+    public async Task<IEnumerable<UserModel>> FindBySearchAsync(int page, int pageSize, string? search = null)
+    {
+        var query = _context.Users.Include(x => x.Employee).Where(x => x.EmployeeId.HasValue).AsNoTracking();
+
+        if (search is not null)
+        {
+            query = query.Where(x => x.Employee!.Name.Contains(search));
+        }
+
+        query = query.Skip((page - 1) * pageSize).Take(pageSize);    
+
+        return await query.ToListAsync();
+    }
+
+    public async Task<int> CountBySearchAsync(string? search = null)
+    {
+        return search is not null ? await _context.Users.CountAsync(x => x.Employee!.Name.Contains(search)) : await _context.Users.CountAsync();
+    }
+
     public async Task<UserModel?> GetByEmailAndCpfAndBirthDateAsync(string email, string cpf, DateOnly birthDate)
     {
         Expression<Func<UserModel, bool>> criteria = x => x.Email == email &&

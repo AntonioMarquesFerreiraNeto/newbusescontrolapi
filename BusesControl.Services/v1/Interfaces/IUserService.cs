@@ -8,6 +8,7 @@ namespace BusesControl.Services.v1.Interfaces;
 public interface IUserService
 {
     string GeneratePassword();
+    Task<PaginationResponse<UserResponse>> FindBySearchForAdminAsync(PaginationRequest request);
     Task<UserResponse> GetByLoggedUserAsync();
     UserAuthResponse FindAuthenticatedUser();
     Task<LoginResponse> LoginAsync(LoginRequest request);

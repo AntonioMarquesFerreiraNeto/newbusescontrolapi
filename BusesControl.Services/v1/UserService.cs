@@ -60,6 +60,18 @@ public class UserService(
         return password;
     }
 
+    public async Task<PaginationResponse<UserResponse>> FindBySearchForAdminAsync(PaginationRequest request)
+    {
+        var records = await _userRepository.FindBySearchAsync(request.Page, request.PageSize, request.Search);
+        var count = await _userRepository.CountBySearchAsync(request.Search);
+
+        return new PaginationResponse<UserResponse>
+        {
+            Response = _mapper.Map<IEnumerable<UserResponse>>(records),
+            TotalSize = count
+        };
+    }
+
     public async Task<UserResponse> GetByLoggedUserAsync()
     {
         var userId = FindAuthenticatedUser().Id;
@@ -435,7 +447,8 @@ public class UserService(
             return false;
         }
 
-        record.Status = request.Status;
+        record.Status = request.Status == UserStatusEnum.Active ? UserStatusEnum.Inactive : UserStatusEnum.Active;
+
         var result = await _userManager.UpdateAsync(record);
         if (!result.Succeeded)
         {

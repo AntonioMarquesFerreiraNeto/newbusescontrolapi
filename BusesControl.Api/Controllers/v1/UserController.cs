@@ -22,6 +22,25 @@ public class UserController(
 ) : ControllerBase
 {
     /// <summary>
+    /// Busca todos os usuários do sistema para o ADMIN
+    /// </summary>
+    /// <response code="200">Retorna sucesso da requisição</response>
+    /// <response code="401">Retorna erro de não autorizado</response>
+    /// <response code="403">Retorna erro de acesso negado</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Admin")]
+    [HttpGet("find")]
+    public async Task<IActionResult> FindBySearchForAdmin([FromQuery] PaginationRequest request)
+    {
+        var response = await _userService.FindBySearchForAdminAsync(request);
+        return Ok(response);
+    }
+
+    /// <summary>
     /// Busca informações do perfil do usuário logado
     /// </summary>
     /// <response code="200">Retorna sucesso da requisição</response>
