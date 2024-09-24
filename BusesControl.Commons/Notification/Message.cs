@@ -22,6 +22,9 @@ public class Message
         public readonly static string NotFound = "Cliente não encontrado!";
         public readonly static string NotActive = "Cliente não está ativo!";
         public readonly static string Unexpected = "Desculpe, ocorreu um erro interno na criação do cliente.";
+        public readonly static string CnpjNotProvided = "CNPJ não informado!";
+        public readonly static string IntegrationError = "Detalhes da empresa não encontrado.";
+        public readonly static string CompanyNotActive = "Empresa não está em situação ativa.";
     }
 
     public class CustomerContract
