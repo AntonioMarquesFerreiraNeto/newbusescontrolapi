@@ -12,10 +12,11 @@ public class LegalEntityDetailsController(
 ) : ControllerBase
 {
     /// <summary>
-    /// Retorna detalhes públicos uma empresa pelo CNPJ
+    /// Retorna detalhes públicos de empresas pelo CNPJ
     /// </summary>
     /// <response code="200">Retorna sucesso da requisição</response>
     /// <response code="400">Retorna erro de requisição inválida</response>
+    /// <response code="404">Retorna erro de não encontrado</response>
     /// <response code="500">Retorna erro interno do servidor</response>
     [HttpGet]
     public async Task<IActionResult> GetDetails([FromQuery] string? cnpj)
