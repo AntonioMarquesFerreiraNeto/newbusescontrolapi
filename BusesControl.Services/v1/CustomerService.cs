@@ -242,4 +242,69 @@ public class CustomerService(
 
         return true;
     }
+
+    public async Task<LegalEntityDetailsResponse> LegalPersonConsultationByCnpjAsync(string? cnpj)
+    {
+        cnpj = cnpj is not null? OnlyNumbers.ClearValue(cnpj) : cnpj;
+
+        if (cnpj is null || cnpj.Length == 0)
+        {
+            _notificationContext.SetNotification(
+                statusCode: StatusCodes.Status400BadRequest,
+                title: NotificationTitle.BadRequest,
+                details: "CNPJ não informado!"
+            );
+            return default!;
+        }
+
+        var httpClient = new HttpClient();
+        var httpResponse = await httpClient.GetAsync($"https://brasilapi.com.br/api/cnpj/v1/{cnpj}");
+        if (!httpResponse.IsSuccessStatusCode)
+        {
+            _notificationContext.SetNotification(
+                statusCode: StatusCodes.Status404NotFound,
+                title: NotificationTitle.NotFound,
+                details: Message.Customer.IntegrationError
+            );
+            return default!;
+        }
+
+        var response = await httpResponse.Content.ReadFromJsonAsync<LegalEntityDetailsDTO>();
+        if (response is null)
+        {
+            _notificationContext.SetNotification(
+                statusCode: StatusCodes.Status500InternalServerError,
+                title: NotificationTitle.BadRequest,
+                details: Message.Customer.IntegrationError
+            );
+            return default!;
+        }
+
+        if (response.Status != "ATIVA")
+        {
+            _notificationContext.SetNotification(
+                 statusCode: StatusCodes.Status400BadRequest,
+                 title: NotificationTitle.BadRequest,
+                 details: Message.Customer.CompanyNotActive
+            );
+            return default!;
+        }
+
+        return new LegalEntityDetailsResponse
+        {
+            RazaoSocial = response.RazaoSocial,
+            Name = string.IsNullOrEmpty(response.Name) ? response.RazaoSocial : response.Name,
+            TypeSize = response.TypeSize,
+            CapitalSocial = response.CapitalSocial,
+            LegalNature = response.LegalNature,
+            Uf = response.Uf,
+            ZipCode = response.ZipCode,
+            Neighborhood = response.Neighborhood,
+            Number = response.Number,
+            City = response.City,
+            Logradouro = response.Logradouro,
+            Complement = response.Complement,
+            Status = response.Status
+        };
+    }
 }

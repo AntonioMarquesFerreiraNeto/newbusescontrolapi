@@ -11,4 +11,5 @@ public interface ICustomerService
     Task<bool> CreateAsync(CustomerCreateRequest request);
     Task<bool> UpdateAsync(Guid id, CustomerUpdateRequest request);
     Task<bool> ToggleActiveAsync(Guid id);
+    Task<LegalEntityDetailsResponse> LegalPersonConsultationByCnpjAsync(string? cnpj);
 }
