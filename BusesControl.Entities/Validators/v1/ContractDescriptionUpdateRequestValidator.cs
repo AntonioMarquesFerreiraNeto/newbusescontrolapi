@@ -25,16 +25,16 @@ public class ContractDescriptionUpdateRequestValidator : AbstractValidator<Contr
         RuleFor(x => x.Title)
             .NotEmpty().WithMessage("Título é um campo obrigatório")
             .MinimumLength(10).WithMessage("Título deve ter no mínimo 10 caracteres")
-            .MaximumLength(70).WithMessage("Título deve ter no máximo 3000 caracteres");
+            .MaximumLength(70).WithMessage("Título deve ter no máximo 70 caracteres");
 
         RuleFor(x => x.SubTitle)
             .NotEmpty().WithMessage("Subtítulo é um campo obrigatório")
             .MinimumLength(10).WithMessage("Subtítulo deve ter no mínimo 10 caracteres")
-            .MaximumLength(70).WithMessage("Subtítulo deve ter no máximo 3000 caracteres");
+            .MaximumLength(70).WithMessage("Subtítulo deve ter no máximo 70 caracteres");
 
         RuleFor(x => x.Copyright)
             .NotEmpty().WithMessage("Copyright é um campo obrigatório")
             .MinimumLength(10).WithMessage("Copyright deve ter no mínimo 10 caracteres")
-            .MaximumLength(70).WithMessage("Copyright deve ter no máximo 3000 caracteres");
+            .MaximumLength(70).WithMessage("Copyright deve ter no máximo 70 caracteres");
     }
 }
