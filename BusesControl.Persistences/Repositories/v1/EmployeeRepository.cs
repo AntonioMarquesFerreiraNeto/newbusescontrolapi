@@ -1,4 +1,5 @@
-﻿using BusesControl.Entities.Models.v1;
+﻿using BusesControl.Entities.Enums.v1;
+using BusesControl.Entities.Models.v1;
 using BusesControl.Persistence.Contexts;
 using BusesControl.Persistence.Repositories.Interfaces.v1;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +38,11 @@ public class EmployeeRepository(
         }
 
         return await query.CountAsync();
+    }
+
+    public async Task<IEnumerable<EmployeeModel>> FindByTypeAsync(EmployeeTypeEnum type)
+    {
+        return await _context.Employees.Where(x => x.Type == type && x.Status == EmployeeStatusEnum.Active).ToListAsync();
     }
 
     public async Task<EmployeeModel?> GetByIdAsync(Guid id)

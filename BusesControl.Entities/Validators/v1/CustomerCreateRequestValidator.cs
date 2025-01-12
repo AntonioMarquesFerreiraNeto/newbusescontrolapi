@@ -16,12 +16,12 @@ public class CustomerCreateRequestValidator : AbstractValidator<CustomerCreateRe
 
         RuleFor(x => x.Cpf)
             .NotEmpty().WithMessage("Cpf é um campo obrigatório")
-            .Must(ValidateCpfOrCnpj.CpfIsValid).WithMessage("Cpf inválido")
+            .Must(ValidateDocument.CpfIsValid).WithMessage("Cpf inválido")
             .When(x => x.Type == CustomerTypeEnum.NaturalPerson);
 
         RuleFor(x => x.Cnpj)
             .NotEmpty().WithMessage("Cnpj é um campo obrigatório")
-                .Must(ValidateCpfOrCnpj.CnpjIsValid).WithMessage("Cnpj inválido")
+                .Must(ValidateDocument.CnpjIsValid).WithMessage("Cnpj inválido")
                 .When(x => x.Type == CustomerTypeEnum.LegalEntity);
 
         When(x => x.Type == CustomerTypeEnum.NaturalPerson, () =>

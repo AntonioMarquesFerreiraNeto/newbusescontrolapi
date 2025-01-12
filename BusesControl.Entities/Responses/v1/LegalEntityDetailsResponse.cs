@@ -4,6 +4,8 @@ public class LegalEntityDetailsResponse
 {
     public string RazaoSocial { get; set; } = default!;
     public string Name { get; set; } = default!;
+    public string? Email { get; set; }
+    public string? PhoneNumber { get; set; }
     public string TypeSize { get; set; } = default!;
     public decimal CapitalSocial { get; set; }
     public string LegalNature { get; set; } = default!;

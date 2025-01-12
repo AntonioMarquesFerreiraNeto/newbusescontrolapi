@@ -34,6 +34,11 @@ public class EmployeeService(
         };
     }
 
+    public async Task<IEnumerable<EmployeeModel>> FindByTypeAsync(EmployeeTypeEnum type)
+    {
+        return await _employeeRepository.FindByTypeAsync(type);
+    }
+
     public async Task<EmployeeModel> GetByIdAsync(Guid id)
     {
         var record = await _employeeRepository.GetByIdAsync(id);

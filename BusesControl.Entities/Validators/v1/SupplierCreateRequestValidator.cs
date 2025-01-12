@@ -15,7 +15,7 @@ public class SupplierCreateRequestValidator : AbstractValidator<SupplierCreateRe
 
         RuleFor(x => x.Cnpj)
             .NotEmpty().WithMessage("Cnpj é um campo obrigatório")
-                .Must(ValidateCpfOrCnpj.CnpjIsValid).WithMessage("Cnpj inválido");
+                .Must(ValidateDocument.CnpjIsValid).WithMessage("Cnpj inválido");
 
         RuleFor(x => x.OpenDate)
             .NotEmpty().WithMessage("Data de abertura é um campo obrigatório")

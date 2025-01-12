@@ -15,7 +15,7 @@ public class EmployeeCreateRequestValidator : AbstractValidator<EmployeeCreateRe
 
         RuleFor(x => x.Cpf)
             .NotEmpty().WithMessage("Cpf é um campo obrigatório")
-            .Must(ValidateCpfOrCnpj.CpfIsValid).WithMessage("Cpf inválido");
+            .Must(ValidateDocument.CpfIsValid).WithMessage("Cpf inválido");
 
         RuleFor(x => x.BirthDate)
             .NotEmpty().WithMessage("Data de nascimento é um campo obrigatório")

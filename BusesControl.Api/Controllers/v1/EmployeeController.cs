@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using BusesControl.Entities.Enums.v1;
 using BusesControl.Entities.Requests.v1;
 using BusesControl.Services.v1.Interfaces;
 using FluentValidation;
@@ -10,7 +11,7 @@ namespace BusesControl.Api.Controllers.v1;
 
 [ApiController]
 [ApiVersion("1.0")]
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = "Admin, SupportAgent, Assistant")]
 [Route("api/v1/employee")]
 public class EmployeeController(
     IValidator<EmployeeCreateRequest> _employeeCreateRequestValidator,
@@ -34,6 +35,24 @@ public class EmployeeController(
     public async Task<IActionResult> FindBySearch([FromQuery] PaginationRequest request)
     {
         var response = await _employeeService.FindBySearchAsync(request);
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Retorna funcionários pelo tipo
+    /// </summary>
+    /// <response code="200">Retorna sucesso da requisição</response>
+    /// <response code="401">Retorna erro de não autorizado</response>
+    /// <response code="403">Retorna erro de acesso negado</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+    [HttpGet("type/{type}")]
+    public async Task<IActionResult> FindByType([FromRoute] EmployeeTypeEnum type)
+    {
+        var response = await _employeeService.FindByTypeAsync(type);
         return Ok(response);
     }
 
@@ -74,6 +93,7 @@ public class EmployeeController(
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Admin, SupportAgent")]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] EmployeeCreateRequest request)
     {
@@ -104,6 +124,7 @@ public class EmployeeController(
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Admin, SupportAgent")]
     [HttpPut("{id}")]
     public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] EmployeeUpdateRequest request)
     {
@@ -132,6 +153,7 @@ public class EmployeeController(
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Admin, SupportAgent")]
     [HttpPatch("{id}/active")]
     public async Task<IActionResult> ToggleActive([FromRoute] Guid id)
     {
@@ -154,6 +176,7 @@ public class EmployeeController(
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Admin, SupportAgent")]
     [HttpPatch("{id}/type")]
     public async Task<IActionResult> ToggleType([FromRoute] Guid id, [FromBody] EmployeeToggleTypeRequest request)
     {

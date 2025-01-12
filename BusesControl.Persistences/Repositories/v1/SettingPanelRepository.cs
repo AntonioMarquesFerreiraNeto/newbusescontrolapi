@@ -31,6 +31,11 @@ public class SettingPanelRepository(
         return records;
     }
 
+    public async Task<IEnumerable<SettingPanelModel>> FindByParentAysnc(SettingPanelParentEnum parent)
+    {
+        return await _context.SettingsPanel.AsNoTracking().Include(x => x.Requester).Where(x => x.Parent == parent && x.Active).ToListAsync();
+    }
+
     public async Task<int> CountAsync()
     {
         return await _context.SettingsPanel.CountAsync();

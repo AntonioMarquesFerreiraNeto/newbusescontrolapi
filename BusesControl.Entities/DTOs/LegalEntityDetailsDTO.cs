@@ -9,7 +9,10 @@ public class LegalEntityDetailsDTO
 
     [JsonPropertyName("nome_fantasia")]
     public string? Name { get; set; }
-
+    [JsonPropertyName("email")]
+    public string? Email { get; set; }
+    [JsonPropertyName("ddd_fax")]
+    public string? DddFax { get; set; }
     [JsonPropertyName("porte")]
     public string TypeSize { get; set; } = default!;
 

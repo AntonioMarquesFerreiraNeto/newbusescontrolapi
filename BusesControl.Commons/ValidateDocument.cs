@@ -2,7 +2,7 @@
 
 namespace BusesControl.Commons;
 
-public static class ValidateCpfOrCnpj
+public static class ValidateDocument
 {
     public static bool CpfIsValid(string? cpf)
     {

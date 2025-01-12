@@ -1,5 +1,7 @@
 ﻿using Asp.Versioning;
+using BusesControl.Entities.Enums.v1;
 using BusesControl.Entities.Requests.v1;
+using BusesControl.Services.v1;
 using BusesControl.Services.v1.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
@@ -49,6 +51,24 @@ public class SettingPanelController(
     public async Task<IActionResult> Find([FromQuery] PaginationRequest request)
     {
         var response = await _settingPanelService.FindAsync(request);
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Retorna paineis pelo destinatário
+    /// </summary>
+    /// <response code="200">Retorna sucesso da requisição</response>
+    /// <response code="401">Retorna erro de não autorizado</response>
+    /// <response code="403">Retorna erro de acesso negado</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+    [HttpGet("parent/{parent}")]
+    public async Task<IActionResult> FindByParent([FromRoute] SettingPanelParentEnum parent)
+    {
+        var response = await _settingPanelService.FindByParentAsync(parent);
         return Ok(response);
     }
 

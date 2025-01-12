@@ -1,6 +1,7 @@
 ﻿using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification;
 using BusesControl.Commons.Notification.Interfaces;
+using BusesControl.Entities.Enums.v1;
 using BusesControl.Entities.Models.v1;
 using BusesControl.Entities.Requests.v1;
 using BusesControl.Entities.Responses.v1;
@@ -65,6 +66,11 @@ public class SettingPanelService(
             Response = records,
             TotalSize = count
         };
+    }
+
+    public async Task<IEnumerable<SettingPanelModel>> FindByParentAsync(SettingPanelParentEnum parent)
+    {
+        return await _settingPanelRepository.FindByParentAysnc(parent);
     }
 
     public async Task<bool> CreateAsync(SettingPanelCreateRequest request)
