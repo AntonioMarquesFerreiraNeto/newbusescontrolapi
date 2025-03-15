@@ -11,6 +11,7 @@
     public AppSettingsSecurityCode SecurityCode { get; set; } = default!;
     public AppSettingsTermination Termination { get; set; } = default!;
     public AppSettingsUserSystem UserSystem { get; set; } = default!;
+    public AppSettingsGoogleGemini GoogleGemini { get; set; } = default!;
 }
 
 public class AppSettingsRedis 
@@ -80,4 +81,10 @@ public class AppSettingsTermination
 public class AppSettingsUserSystem
 {
     public string Role { get; set; } = default!;
+}
+
+public class AppSettingsGoogleGemini 
+{ 
+    public string ApiToken { get; set; } = default!;
+    public string BaseUrl { get; set; } = default!;
 }

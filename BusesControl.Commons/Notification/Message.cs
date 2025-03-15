@@ -242,4 +242,9 @@ public class Message
     {
         public readonly static string NotFound = "Mensagem de ticket de suporte não encontrada!";
     }
+
+    public class Generative 
+    { 
+        public readonly static string Unexpected = "Desculpe, ocorreu um erro interno e não conseguimos processar sua mensagem!";
+    }
 }
