@@ -249,6 +249,9 @@ public class UserService(
             return default!;
         }
 
+        _resetPasswordSecurityCodeRepository.Remove(resetPasswordRecord);
+        await _unitOfWork.CommitAsync();
+
         return new UserResetPasswordStepResetTokenResponse(userRecord.Id, resetToken);
     }
 

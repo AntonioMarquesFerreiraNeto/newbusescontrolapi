@@ -33,7 +33,7 @@ public class ContractRepository(
 
         query = query.Include(x => x.Bus)
                      .Include(x => x.Driver)
-                     .Include(x => x.SettingPanel)
+                     .Include(x => x.SettingPanel).ThenInclude(x => x.Requester)
                      .Include(x => x.ContractDescription)
                      .Include(x => x.Approver)
                      .Include(x => x.CustomersContract)
@@ -53,7 +53,7 @@ public class ContractRepository(
 
     public async Task<IEnumerable<ContractModel>> FindByOptionalStatusAsync(int page = 0, int pageSize = 0, ContractStatusEnum? status = null)
     {
-        var query = _context.Contracts.AsNoTracking();
+        var query = _context.Contracts.Include(x => x.Driver).Include(x => x.Bus).AsNoTracking();
 
         if (status is not null)
         {

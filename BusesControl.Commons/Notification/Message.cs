@@ -30,7 +30,7 @@ public class Message
     public class CustomerContract
     {
         public readonly static string NotFound = "Contrato do cliente não encontrado!";
-        public readonly static string NotPdfContract = "Não é possível gerar o pdf do contrato, o mesmo não está aprovado ou aguardando assinaturas.";
+        public readonly static string NotPdfContract = "Não é possível gerar o pdf do contrato por não estar aprovado ou aguardando assinaturas.";
         public readonly static string NotPdfTermination = "Não é possível gerar o pdf da rescisão, o contrato não está em andamento";
         public readonly static string PdfUnexpected = "Desculpe, não conseguimos gerar seu pdf!";
     }
@@ -45,7 +45,7 @@ public class Message
         public readonly static string NotIsWaitingSignature = "Contrato não está aguardando assinatura!";
         public readonly static string TerminationDateNotInFuture = "A data de término não pode ser menor ou igual a data atual.";
         public readonly static string TerminationDateExceedsLimit = "A data de término não deve exceder o limite de anos estabelecido no painel de configurações para contrato a partir da data atual.";
-        public readonly static string InvalidEditRequest = "Contrato não pode ser editado. Ele deve estar negado ou aguardando revisão.";
+        public readonly static string InvalidEditRequest = "Contrato não pode ser editado. Para editar, é necessário estar negado ou aguardando revisão.";
         public readonly static string InvalidRemoveRequest = "Contrato não pode ser removido. Ele já foi aprovado!";
         public readonly static string EmployeeNotDriver = "Funcionário selecionado não é motorista!";
         public readonly static string DuplicateCustomers = "Pelo menos um cliente está duplicado nesta requisição!";

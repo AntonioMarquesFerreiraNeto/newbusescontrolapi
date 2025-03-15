@@ -5,6 +5,7 @@ namespace BusesControl.Entities.Responses.v1;
 public class SettingPanelResponse
 {
     public Guid Id { get; set; }
+    public string Reference { get; set; } = default!;
     public decimal TerminationFee { get; set; }
     public decimal LateFeeInterestRate { get; set; }
     public bool CustomerDelinquencyEnabled { get; set; }

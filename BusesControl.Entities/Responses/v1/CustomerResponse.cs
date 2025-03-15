@@ -20,5 +20,6 @@ public class CustomerResponse
     public string State { get; set; } = default!;
     public bool Active { get; set; }
     public CustomerTypeEnum Type { get; set; }
+    public PersonGenderEnum? Gender { get; set; }
     public bool InCompliance { get; set; }
 }

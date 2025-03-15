@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace BusesControl.Commons;
+﻿namespace BusesControl.Commons;
 
 public static class ValidatePhoneNumber
 {

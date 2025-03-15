@@ -13,7 +13,7 @@ public class ContractResponse
     public SettingPanelResponse SettingPanel { get; set; } = default!;
     public ContractDescriptionResponse ContractDescription { get; set; } = default!;
     public decimal TotalPrice { get; set; }
-    public PaymentTypeEnum PaymentMethod { get; set; }
+    public PaymentTypeEnum PaymentType { get; set; }
     public string? Details { get; set; }
     public int? InstallmentsCount { get; set; }
     public DateTime CreatedAt { get; set; }
