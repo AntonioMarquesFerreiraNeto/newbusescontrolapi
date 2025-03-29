@@ -18,9 +18,26 @@ public class SupportTicketMessageController(
 ) : ControllerBase
 {
     /// <summary>
+    /// Retorna mensagens de um ticket
+    /// </summary>
+    /// <response code="200">Retorna sucesso da requisição</response>
+    /// <response code="401">Retorna erro de não autorizado</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+    [HttpGet]
+    public async Task<IActionResult> FindByTicket([FromRoute] Guid ticketId)
+    {
+        var response = await _supportTicketMessageService.FindByTicketAsync(ticketId);
+
+        return Ok(response);
+    }
+
+    /// <summary>
     /// Cria uma nova mensagem para um ticket de suporte pelo ticket
     /// </summary>
-    /// <response code="204">Retorna sucesso da requisição</response>
+    /// <response code="200">Retorna sucesso da requisição</response>
     /// <response code="400">Retorna erro de requisição inválida</response>
     /// <response code="401">Retorna erro de não autorizado</response>
     /// <response code="403">Retorna erro de acesso negado</response>
@@ -40,7 +57,8 @@ public class SupportTicketMessageController(
             return BadRequest(validation);
         }
 
-        await _supportTicketMessageService.CreateAsync(ticketId, request);
-        return NoContent();
+        var response = await _supportTicketMessageService.CreateAsync(ticketId, request);
+
+        return Ok(response);
     }
 }

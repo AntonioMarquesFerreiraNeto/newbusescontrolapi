@@ -8,6 +8,7 @@ public class SupportTicketMessageModel
     public Guid? SupportAgentId { get; set; }
     public EmployeeModel? SupportAgent { get; set; }
     public string Message { get; set; } = default!;
+    public bool Delivered { get; set; }
     public bool IsSupportAgent { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

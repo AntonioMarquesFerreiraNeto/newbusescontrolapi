@@ -21,7 +21,8 @@ public class SupportTicketService(
     IUserService _userService,
     ISupportTicketMessageService _supportTicketMessageService,
     ISupportTicketBusiness _supportTicketBusiness,
-    ISupportTicketRepository _supportTicketRepository
+    ISupportTicketRepository _supportTicketRepository,
+    ISupportTicketMessageRepository _supportTicketMessageRepository
 ) : ISupportTicketService
 {
     private async Task<string> GenerateReferenceUniqueAsync()
@@ -73,8 +74,6 @@ public class SupportTicketService(
             );
             return default!;
         }
-
-        record.SupportTicketMessages = [.. record.SupportTicketMessages.OrderByDescending(x => x.CreatedAt)];
 
         return _mapper.Map<SupportTicketResponse>(record);
     }

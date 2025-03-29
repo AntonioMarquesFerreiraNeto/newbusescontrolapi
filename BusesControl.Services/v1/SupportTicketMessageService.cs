@@ -1,8 +1,10 @@
-﻿using BusesControl.Business.v1.Interfaces;
+﻿using AutoMapper;
+using BusesControl.Business.v1.Interfaces;
 using BusesControl.Commons.Notification.Interfaces;
 using BusesControl.Entities.Enums.v1;
 using BusesControl.Entities.Models.v1;
 using BusesControl.Entities.Requests.v1;
+using BusesControl.Entities.Responses.v1;
 using BusesControl.Persistence.Repositories.Interfaces.v1;
 using BusesControl.Persistence.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
@@ -10,6 +12,7 @@ using BusesControl.Services.v1.Interfaces;
 namespace BusesControl.Services.v1;
 
 public class SupportTicketMessageService(
+    IMapper _mapper,
     INotificationContext _notificationContext,
     IUnitOfWork _unitOfWork,
     IUserService _userService,
@@ -18,6 +21,24 @@ public class SupportTicketMessageService(
     ISupportTicketMessageRepository _supportTicketMessageRepository
 ) : ISupportTicketMessageService
 {
+    public async Task<IEnumerable<SupportTicketMessageResponse>> FindByTicketAsync(Guid ticketId)
+    {
+        var authenticatedUser = _userService.FindAuthenticatedUser();
+        var isSupportAgent = authenticatedUser.Role == "SupportAgent";
+
+        var messages = await _supportTicketMessageRepository.FindByTicketAsync(ticketId);
+
+        var messagesToMarkAsDelivered = messages.Where(message => message.IsSupportAgent != isSupportAgent).ToList();
+
+        foreach (var message in messagesToMarkAsDelivered)
+        {
+            var shouldBeMarkedAsDelivered = !isSupportAgent;
+            await _supportTicketMessageRepository.MarkMessageAsDeliveredAsync(message.Id, shouldBeMarkedAsDelivered);
+        }
+
+        return _mapper.Map<IEnumerable<SupportTicketMessageResponse>>(messages);
+    }
+
     public async Task<bool> CreateInternalAsync(Guid ticketId, string message)
     {
         var record = new SupportTicketMessageModel
@@ -32,7 +53,7 @@ public class SupportTicketMessageService(
         return false;
     }
 
-    public async Task<bool> CreateAsync(Guid ticketId, SupportTicketMessageCreateRequest request)
+    public async Task<SupportTicketMessageResponse> CreateAsync(Guid ticketId, SupportTicketMessageCreateRequest request)
     {
         var user = _userService.FindAuthenticatedUser();
         var employeeId = user.Role != "SupportAgent" ? user.EmployeeId : null;
@@ -41,7 +62,7 @@ public class SupportTicketMessageService(
         var supportTicketRecord = await _supportTicketBusiness.GetForCreateSupportTicketMessageAsync(ticketId, employeeId);
         if (_notificationContext.HasNotification)
         {
-            return false;
+            return default!;
         }
 
         _unitOfWork.BeginTransaction();
@@ -67,6 +88,6 @@ public class SupportTicketMessageService(
 
         await _unitOfWork.CommitAsync(true);
 
-        return true;
+        return _mapper.Map<SupportTicketMessageResponse>(record);
     }
 }
