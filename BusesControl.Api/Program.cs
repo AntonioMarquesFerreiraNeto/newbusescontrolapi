@@ -13,12 +13,14 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using BusesControl.Entities.Validators.v1;
+using System.Threading.Tasks;
+using BusesControl.Api.Utils;
 
 namespace BusesControl.Api;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +43,9 @@ public class Program
         });
 
         builder.Services.AddControllers();
+
+        builder.Services.AddSignalR();
+
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options => 
@@ -109,6 +114,20 @@ public class Program
                 ValidateIssuer = false,
                 ValidateAudience = false
             };
+            x.Events = new JwtBearerEvents
+            {
+                OnMessageReceived = context =>
+                {
+                    var accessToken = context.Request.Query["access_token"];
+                    var path = context.HttpContext.Request.Path;
+                    if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/ws"))
+                    {
+                        context.Token = accessToken;
+                    }
+
+                    return Task.CompletedTask;
+                }
+            };
         });
 
         var app = builder.Build();
@@ -123,6 +142,7 @@ public class Program
         }
 
         app.UseCors(x => {
+            x.WithOrigins("http://localhost:4200");
             x.AllowAnyOrigin();
             x.AllowAnyMethod();
             x.AllowAnyHeader();
@@ -130,8 +150,10 @@ public class Program
 
         app.UseAuthorization();
 
+        app.MapHub<SupportChatHub>("ws/support");
+
         app.MapControllers();
 
-        app.Run();
+        await app.RunAsync();
     }
 }

@@ -1,9 +1,11 @@
 ﻿using Asp.Versioning;
+using BusesControl.Api.Utils;
 using BusesControl.Entities.Requests.v1;
 using BusesControl.Services.v1.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Service.Api.Utils;
 
 namespace BusesControl.Api.Controllers.v1;
@@ -13,6 +15,7 @@ namespace BusesControl.Api.Controllers.v1;
 [Authorize]
 [Route("api/v1/support/ticket/{ticketId}/messages")]
 public class SupportTicketMessageController(
+    IHubContext<SupportChatHub> _hubContext,
     IValidator<SupportTicketMessageCreateRequest> _supportTicketMessageCreateRequestValidator,
     ISupportTicketMessageService _supportTicketMessageService
 ) : ControllerBase
@@ -58,6 +61,17 @@ public class SupportTicketMessageController(
         }
 
         var response = await _supportTicketMessageService.CreateAsync(ticketId, request);
+        if (response != null)
+        {
+            var userAuth = UserAuth.Get(HttpContext.User);
+            var groupName = userAuth.Role switch
+            {
+                "SupportAgent" => $"{KeysSocket.SupportUserChatHub}-${response.SupportTicketId}",
+                _ => $"{KeysSocket.SupportAgentChatHub}-${response.SupportTicketId}"
+            };
+
+            await _hubContext.Clients.Groups(groupName).SendAsync(KeysSocket.SupportChatHub, response);
+        }
 
         return Ok(response);
     }
