@@ -15,6 +15,8 @@ using System.Reflection;
 using BusesControl.Entities.Validators.v1;
 using System.Threading.Tasks;
 using BusesControl.Api.Utils;
+using System.Threading.RateLimiting;
+using BusesControl.Filters.Notification;
 
 namespace BusesControl.Api;
 
@@ -130,7 +132,48 @@ public class Program
             };
         });
 
+        builder.Services.AddRateLimiter(options =>
+        {
+            options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+            options.OnRejected = async (context, token) => { 
+                await context.HttpContext.Response.WriteAsJsonAsync(new ProblemDetails
+                {
+                    Type = $"Método HTTP - {context.HttpContext.Request.Method}",
+                    Title = NotificationTitle.TooManyRequests,
+                    Detail = Message.Commons.TooManyRequests,
+                    Status = StatusCodes.Status429TooManyRequests,
+                    Instance = context.HttpContext.Request.Path
+                }, cancellationToken: token);
+            };
+            options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: httpContext.User.Identity?.Name ?? httpContext.Request.Headers.Host.ToString(),
+                    factory: partition => new FixedWindowRateLimiterOptions
+                    {
+                        AutoReplenishment = true,
+                        PermitLimit = 200,
+                        QueueLimit = 0,
+                        Window = TimeSpan.FromMinutes(1)
+                    }
+                )
+            );
+            options.AddPolicy("auth-policy", context =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: context.User.Identity?.Name ?? context.Request.Headers.Host.ToString(),
+                    factory: _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 10,
+                        QueueLimit = 0,
+                        Window = TimeSpan.FromMinutes(1),
+                        AutoReplenishment = true
+                    }
+                )
+            );
+        });
+
         var app = builder.Build();
+
+        app.UseRateLimiter();
 
         app.UseMiddleware<NotificationMiddleware>();
 
@@ -142,7 +185,6 @@ public class Program
         }
 
         app.UseCors(x => {
-            x.WithOrigins("http://localhost:4200");
             x.AllowAnyOrigin();
             x.AllowAnyMethod();
             x.AllowAnyHeader();
