@@ -4,6 +4,7 @@ using BusesControl.Services.v1.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Service.Api.Utils;
 
 namespace BusesControl.Api.Controllers.v1;
@@ -31,6 +32,7 @@ public class LoginController(
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPost]
     [AllowAnonymous]
+    [EnableRateLimiting("auth-policy")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {        
         var validation = await ValidateModel.CheckIsValid(request, Request.Path, ModelState, _loginRequestValidator);

@@ -4,6 +4,7 @@ using BusesControl.Services.v1.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Service.Api.Utils;
 
 namespace BusesControl.Api.Controllers.v1;
@@ -30,6 +31,7 @@ public class UserRegistrationQueueController(
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [Authorize(Roles = "Admin")]
+    [EnableRateLimiting("auth-policy")]
     [HttpGet]
     public async Task<IActionResult> FindBySearch([FromQuery] PaginationRequest request)
     {
@@ -53,6 +55,7 @@ public class UserRegistrationQueueController(
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [Authorize(Roles = "Admin")]
+    [EnableRateLimiting("auth-policy")]
     [HttpPost]
     public async Task<IActionResult> CreateForEmployee([FromBody] UserRegistrationCreateRequest request)
     {
@@ -71,6 +74,7 @@ public class UserRegistrationQueueController(
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+    [EnableRateLimiting("auth-policy")]
     [HttpPatch("step-code")]
     public async Task<IActionResult> RegistrationUserStepCode([FromBody] UserRegistrationStepCodeRequest request)
     {
@@ -95,6 +99,7 @@ public class UserRegistrationQueueController(
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+    [EnableRateLimiting("auth-policy")]
     [HttpPatch("step-token")]
     public async Task<IActionResult> RegistrationUserStepToken([FromBody] UserRegistrationStepTokenRequest request)
     {

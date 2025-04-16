@@ -14,6 +14,7 @@ public class Message
         public readonly static string Unexpected = "Desculpe, ocorreu um erro interno no servidor.";
         public readonly static string BalanceAssasFailure = "Desculpe, ocorreu um erro ao consultar o saldo no assas e essa solicitação.";
         public readonly static string NoOperation = "Nenhuma operação foi necessária para a data especificada ou a atual.";
+        public readonly static string TooManyRequests = "Ops! Você fez muitas requisições em pouco tempo. Por favor, aguarde um momento antes de tentar novamente.";
     }
 
     public class Customer

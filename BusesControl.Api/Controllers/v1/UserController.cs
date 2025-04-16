@@ -4,6 +4,7 @@ using BusesControl.Services.v1.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Service.Api.Utils;
 
 namespace BusesControl.Api.Controllers.v1;
@@ -71,6 +72,7 @@ public class UserController(
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPatch("reset-password/step-code")]
+    [EnableRateLimiting("auth-policy")]
     public async Task<IActionResult> ResetPasswordStepCode([FromBody] UserResetPasswordStepCodeRequest request)
     {
         var validation = await ValidateModel.CheckIsValid(request, Request.Path, ModelState, _userResetPasswordStepCodeRequestValidator);
@@ -95,6 +97,7 @@ public class UserController(
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPatch("reset-password/step-reset-token")]
+    [EnableRateLimiting("auth-policy")]
     public async Task<IActionResult> ResetPasswordStepResetToken([FromBody] UserResetPasswordStepResetTokenRequest request)
     {
         var validation = await ValidateModel.CheckIsValid(request, Request.Path, ModelState, _userResetPasswordStepResetTokenRequestValidator);
@@ -119,6 +122,7 @@ public class UserController(
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpPatch("reset-password/step-new-password")]
+    [EnableRateLimiting("auth-policy")]
     public async Task<IActionResult> ResetPasswordStepNewPassword([FromBody] UserResetPasswordStepNewPasswordRequest request)
     {
         var validation = await ValidateModel.CheckIsValid(request, Request.Path, ModelState, _userResetPasswordStepNewPasswordRequestValidator);

@@ -8,4 +8,5 @@ public class NotificationTitle
     public readonly static string NotFound = "Erro de não encontrado.";
     public readonly static string Conflict = "Erro de conflito entre entidades.";
     public readonly static string InternalError = "Erro interno no servidor.";
+    public readonly static string TooManyRequests = "Erro de limite de requisições";
 }
