@@ -62,6 +62,7 @@ public class RegisterServices
         builder.Services.AddScoped<ISupportTicketMessageService, SupportTicketMessageService>();
         builder.Services.AddScoped<IExcelService, ExcelService>();
         builder.Services.AddScoped<IGenerativeService, GenerativeService>();
+        builder.Services.AddScoped<IContactService, ContactService>();
 
         var appSettings = builder.Configuration.GetSection("AppSettings");
         builder.Services.Configure<AppSettings>(appSettings);

@@ -1,4 +1,5 @@
-﻿using BusesControl.Entities.Requests.v1;
+﻿using Asp.Versioning;
+using BusesControl.Entities.Requests.v1;
 using BusesControl.Services.v1.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
@@ -7,6 +8,7 @@ using Service.Api.Utils;
 
 namespace BusesControl.Api.Controllers.v1
 {
+    [ApiVersion("1.0")]
     [Route("api/v1/question")]
     [ApiController]
     [Authorize]

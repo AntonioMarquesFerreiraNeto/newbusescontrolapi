@@ -16,6 +16,7 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
     public DbSet<ColorModel> Colors { get; set; }
     public DbSet<CustomerModel> Customers { get; set; }
     public DbSet<ContractModel> Contracts { get; set; }
+    public DbSet<ContactModel> Contacts { get; set; }
     public DbSet<ContractDescriptionModel> ContractDescriptions { get; set; }
     public DbSet<ContractBusReplacementModel> ContractBusReplacements { get; set; }
     public DbSet<ContractDriverReplacementModel> ContractDriverReplacements { get; set; }
