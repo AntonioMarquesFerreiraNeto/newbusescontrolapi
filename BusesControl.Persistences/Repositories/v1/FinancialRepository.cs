@@ -23,7 +23,7 @@ public class FinancialRepository(
 
     public async Task<IEnumerable<FinancialModel>> FindBySearchAsync(int page = 0, int pageSize = 0, string? search = null)
     {
-        var query = _context.Financials.Include(x => x.Customer).Include(x => x.Supplier).AsNoTracking();
+        var query = _context.Financials.Include(x => x.Customer).Include(x => x.Supplier).OrderByDescending(x => x.CreatedAt).AsNoTracking();
 
         if (search is not null)
         {
@@ -73,7 +73,7 @@ public class FinancialRepository(
     public async Task<FinancialModel?> GetByIdWithIncludesAsync(Guid id)
     {
         return await _context.Financials.AsNoTracking()
-                .Include(x => x.SettingPanel)
+                .Include(x => x.SettingPanel).ThenInclude(y => y!.Requester)
                 .Include(x => x.Customer)
                 .Include(x => x.Supplier)
                 .Include(x => x.Invoices)

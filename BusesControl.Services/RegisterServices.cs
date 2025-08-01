@@ -1,4 +1,5 @@
 ﻿using BusesControl.Services.v1;
+using BusesControl.Services.v1.Background;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -63,6 +64,8 @@ public class RegisterServices
         builder.Services.AddScoped<IExcelService, ExcelService>();
         builder.Services.AddScoped<IGenerativeService, GenerativeService>();
         builder.Services.AddScoped<IContactService, ContactService>();
+
+        builder.Services.AddHostedService<BackgroundTaskRoutineService>();
 
         var appSettings = builder.Configuration.GetSection("AppSettings");
         builder.Services.Configure<AppSettings>(appSettings);
