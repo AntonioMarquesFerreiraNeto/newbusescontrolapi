@@ -17,5 +17,6 @@ public class InvoiceResponse
     public string? ExternalId { get; set; } = default!;
     public DateTime CreatedAt { get; set; }
     public DateOnly? PaymentDate { get; set; }
+    public PaymentMethodEnum? PaymentMethod { get; set; }
     public DateTime? UpdatedAt { get; set; }
 }

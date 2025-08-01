@@ -22,13 +22,17 @@ public class PdfService(
 
         var terminationFee = customerContract.Contract.SettingPanel.TerminationFee;
 
+        var contractOwner = customerContract.Contract.ContractDescription.Owner.Replace("\n", "<br>");
+        var contractObjective = customerContract.Contract.ContractDescription.Objective.Replace("\n", "<br>");
+        var contractGeneralProvisions = customerContract.Contract.ContractDescription.GeneralProvisions.Replace("\n", "<br>");
+
         var placeholders = new Dictionary<string, string>
         {
             { "{{Title}}", customerContract.Contract.ContractDescription.Title },
             { "{{SubTitle}}", customerContract.Contract.ContractDescription.SubTitle },
-            { "{{Owner}}", customerContract.Contract.ContractDescription.Owner },
-            { "{{Objective}}", customerContract.Contract.ContractDescription.Objective },
-            { "{{GeneralProvisions}}", customerContract.Contract.ContractDescription.GeneralProvisions },
+            { "{{Owner}}", contractOwner },
+            { "{{Objective}}", contractObjective },
+            { "{{GeneralProvisions}}", contractGeneralProvisions },
             { "{{Copyright}}", $"&copy; {DateTime.UtcNow.Year} {customerContract.Contract.ContractDescription.Copyright}" },
             { "{{Contractor}}", RenderContractorForContractOrTermination(customerContract.Customer) },
             { "{{Bus}}", RenderBusForContract(customerContract.Contract.Bus) },
