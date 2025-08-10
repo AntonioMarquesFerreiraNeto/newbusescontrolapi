@@ -1,4 +1,5 @@
-﻿using BusesControl.Entities.Models.v1;
+﻿using BusesControl.Entities.Keys.v1;
+using BusesControl.Entities.Models.v1;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -36,11 +37,14 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
     public DbSet<NotificationModel> Notifications { get; set; }
     public DbSet<SupportTicketModel> SupportTickets { get; set; }
     public DbSet<SupportTicketMessageModel> SupportTicketMessages { get; set; }
+    public DbSet<FeatureFlagModel> FeatureFlags { get; set; }
 
     public override DbSet<UserModel> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        var createdAtFixed = DateTime.Parse("2025-08-09 14:49");
+
         base.OnModelCreating(builder);
 
         builder.Entity<UserModel>(entity => {
@@ -130,5 +134,13 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
             .WithMany()
             .HasForeignKey(x => x.ContractId)
             .OnDelete(DeleteBehavior.NoAction);
+
+        builder.Entity<FeatureFlagModel>().HasData(
+            new FeatureFlagModel { Id = Guid.NewGuid(), Key = FeatureFlagKey.AutomatedPayment, Name = "Processamento de pagamentos automáticos", CreatedAt = createdAtFixed, Enabled = true },
+            new FeatureFlagModel { Id = Guid.NewGuid(), Key = FeatureFlagKey.AutomatedOverdueInvoiceProcessing, Name = "Processamento de faturas vencidas", CreatedAt = createdAtFixed, Enabled = true },
+            new FeatureFlagModel { Id = Guid.NewGuid(), Key = FeatureFlagKey.AutomatedContractFinalization, Name = "Finalização automática de contratos", CreatedAt = createdAtFixed, Enabled = true },
+            new FeatureFlagModel { Id = Guid.NewGuid(), Key = FeatureFlagKey.AutomatedCancelProcessTermination, Name = "Cancelamento e encerramento de processos", CreatedAt = createdAtFixed, Enabled = true },
+            new FeatureFlagModel { Id = Guid.NewGuid(), Key = FeatureFlagKey.AutomatedChangeWebhook, Name = "Atualização automática de webhooks", CreatedAt = createdAtFixed, Enabled = true }
+        );
     }
 }

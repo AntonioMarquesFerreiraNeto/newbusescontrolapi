@@ -1,4 +1,6 @@
-﻿using BusesControl.Services.v1.Interfaces;
+﻿using BusesControl.Entities.Keys.v1;
+using BusesControl.Persistence.Repositories.Interfaces.v1;
+using BusesControl.Services.v1.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -6,7 +8,6 @@ using Microsoft.Extensions.Logging;
 namespace BusesControl.Services.v1.Background;
 
 //TODO: analisar a possibilidade de usar Azure Logic Apps.
-//TODO: implementar feature flag no banco de dados para controlar se irei rodar as rotinas ou não, ou desabilitar algumas rotinas em específico.
 public class BackgroundTaskRoutineService : BackgroundService
 {
     public BackgroundTaskRoutineService(ILogger<BackgroundTaskRoutineService> logger, IServiceScopeFactory serviceScopeFactory)
@@ -59,56 +60,86 @@ public class BackgroundTaskRoutineService : BackgroundService
 
     private async Task AutomatedChangeWebhookAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("Automated Change Webhook started at {Time}", DateTime.Now);
+        using var scope = _serviceScopeFactory.CreateScope();
+        var featureFlagRepository = scope.ServiceProvider.GetRequiredService<IFeatureFlagRepository>();
 
-        using var scope =  _serviceScopeFactory.CreateScope();
-        var systemService = scope.ServiceProvider.GetRequiredService<ISystemService>();
-        await systemService.AutomatedChangeWebhookAsync();
+        var featureFlag = await featureFlagRepository.GetByKeyAsync(FeatureFlagKey.AutomatedChangeWebhook);
+        if (featureFlag != null && featureFlag.FeatureFlagEnabled())
+        {
+            _logger.LogInformation("Automated Change Webhook started at {Time}", DateTime.Now);
 
-        _logger.LogInformation("Automated Change Webhook finished at {Time}", DateTime.Now);
+            var systemService = scope.ServiceProvider.GetRequiredService<ISystemService>();
+            await systemService.AutomatedChangeWebhookAsync();
+
+            _logger.LogInformation("Automated Change Webhook finished at {Time}", DateTime.Now);
+        }
     }
 
     private async Task AutomatedPaymentAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("Automated Payment started at {Time}", DateTime.Now);
-
         using var scope = _serviceScopeFactory.CreateScope();
-        var systemService = scope.ServiceProvider.GetRequiredService<ISystemService>();
-        await systemService.AutomatedPaymentAsync();
+        var featureFlagRepository = scope.ServiceProvider.GetRequiredService<IFeatureFlagRepository>();
 
-        _logger.LogInformation("Automated Payment finished at {Time}", DateTime.Now);
+        var featureFlag = await featureFlagRepository.GetByKeyAsync(FeatureFlagKey.AutomatedPayment);
+        if (featureFlag != null && featureFlag.FeatureFlagEnabled())
+        {
+            _logger.LogInformation("Automated Payment started at {Time}", DateTime.Now);
+
+            var systemService = scope.ServiceProvider.GetRequiredService<ISystemService>();
+            await systemService.AutomatedPaymentAsync();
+
+            _logger.LogInformation("Automated Payment finished at {Time}", DateTime.Now);
+        }
     }
 
     private async Task AutomatedOverdueInvoiceProcessingAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("Automated Overdue Invoice Processing started at {Time}", DateTime.Now);
-
         using var scope = _serviceScopeFactory.CreateScope();
-        var systemService = scope.ServiceProvider.GetRequiredService<ISystemService>();
-        await systemService.AutomatedOverdueInvoiceProcessingAsync();
+        var featureFlagRepository = scope.ServiceProvider.GetRequiredService<IFeatureFlagRepository>();
 
-        _logger.LogInformation("Automated Overdue Invoice Processing finished at {Time}", DateTime.Now);
+        var featureFlag = await featureFlagRepository.GetByKeyAsync(FeatureFlagKey.AutomatedOverdueInvoiceProcessing);
+        if (featureFlag != null && featureFlag.FeatureFlagEnabled())
+        {
+            _logger.LogInformation("Automated Overdue Invoice Processing started at {Time}", DateTime.Now);
+
+            var systemService = scope.ServiceProvider.GetRequiredService<ISystemService>();
+            await systemService.AutomatedOverdueInvoiceProcessingAsync();
+
+            _logger.LogInformation("Automated Overdue Invoice Processing finished at {Time}", DateTime.Now);
+        }
     }
 
     private async Task AutomatedContractFinalizationAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("Automated Contract Finalization started at {Time}", DateTime.Now);
-
         using var scope = _serviceScopeFactory.CreateScope();
-        var systemService = scope.ServiceProvider.GetRequiredService<ISystemService>();
-        await systemService.AutomatedContractFinalizationAsync();
+        var featureFlagRepository = scope.ServiceProvider.GetRequiredService<IFeatureFlagRepository>();
 
-        _logger.LogInformation("Automated Contract Finalization finished at {Time}", DateTime.Now);
+        var featureFlag = await featureFlagRepository.GetByKeyAsync(FeatureFlagKey.AutomatedContractFinalization);
+        if (featureFlag != null && featureFlag.FeatureFlagEnabled())
+        {
+            _logger.LogInformation("Automated Contract Finalization started at {Time}", DateTime.Now);
+
+            var systemService = scope.ServiceProvider.GetRequiredService<ISystemService>();
+            await systemService.AutomatedContractFinalizationAsync();
+
+            _logger.LogInformation("Automated Contract Finalization finished at {Time}", DateTime.Now);
+        }
     }
 
     private async Task AutomatedCancelProcessTerminationAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("Automated Cancel Process Termination started at {Time}", DateTime.Now);
-
         using var scope = _serviceScopeFactory.CreateScope();
-        var systemService = scope.ServiceProvider.GetRequiredService<ISystemService>();
-        await systemService.AutomatedCancelProcessTerminationAsync();
+        var featureFlagRepository = scope.ServiceProvider.GetRequiredService<IFeatureFlagRepository>();
 
-        _logger.LogInformation("Automated Cancel Process Termination finished at {Time}", DateTime.Now);
+        var featureFlag = await featureFlagRepository.GetByKeyAsync(FeatureFlagKey.AutomatedCancelProcessTermination);
+        if (featureFlag != null && featureFlag.FeatureFlagEnabled())
+        {
+            _logger.LogInformation("Automated Cancel Process Termination started at {Time}", DateTime.Now);
+
+            var systemService = scope.ServiceProvider.GetRequiredService<ISystemService>();
+            await systemService.AutomatedCancelProcessTerminationAsync();
+
+            _logger.LogInformation("Automated Cancel Process Termination finished at {Time}", DateTime.Now);
+        }
     }
 }

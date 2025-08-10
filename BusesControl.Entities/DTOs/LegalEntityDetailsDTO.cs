@@ -13,6 +13,8 @@ public class LegalEntityDetailsDTO
     public string? Email { get; set; }
     [JsonPropertyName("ddd_fax")]
     public string? DddFax { get; set; }
+    [JsonPropertyName("ddd_telefone_1")]
+    public string? PhoneNumber { get; set; }
     [JsonPropertyName("porte")]
     public string TypeSize { get; set; } = default!;
 

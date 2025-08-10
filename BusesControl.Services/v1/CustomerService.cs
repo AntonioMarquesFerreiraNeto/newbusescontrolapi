@@ -295,7 +295,7 @@ public class CustomerService(
             RazaoSocial = response.RazaoSocial,
             Name = string.IsNullOrEmpty(response.Name) ? response.RazaoSocial : response.Name,
             Email = response.Email,
-            PhoneNumber = response.DddFax,
+            PhoneNumber = response.PhoneNumber,
             TypeSize = response.TypeSize,
             CapitalSocial = response.CapitalSocial,
             LegalNature = response.LegalNature,
