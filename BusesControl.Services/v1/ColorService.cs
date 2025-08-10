@@ -79,7 +79,7 @@ public class ColorService(
             return false;
         }
 
-        await _colorBusiness.ExistsAsync(request.Color);
+        await _colorBusiness.ExistsAsync(request.Color, id);
         if (_notificationContext.HasNotification)
         {
             return false;
