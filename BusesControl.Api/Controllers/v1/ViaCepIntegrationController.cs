@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using BusesControl.Entities.Responses.v1;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +22,7 @@ public class ViaCepIntegrationController(
     /// <response code="401">Retorna erro de não autorizado</response>
     /// <response code="404">Retorna erro de não encontrado</response>
     /// <response code="500">Retorna erro interno do servidor</response>
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(AddressResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
