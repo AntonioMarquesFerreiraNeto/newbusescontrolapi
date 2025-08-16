@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using BusesControl.Entities.Responses.v1;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +21,7 @@ public class SystemController(
     /// <response code="401">Retorna erro de não autorizado</response>
     /// <response code="403">Retorna erro de acesso negado</response>
     /// <response code="500">Retorna erro interno do servidor</response>
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(SystemResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
@@ -39,7 +40,7 @@ public class SystemController(
     /// <response code="401">Retorna erro de não autorizado</response>
     /// <response code="403">Retorna erro de acesso negado</response>
     /// <response code="500">Retorna erro interno do servidor</response>
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(SystemResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
@@ -58,7 +59,7 @@ public class SystemController(
     /// <response code="401">Retorna erro de não autorizado</response>
     /// <response code="403">Retorna erro de acesso negado</response>
     /// <response code="500">Retorna erro interno do servidor</response>
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(SystemResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
@@ -77,7 +78,7 @@ public class SystemController(
     /// <response code="401">Retorna erro de não autorizado</response>
     /// <response code="403">Retorna erro de acesso negado</response>
     /// <response code="500">Retorna erro interno do servidor</response>
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(SystemResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
@@ -96,7 +97,7 @@ public class SystemController(
     /// <response code="401">Retorna erro de não autorizado</response>
     /// <response code="403">Retorna erro de acesso negado</response>
     /// <response code="500">Retorna erro interno do servidor</response>
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(SystemResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
@@ -115,7 +116,7 @@ public class SystemController(
     /// <response code="401">Retorna erro de não autorizado</response>
     /// <response code="403">Retorna erro de acesso negado</response>
     /// <response code="500">Retorna erro interno do servidor</response>
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(SystemResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
