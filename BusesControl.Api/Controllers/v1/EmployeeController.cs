@@ -1,6 +1,8 @@
 ﻿using Asp.Versioning;
 using BusesControl.Entities.Enums.v1;
+using BusesControl.Entities.Models.v1;
 using BusesControl.Entities.Requests.v1;
+using BusesControl.Entities.Responses.v1;
 using BusesControl.Services.v1.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
@@ -27,7 +29,7 @@ public class EmployeeController(
     /// <response code="401">Retorna erro de não autorizado</response>
     /// <response code="403">Retorna erro de acesso negado</response>
     /// <response code="500">Retorna erro interno do servidor</response>
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PaginationResponse<EmployeeModel>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
@@ -45,7 +47,7 @@ public class EmployeeController(
     /// <response code="401">Retorna erro de não autorizado</response>
     /// <response code="403">Retorna erro de acesso negado</response>
     /// <response code="500">Retorna erro interno do servidor</response>
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IEnumerable<EmployeeModel>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
@@ -64,7 +66,7 @@ public class EmployeeController(
     /// <response code="403">Retorna erro de acesso negado</response>
     /// <response code="404">Retorna erro de não não encontrado</response>
     /// <response code="500">Retorna erro interno do servidor</response>
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(EmployeeModel), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
@@ -170,7 +172,7 @@ public class EmployeeController(
     /// <response code="403">Retorna erro de acesso negado</response>
     /// <response code="404">Retorna erro de não não encontrado</response>
     /// <response code="500">Retorna erro interno do servidor</response>
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(SuccessResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]

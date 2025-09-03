@@ -1,5 +1,7 @@
 ﻿using Asp.Versioning;
+using BusesControl.Entities.Models.v1;
 using BusesControl.Entities.Requests.v1;
+using BusesControl.Entities.Responses.v1;
 using BusesControl.Services.v1.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
@@ -23,7 +25,7 @@ public class ColorController(
     /// </summary>
     /// <response code="200">Retorna sucesso da requisição</response>
     /// <response code="500">Retorna erro interno do servidor</response>
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PaginationResponse<ColorModel>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet]
@@ -38,7 +40,7 @@ public class ColorController(
     /// </summary>
     /// <response code="200">Retorna sucesso da requisição</response>
     /// <response code="500">Retorna erro interno do servidor</response>
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ColorModel), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [HttpGet("{id}")]
