@@ -38,6 +38,16 @@ public class FinancialRepository(
         return await query.ToListAsync();
     }
 
+    public async Task<IEnumerable<FinancialModel>> FindRecentsByQuantities(int quantities)
+    {
+        return await _context.Financials
+            .Include(x => x.Customer)
+            .Include(x => x.Supplier)
+            .OrderByDescending(x => x.CreatedAt)
+            .AsNoTracking()
+            .Take(quantities).ToListAsync();
+    }
+
     public async Task<int> CountBySearchAsync(string? search = null)
     {
         var query = _context.Financials.Include(x => x.Customer).Include(x => x.Supplier).AsNoTracking();
