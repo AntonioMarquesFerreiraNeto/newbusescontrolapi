@@ -1,4 +1,5 @@
 ﻿using BusesControl.Entities.Models.v1;
+using BusesControl.Entities.Responses.v1;
 using BusesControl.Persistence.Contexts;
 using BusesControl.Persistence.Repositories.Interfaces.v1;
 using Microsoft.EntityFrameworkCore;
@@ -99,5 +100,17 @@ public class FinancialRepository(
     public async Task<bool> ExistsBySettingPanelAsync(Guid settingPanelId)
     {
         return await _context.Financials.AnyAsync(x => x.SettingPanelId == settingPanelId);
+    }
+
+    public async Task<IEnumerable<FinancialComparativeResponse>> GetYearlyComparativeAsync()
+    {
+        var query = _context.Financials.Where(x => x.CreatedAt.Year == DateTime.Now.Year && x.Active);
+
+        return await query.GroupBy(x => new { x.CreatedAt.Month, x.Type }).Select(x => new FinancialComparativeResponse 
+        { 
+            Month = x.Key.Month,
+            TotalValuePeriod = x.Sum(x => x.TotalPrice),
+            FinancialType = x.Key.Type
+        }).ToListAsync();
     }
 }

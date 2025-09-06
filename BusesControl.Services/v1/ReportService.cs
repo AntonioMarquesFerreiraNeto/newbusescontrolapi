@@ -18,5 +18,10 @@ namespace BusesControl.Services.v1
 
             return _mapper.Map<IEnumerable<FinancialResponse>>(financialsRecords);
         }
+
+        public async Task<IEnumerable<FinancialComparativeResponse>> GetYearlyComparativeAsync() 
+        {
+            return await _financialRepository.GetYearlyComparativeAsync();
+        }
     }
 }

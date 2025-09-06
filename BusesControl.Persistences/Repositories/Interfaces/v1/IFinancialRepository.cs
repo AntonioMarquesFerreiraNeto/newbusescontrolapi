@@ -1,4 +1,5 @@
 ﻿using BusesControl.Entities.Models.v1;
+using BusesControl.Entities.Responses.v1;
 
 namespace BusesControl.Persistence.Repositories.Interfaces.v1;
 
@@ -15,4 +16,5 @@ public interface IFinancialRepository : IGenericRepository<FinancialModel>
     Task<FinancialModel?> GetByIdWithIncludesAsync(Guid id);
     Task<bool> ExistsByReferenceAsync(string reference);
     Task<bool> ExistsBySettingPanelAsync(Guid settingPanelId);
+    Task<IEnumerable<FinancialComparativeResponse>> GetYearlyComparativeAsync();
 }
