@@ -1,4 +1,6 @@
-﻿using BusesControl.Entities.Models.v1;
+﻿using BusesControl.Entities.DTOs;
+using BusesControl.Entities.Enums.v1;
+using BusesControl.Entities.Models.v1;
 using BusesControl.Entities.Responses.v1;
 using BusesControl.Persistence.Contexts;
 using BusesControl.Persistence.Repositories.Interfaces.v1;
@@ -112,5 +114,21 @@ public class FinancialRepository(
             TotalValuePeriod = x.Sum(x => x.TotalPrice),
             FinancialType = x.Key.Type
         }).ToListAsync();
+    }
+
+    public async Task<FinancialBalanceResponse> GetBalanceAsync()
+    {
+        var query = _context.Financials.Where(x => x.Active && x.CreatedAt.Year == DateTime.Now.Year);
+        var records = await query.Select(x => new FinancialResumeDto { TotalPrice = x.TotalPrice, Type = x.Type }).ToListAsync();
+
+        var response = new FinancialBalanceResponse 
+        { 
+            ExpenseTotal = records.Where(x => x.Type == FinancialTypeEnum.Expense).Sum(x => x.TotalPrice),
+            RevenueTotal = records.Where(x => x.Type == FinancialTypeEnum.Revenue).Sum(x => x.TotalPrice)
+        };
+
+        response.Balance = response.RevenueTotal - response.ExpenseTotal;
+
+        return response;
     }
 }

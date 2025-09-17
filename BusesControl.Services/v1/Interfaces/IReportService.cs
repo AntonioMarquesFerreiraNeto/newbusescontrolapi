@@ -6,5 +6,6 @@ namespace BusesControl.Services.v1.Interfaces
     {
         Task<IEnumerable<FinancialResponse>> GetFinancialsRecents(int quantities);
         Task<IEnumerable<FinancialComparativeResponse>> GetYearlyComparativeAsync();
+        Task<FinancialBalanceResponse> GetBalanceAsync();
     }
 }

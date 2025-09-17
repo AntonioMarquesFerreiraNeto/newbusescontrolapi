@@ -41,5 +41,21 @@ namespace BusesControl.Api.Controllers.v1
             var response = await _reportService.GetYearlyComparativeAsync();
             return Ok(response);
         }
+
+        /// <summary>
+        /// Retorna o balanço financeiro anual
+        /// </summary>
+        /// <response code="200">Retorna sucesso da requisição</response>
+        /// <response code="401">Retorna erro de não autorizado</response>
+        /// <response code="500">Retorna erro interno do servidor</response>
+        [ProducesResponseType(typeof(FinancialBalanceResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        [HttpGet("financials/balance")]
+        public async Task<IActionResult> GetBalanceAsync()
+        {
+            var response = await _reportService.GetBalanceAsync();
+            return Ok(response);
+        }
     }
 }

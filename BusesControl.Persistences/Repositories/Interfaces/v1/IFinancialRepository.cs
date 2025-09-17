@@ -17,4 +17,5 @@ public interface IFinancialRepository : IGenericRepository<FinancialModel>
     Task<bool> ExistsByReferenceAsync(string reference);
     Task<bool> ExistsBySettingPanelAsync(Guid settingPanelId);
     Task<IEnumerable<FinancialComparativeResponse>> GetYearlyComparativeAsync();
+    Task<FinancialBalanceResponse> GetBalanceAsync();
 }
