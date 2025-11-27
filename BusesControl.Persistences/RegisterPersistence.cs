@@ -43,6 +43,7 @@ public class RegisterPersistence
         builder.Services.AddScoped<ISupportTicketMessageRepository, SupportTicketMessageRepository>();
         builder.Services.AddScoped<IContactRepository, ContactRepository>();
         builder.Services.AddScoped<IFeatureFlagRepository, FeatureFlagRepository>();
+        builder.Services.AddScoped<ITwoFaRepository, TwoFaRepository>();
 
         builder.Services.AddIdentity<UserModel, IdentityRole<Guid>>(options => 
         {

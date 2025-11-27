@@ -11,7 +11,7 @@ public interface IUserService
     Task<PaginationResponse<UserResponse>> FindBySearchForAdminAsync(PaginationRequest request);
     Task<UserResponse> GetByLoggedUserAsync();
     UserAuthResponse FindAuthenticatedUser();
-    Task<LoginResponse> LoginAsync(LoginRequest request);
+    Task<LoginResponse> LoginAsync(string? tokenTwoFa, string ipLocation, LoginRequest request);
     Task<SuccessResponse> ResetPasswordStepCodeAsync(UserResetPasswordStepCodeRequest request);
     Task<UserResetPasswordStepResetTokenResponse> ResetPasswordStepResetTokenAsync(UserResetPasswordStepResetTokenRequest request);
     Task<SuccessResponse> ResetPasswordStepNewPasswordAsync(UserResetPasswordStepNewPasswordRequest request);

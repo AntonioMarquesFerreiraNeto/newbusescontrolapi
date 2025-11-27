@@ -38,6 +38,7 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
     public DbSet<SupportTicketModel> SupportTickets { get; set; }
     public DbSet<SupportTicketMessageModel> SupportTicketMessages { get; set; }
     public DbSet<FeatureFlagModel> FeatureFlags { get; set; }
+    public DbSet<TwoFaModel> TwoFas { get; set; }
 
     public override DbSet<UserModel> Users { get; set; }
 

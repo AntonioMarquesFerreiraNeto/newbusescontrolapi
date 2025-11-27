@@ -65,6 +65,7 @@ public class RegisterServices
         builder.Services.AddScoped<IGenerativeService, GenerativeService>();
         builder.Services.AddScoped<IContactService, ContactService>();
         builder.Services.AddScoped<IReportService, ReportService>();
+        builder.Services.AddScoped<ITwoFaService, TwoFaService>();
 
         builder.Services.AddHostedService<BackgroundTaskRoutineService>();
 

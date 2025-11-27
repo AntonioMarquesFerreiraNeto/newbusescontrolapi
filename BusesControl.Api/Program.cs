@@ -13,7 +13,6 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using BusesControl.Entities.Validators.v1;
-using System.Threading.Tasks;
 using BusesControl.Api.Utils;
 using System.Threading.RateLimiting;
 using BusesControl.Filters.Notification;
@@ -147,7 +146,7 @@ public class Program
             };
             options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
                 RateLimitPartition.GetFixedWindowLimiter(
-                    partitionKey: httpContext.User.Identity?.Name ?? httpContext.Request.Headers.Host.ToString(),
+                    partitionKey: httpContext.User.Identity?.Name ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
                     factory: partition => new FixedWindowRateLimiterOptions
                     {
                         AutoReplenishment = true,
@@ -159,10 +158,22 @@ public class Program
             );
             options.AddPolicy("auth-policy", context =>
                 RateLimitPartition.GetFixedWindowLimiter(
-                    partitionKey: context.User.Identity?.Name ?? context.Request.Headers.Host.ToString(),
+                    partitionKey: context.User.Identity?.Name ?? context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
                     factory: _ => new FixedWindowRateLimiterOptions
                     {
                         PermitLimit = 10,
+                        QueueLimit = 0,
+                        Window = TimeSpan.FromMinutes(1),
+                        AutoReplenishment = true
+                    }
+                )
+            );
+            options.AddPolicy("two-fa-policy", context =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: context.User.Identity?.Name ?? context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                    factory: _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 20,
                         QueueLimit = 0,
                         Window = TimeSpan.FromMinutes(1),
                         AutoReplenishment = true

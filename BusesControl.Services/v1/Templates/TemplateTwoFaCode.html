@@ -14,7 +14,7 @@
         .container {
             margin: auto;
             margin-top: 20px;
-            max-width: 700px;
+            max-width: 600px;
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
@@ -24,7 +24,8 @@
         }
 
         h1 {
-            font-size: 22pt;
+            font-size: 23pt;
+            margin-bottom: -5px;
         }
 
         h2 {
@@ -73,16 +74,11 @@
 <body style="background-color: #f4f4f4; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
     <div class="container">
         <h1>Buses Control</h1>
-        <h2 style="margin-top: -20px;">Olá, {{FirstName}}! Seja bem vindo(a)!</h2>
+        <h2>Aqui está seu código de autenticação</h2>
         <p class="content">
-            Olá, <span class="highlight">{{Name}}!</span> Seja muito bem-vindo(a) ao Buses Control System! Um administrador iniciou o processo de registro para você. Para prosseguir, por favor, clique no seguinte <a href="{{Link}}">Link de Registro</a>. Lá, você será solicitado(a) a fornecer suas informações pessoais em garantia da sua segurança de sua conta.
+            Olá, tudo bem? Você tentou conectar-se ao Buses Control recentemente... Utilize o código abaixo para concluir o processo com segurança e não compartilhe este código com ninguém para proteção da sua conta.
         </p>
-        <p class="content">
-            Após preencher suas informações, você receberá um código de validação por e-mail. Utilize este código para confirmar sua identidade. Este código é válido por um curto período de tempo, garantindo assim a segurança da sua conta.
-        </p>
-        <p class="content">
-            Após validar seu código, você será direcionado(a) para completar o processo, onde poderá definir sua senha. Depois disso, seu registro será submetido à aprovação de um administrador. Estamos ansiosos para conectá-lo(a) ao Buses Control em breve!
-        </p>
+        <p class="p-center">Código de autenticação: <span class="highlight">{{Code}}</span></p>
         <div class="footer">
             <p class="p-footer">
                 &copy; {{YearNow}} Buses Control System. Todos os direitos reservados. <br />

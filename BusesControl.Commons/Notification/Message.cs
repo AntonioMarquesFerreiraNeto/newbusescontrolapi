@@ -248,4 +248,10 @@ public class Message
     { 
         public readonly static string Unexpected = "Desculpe, ocorreu um erro interno e não conseguimos processar sua mensagem!";
     }
+
+    public class TwoFa 
+    {
+        public readonly static string CodeInvalid = "Código não encontrado ou inválido!";
+        public readonly static string CheckForNew = "Verificação realizada e será necessário autenticação em dois fatores.";
+    }
 }
