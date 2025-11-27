@@ -26,6 +26,7 @@ public class LoginController(
     /// <response code="401">Retorna erro de não autorizado</response>
     /// <response code="404">Retorna erro de não não encontrado</response>
     /// <response code="500">Retorna erro interno do servidor</response>
+    /// <param name="tokenTwoFa">
     [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
@@ -34,7 +35,7 @@ public class LoginController(
     [HttpPost]
     [AllowAnonymous]
     [EnableRateLimiting("auth-policy")]
-    public async Task<IActionResult> Login([FromBody] LoginRequest request)
+    public async Task<IActionResult> Login([FromHeader(Name = "token-two-fa")] string? token, [FromBody] LoginRequest request)
     {        
         var validation = await ValidateModel.CheckIsValid(request, Request.Path, ModelState, _loginRequestValidator);
         if (validation is not null)
@@ -42,7 +43,9 @@ public class LoginController(
             return BadRequest(validation);
         }
 
-        var response = await _userService.LoginAsync(request);
+        var ip = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        var response = await _userService.LoginAsync(token, ip, request);
+
         return Ok(response);
     }
 }

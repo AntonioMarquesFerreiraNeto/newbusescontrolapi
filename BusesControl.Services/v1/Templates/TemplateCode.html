@@ -8,7 +8,6 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #ffffff;
             color: #333;
         }
 
@@ -20,21 +19,22 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
             text-align: left;
-            background-color: rgba(20, 103, 186, 0.035);
+            background-color: #ffff;
+            border: 1px solid #f4f4f4;
         }
 
         h1 {
-            font-size: 22pt
+            font-size: 23pt;
         }
 
         h2 {
-            font-size: 18pt
+            font-size: 14pt;
         }
 
         h1, h2 {
             font-family: 'Poppins', sans-serif !important;
             text-align: center;
-            color: rgb(0, 51, 102);
+            color: #0273C6;
         }
 
         p {
@@ -46,7 +46,7 @@
         }
 
         .highlight {
-            color: rgb(176, 93, 90);
+            color: #0273C6;
             font-weight: bold;
         }
 
@@ -65,22 +65,25 @@
         .p-footer {
             text-align: center !important;
             font-size: 9pt !important;
+            margin-bottom: -15px;
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body style="background-color: #f4f4f4; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
     <div class="container">
         <h1>Buses Control</h1>
-        <h2>Código de redefinição</h2>
+        <h2>Aqui está seu código de redefinição</h2>
         <p class="content">
-            Olá, <span class="highlight">{{Name}}</span>. Você solicitou a redefinição de senha. Utilize o código abaixo para concluir o processo com segurança. Não compartilhe este código com ninguém para proteger sua conta.
+            Olá, <span class="highlight">{{Name}}!</span> Você solicitou a redefinição de senha. Utilize o código abaixo para concluir o processo com segurança. Não compartilhe este código com ninguém para proteger sua conta.
         </p>
         <p class="p-center">Código de Redefinição: <span class="highlight">{{Code}}</span></p>
         <div class="footer">
-            <p class="p-footer">&copy; {{YearNow}} Buses Control System. Todos os direitos reservados.</p>
-            <p class="p-footer">Endereço: Rua da Empresa, 1234 - Cidade, Estado - CEP: 12345-678</p>
-            <p class="p-footer">Telefone: (62) 98346-7890 | Email: contato@busescontrol.com</p>
+            <p class="p-footer">
+                &copy; {{YearNow}} Buses Control System. Todos os direitos reservados. <br />
+                Endereço: Rua da Empresa, 1234 - Cidade, Estado - CEP: 12345-678 <br />
+                Telefone: (62) 98346-7890 | Email: contato@busescontrol.com
+            </p>
         </div>
     </div>
 </body>

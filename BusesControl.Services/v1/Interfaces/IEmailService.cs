@@ -3,5 +3,6 @@
 public interface IEmailService
 {
     bool SendEmailStepCode(string email, string name, string code);
+    bool SendEmailTwoFaCode(string email, string code);
     bool SendEmailForWelcomeUserRegistration(string email, string name);
 }

@@ -15,7 +15,9 @@ public class ViaCepIntegrationService(
 {
     public async Task<AddressResponse> GetAddressByCepAsync(string cep)
     {
-        if (String.IsNullOrEmpty(cep) || cep.Length < 9)
+        await Task.Delay(1500);
+
+        if (String.IsNullOrEmpty(cep) || cep.Length < 8)
         {
             _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status400BadRequest,

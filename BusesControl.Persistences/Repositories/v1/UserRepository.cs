@@ -1,4 +1,5 @@
-﻿using BusesControl.Entities.Models.v1;
+﻿using BusesControl.Entities.Enums.v1;
+using BusesControl.Entities.Models.v1;
 using BusesControl.Persistence.Contexts;
 using BusesControl.Persistence.Repositories.Interfaces.v1;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +31,9 @@ public class UserRepository(
     {
         return search is not null ? await _context.Users.CountAsync(x => x.Employee!.Name.Contains(search)) : await _context.Users.CountAsync();
     }
+
+    public async Task<UserModel?> GetByEmailAsync(string email)
+        => await _context.Users.FirstOrDefaultAsync(x => x.Email == email && x.Status == UserStatusEnum.Active);
 
     public async Task<UserModel?> GetByEmailAndCpfAndBirthDateAsync(string email, string cpf, DateOnly birthDate)
     {

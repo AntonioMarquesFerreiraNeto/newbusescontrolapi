@@ -4,6 +4,7 @@ using BusesControl.Entities.DTOs;
 using BusesControl.Filters.Notification;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
@@ -12,6 +13,7 @@ namespace BusesControl.Services.v1;
 
 public class EmailService(
     AppSettings _appSettings,
+    ILogger<EmailService> _logger,
     INotificationContext _notificationContext
 ) : IEmailService
 {
@@ -40,8 +42,10 @@ public class EmailService(
 
             return true;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            _logger.LogError("failed send e-mail. Exception details : {0}", ex);
+
             _notificationContext.SetNotification(
                 statusCode: StatusCodes.Status500InternalServerError,
                 title: NotificationTitle.InternalError,
@@ -99,6 +103,28 @@ public class EmailService(
             Subject = "Buses Control - Código de redefinição",
             Recipient = email,
             HtmlTemplate = RenderTemplateCode(name, code, template)
+        };
+
+        var success = SendEmail(sendEmail);
+        if (!success)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    public bool SendEmailTwoFaCode(string email, string code)
+    {
+        var basePath = AppContext.BaseDirectory;
+        var templatePath = Path.Combine(basePath, "..", "..", "..", "..", "BusesControl.Services", "v1", "Templates", "TemplateTwoFaCode.html");
+        var template = File.ReadAllText(templatePath);
+
+        var sendEmail = new SendEmailDTO
+        {
+            Subject = "Buses Control - Autenticação em dois fatores",
+            Recipient = email,
+            HtmlTemplate = RenderTemplateCode(string.Empty, code, template)
         };
 
         var success = SendEmail(sendEmail);
