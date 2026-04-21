@@ -1,11 +1,13 @@
 ﻿using BusesControl.Entities.Responses.v1;
 using BusesControl.Services.v1.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BusesControl.Api.Controllers.v1
 {
     [Route("api/v1/reports")]
     [ApiController]
+    [Authorize]
     public class ReportController(
         IReportService _reportService
     ) : ControllerBase
@@ -36,9 +38,9 @@ namespace BusesControl.Api.Controllers.v1
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         [HttpGet("financials/comparative")]
-        public async Task<IActionResult> GetYearlyComparative()
+        public async Task<IActionResult> GetYearlyComparative([FromQuery] int gapMonth = 12)
         {
-            var response = await _reportService.GetYearlyComparativeAsync();
+            var response = await _reportService.GetYearlyComparativeAsync(gapMonth);
             return Ok(response);
         }
 

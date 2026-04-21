@@ -104,16 +104,10 @@ public class FinancialRepository(
         return await _context.Financials.AnyAsync(x => x.SettingPanelId == settingPanelId);
     }
 
-    public async Task<IEnumerable<FinancialComparativeResponse>> GetYearlyComparativeAsync()
+    public async Task<IEnumerable<FinancialModel>> GetYearlyComparativeAsync(DateTime startDate)
     {
-        var query = _context.Financials.Where(x => x.CreatedAt.Year == DateTime.Now.Year && x.Active);
-
-        return await query.GroupBy(x => new { x.CreatedAt.Month, x.Type }).Select(x => new FinancialComparativeResponse 
-        { 
-            Month = x.Key.Month,
-            TotalValuePeriod = x.Sum(x => x.TotalPrice),
-            FinancialType = x.Key.Type
-        }).ToListAsync();
+        var query = _context.Financials.Where(x => x.CreatedAt >= startDate && x.Active);
+        return await query.ToListAsync();
     }
 
     public async Task<FinancialBalanceResponse> GetBalanceAsync()

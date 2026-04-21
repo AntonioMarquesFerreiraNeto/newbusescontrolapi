@@ -46,6 +46,7 @@ namespace BusesControl.Api.Controllers.v1
         [HttpPost("create")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [EnableRateLimiting("auth-policy")]
         public async Task<IActionResult> Create([FromBody] CreateTwoRequest request)
         {
             var validation = await ValidateModel.CheckIsValid(request, Request.Path, ModelState, _createTwoFaRequestValidator);
@@ -64,6 +65,7 @@ namespace BusesControl.Api.Controllers.v1
         [HttpPost("check/code")]
         [ProducesResponseType(typeof(TwoFaValidateCodeResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [EnableRateLimiting("auth-policy")]
         public async Task<IActionResult> CheckCode([FromBody] TwoFaValidateCodeRequest request)
         {
             var validation = await ValidateModel.CheckIsValid(request, Request.Path, ModelState, _twoFaValidateCodeRequestValidator);

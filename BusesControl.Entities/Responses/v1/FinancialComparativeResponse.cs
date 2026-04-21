@@ -4,7 +4,7 @@ namespace BusesControl.Entities.Responses.v1
 {
     public class FinancialComparativeResponse
     {
-        public int Month { get; set; } = default!;
+        public string Period { get; set; } = default!;
         public decimal TotalValuePeriod { get; set; }
         public FinancialTypeEnum FinancialType { get; set; }
     }

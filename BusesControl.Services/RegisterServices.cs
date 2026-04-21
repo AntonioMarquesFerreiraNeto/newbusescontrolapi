@@ -31,6 +31,11 @@ public class RegisterServices
         builder.Services.AddStackExchangeRedisCache(options =>
         {
             options.Configuration = appSettingsValue!.Redis.Host;
+            options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions
+            {
+                ConnectTimeout = 1000,
+                AsyncTimeout = 1000,
+            };
         });
 
         builder.Services.AddScoped<IBusService, BusService>();

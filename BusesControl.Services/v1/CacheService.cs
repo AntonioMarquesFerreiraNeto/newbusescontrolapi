@@ -28,13 +28,13 @@ public class CacheService(
         }
     }
 
-    public async Task SetAsync<T>(string key, T value, DistributedCacheEntryOptions options)
+    public async Task SetAsync<T>(string key, T value, TimeSpan time)
     {
         try 
         {
             var serializedData = JsonSerializer.Serialize(value);
             var encodedData = Encoding.UTF8.GetBytes(serializedData);
-            await _distributedCache.SetAsync(key, encodedData, options);
+            await _distributedCache.SetAsync(key, encodedData, new DistributedCacheEntryOptions().SetAbsoluteExpiration(time));
         }
         catch (Exception) { }
     }

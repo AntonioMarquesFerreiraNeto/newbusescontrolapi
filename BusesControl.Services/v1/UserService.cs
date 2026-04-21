@@ -92,8 +92,7 @@ public class UserService(
                 return default!;
             }
 
-            var cacheOptions = new DistributedCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(_appSettings.Redis.Expire));
-            await _cacheService.SetAsync($"user:{userId}", user, cacheOptions);
+            await _cacheService.SetAsync($"user:{userId}", user, TimeSpan.FromMinutes(_appSettings.Redis.Expire));
         }
 
         var response = _mapper.Map<UserResponse>(user);
@@ -457,6 +456,8 @@ public class UserService(
             );
             return false;
         }
+
+        await _cacheService.RemoveAsync($"user:{userId}");
 
         return true;
     }

@@ -7,6 +7,7 @@ using BusesControl.Filters.Notification;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
 using System.Net.Http.Json;
 using System.Text.Json;
 
@@ -66,8 +67,7 @@ namespace BusesControl.Services.v1
                 Content = contentResponse
             };
 
-            var cacheOptions = new DistributedCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(_appSettings.Redis.Expire));
-            await _cacheService.SetAsync(cacheKey, postResponse, cacheOptions);
+            await _cacheService.SetAsync(cacheKey, postResponse, TimeSpan.FromMinutes(_appSettings.Redis.Expire));
 
             return postResponse;
         }

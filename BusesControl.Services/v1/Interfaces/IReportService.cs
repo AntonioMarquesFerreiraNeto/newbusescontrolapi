@@ -5,7 +5,7 @@ namespace BusesControl.Services.v1.Interfaces
     public interface IReportService
     {
         Task<IEnumerable<FinancialResponse>> GetFinancialsRecents(int quantities);
-        Task<IEnumerable<FinancialComparativeResponse>> GetYearlyComparativeAsync();
+        Task<IEnumerable<FinancialComparativeResponse>> GetYearlyComparativeAsync(int gapMonth);
         Task<FinancialBalanceResponse> GetBalanceAsync();
     }
 }
