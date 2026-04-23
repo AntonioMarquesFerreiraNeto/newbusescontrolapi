@@ -18,12 +18,12 @@ using System.Net.Http.Json;
 namespace BusesControl.Services.v1;
 
 public class CustomerService(
-    AppSettings _appSettings,
     IMapper _mapper,
     IUnitOfWork _unitOfWork,
     INotificationContext _notificationContext,
     ICustomerBusiness _customerBusiness,
-    ICustomerRepository _customerRepository
+    ICustomerRepository _customerRepository,
+    IAsaasService _asaasService
 ) : ICustomerService
 {
     private static CustomerCreateRequest ClearCustomerRequest(CustomerCreateRequest request)
@@ -36,71 +36,6 @@ public class CustomerService(
         request.PhoneNumber = OnlyNumbers.ClearValue(request.PhoneNumber);
 
         return request;
-    }
-
-    private async Task<string> CreateInAssasAsync(CustomerModel customer)
-    {
-        var httpClient = new HttpClient();
-        httpClient.DefaultRequestHeaders.Add("access_token", _appSettings.Assas.Key);
-
-        var createCustomerInAssas = new
-        {
-            name = customer.Name,
-            cpfCnpj = customer.Cpf ?? customer.Cnpj,
-            mobilePhone = customer.PhoneNumber,
-            email = customer.Email
-        };
-
-        var httpResult = await httpClient.PostAsJsonAsync($"{_appSettings.Assas.Url}/customers", createCustomerInAssas);
-        if (!httpResult.IsSuccessStatusCode)
-        {
-            _notificationContext.SetNotification(
-                statusCode: StatusCodes.Status400BadRequest,
-                title: NotificationTitle.BadRequest,
-                details: Message.Customer.Unexpected
-            );
-            return default!;
-        }
-
-        var customerExternal = await httpResult.Content.ReadFromJsonAsync<CreateCustomerInAssasDTO>();
-        if (customerExternal is null)
-        {
-            _notificationContext.SetNotification(
-                statusCode: StatusCodes.Status400BadRequest,
-                title: NotificationTitle.BadRequest,
-                details: Message.Customer.Unexpected
-            );
-            return default!;
-        }
-
-        return customerExternal.Id;
-    }
-
-    private async Task<bool> UpdateInAssasAsync(string externalId, CustomerUpdateRequest customer)
-    {
-        var httpClient = new HttpClient();
-        httpClient.DefaultRequestHeaders.Add("access_token", _appSettings.Assas.Key);
-
-        var updateCustomerInAssas = new 
-        {
-            name = customer.Name,
-            cpfCnpj = customer.Cpf ?? customer.Cnpj,
-            mobilePhone = customer.PhoneNumber,
-            email = customer.Email
-        };
-
-        var httpResult = await httpClient.PutAsJsonAsync($"{_appSettings.Assas.Url}/customers/{externalId}", updateCustomerInAssas);
-        if (!httpResult.IsSuccessStatusCode)
-        {
-            _notificationContext.SetNotification(
-                statusCode: StatusCodes.Status400BadRequest,
-                title: NotificationTitle.BadRequest,
-                details: Message.Customer.Unexpected
-            );
-            return false;
-        }
-
-        return true;
     }
 
     public async Task<PaginationResponse<CustomerModel>> FindBySearchAsync(PaginationRequest request)
@@ -160,8 +95,8 @@ public class CustomerService(
             Gender = request.Gender
         };
 
-        var externalId = await CreateInAssasAsync(record);
-        if (_notificationContext.HasNotification)
+        var externalId = await _asaasService.CreateCustomerAsync(record);
+        if (string.IsNullOrEmpty(externalId))
         {
             return false;
         }
@@ -195,7 +130,7 @@ public class CustomerService(
             return false;
         }
 
-        await UpdateInAssasAsync(record.ExternalId, request);
+        await _asaasService.UpdateCustomerAsync(record.ExternalId, request);
         if (_notificationContext.HasNotification)
         {
             return false;
