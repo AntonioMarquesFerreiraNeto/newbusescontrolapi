@@ -6,7 +6,6 @@ using BusesControl.Entities.Enums.v1;
 using BusesControl.Entities.Models.v1;
 using BusesControl.Entities.Requests.v1;
 using BusesControl.Entities.Responses.v1;
-using BusesControl.Filters.Notification;
 using BusesControl.Persistence.Repositories.Interfaces.v1;
 using BusesControl.Persistence.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
@@ -20,9 +19,9 @@ public class InvoiceService(
     IUnitOfWork _unitOfWork,
     INotificationContext _notificationContext,
     IUserService _userService,
-    ISavedCardService _savedCardService,
     IInvoiceBusiness _invoiceBusiness,
-    IInvoiceRepository _invoiceRepository
+    IInvoiceRepository _invoiceRepository,
+    IAsaasService _asaasService
 ) : IInvoiceService
 {
     private async Task<string> GenerateReferenceUniqueAsync()
@@ -44,217 +43,6 @@ public class InvoiceService(
         return reference;
     }
 
-    private async Task<string> CreateInAssasAsync(Guid id, string externalId, string descriptionInvoice, CreateInvoiceDTO createInvoice)
-    {
-        var httpClient = new HttpClient();
-        httpClient.DefaultRequestHeaders.Add("access_token", _appSettings.Assas.Key);
-
-        var createInvoiceInAssas = new
-        {
-            billingType = "UNDEFINED",
-            customer = externalId,
-            dueDate = createInvoice.DueDate,
-            value = createInvoice.Price,
-            description = descriptionInvoice,
-            externalReference = id,
-            fine = new 
-            { 
-                type = "PERCENTAGE"
-            }
-        };
-
-        var httpResult = await httpClient.PostAsJsonAsync($"{_appSettings.Assas.Url}/payments", createInvoiceInAssas);
-        if (!httpResult.IsSuccessStatusCode)
-        {
-            _notificationContext.SetNotification(
-                statusCode: StatusCodes.Status400BadRequest,
-                title: NotificationTitle.BadRequest,
-                details: Message.Invoice.UnexpectedCreate
-            );
-            return default!;
-        }
-
-        var invoiceExternal = await httpResult.Content.ReadFromJsonAsync<CreateInvoiceInAssasDTO>();
-        if (invoiceExternal is null)
-        {
-            _notificationContext.SetNotification(
-                statusCode: StatusCodes.Status400BadRequest,
-                title: NotificationTitle.BadRequest,
-                details: Message.Invoice.UnexpectedCreate
-            );
-            return default!;
-        }
-
-        return invoiceExternal.Id;
-    }
-
-    private async Task<bool> UpdateInAssasAsync(InvoiceModel updateInvoice, decimal interest = 0)
-    {
-        var httpClient = new HttpClient();
-        httpClient.DefaultRequestHeaders.Add("access_token", _appSettings.Assas.Key);
-
-        var invoiceUpdateInAssas = new
-        {
-            billingType = "UNDEFINED",
-            dueDate = updateInvoice.DueDate,
-            value = updateInvoice.Price,
-            description = updateInvoice.Description,
-            externalReference = updateInvoice.Id,
-            interest = new 
-            {
-                value = interest
-            }
-        };
-
-        var httpResult = await httpClient.PutAsJsonAsync($"{_appSettings.Assas.Url}/payments/{updateInvoice.ExternalId}", invoiceUpdateInAssas);
-        if (!httpResult.IsSuccessStatusCode)
-        {
-            _notificationContext.SetNotification(
-                statusCode: StatusCodes.Status400BadRequest,
-                title: NotificationTitle.BadRequest,
-                details: Message.Invoice.Unexpected
-            );
-            return false;
-        }
-
-        var response = await httpResult.Content.ReadAsStringAsync();
-        if (response is null)
-        {
-            _notificationContext.SetNotification(
-                statusCode: StatusCodes.Status400BadRequest,
-                title: NotificationTitle.BadRequest,
-                details: Message.Invoice.Unexpected
-            );
-            return false;
-        }
-
-        return true;
-    }
-
-    private async Task<InvoicePayWithCardInAssasDTO> HandleCreditCardPaymentAsync(InvoiceModel record, InvoicePaymentRequest request)
-    {
-        if (request.CreditCard is null)
-        {
-            _notificationContext.SetNotification(
-                statusCode: StatusCodes.Status400BadRequest,
-                title: NotificationTitle.BadRequest,
-                details: Message.Invoice.NotCreditCard
-            );
-            return default!;
-        }
-
-        var httpClient = new HttpClient();
-        httpClient.DefaultRequestHeaders.Add("access_token", _appSettings.Assas.Key);
-
-        var invoicePaymentInAssas = new
-        {
-            creditCard = new
-            {
-                holderName = request.CreditCard!.HolderName,
-                number = request.CreditCard!.Number,
-                expiryMonth = request.CreditCard.ExpiryMonth,
-                expiryYear = request.CreditCard.ExpiryYear,
-                ccv = request.CreditCard.SecurityCode
-            },
-            creditCardHolderInfo = new
-            {
-                name = request.CreditCard!.HolderName,
-                cpfCnpj = request.CreditCard.HolderCpfCnpj,
-                email = request.CreditCard.HolderEmail,
-                mobilePhone = request.CreditCard.HolderMobilePhone,
-                postalCode = request.CreditCard.HolderPostalCode,
-                addressNumber = request.CreditCard.HolderAddressNumber
-            }
-        };
-
-        var httpResult = await httpClient.PostAsJsonAsync($"{_appSettings.Assas.Url}/payments/{record.ExternalId}/payWithCreditCard", invoicePaymentInAssas);
-        if (!httpResult.IsSuccessStatusCode)
-        {
-            _notificationContext.SetNotification(
-                statusCode: StatusCodes.Status400BadRequest,
-                title: NotificationTitle.BadRequest,
-                details: Message.Invoice.UnexpectedPay
-            );
-            return default!;
-        }
-
-        var response = await httpResult.Content.ReadFromJsonAsync<InvoicePayWithCardInAssasDTO>();
-        if (response!.Status != "CONFIRMED" && response.Status != "RECEIVED")
-        {
-            _notificationContext.SetNotification(
-                statusCode: StatusCodes.Status400BadRequest,
-                title: NotificationTitle.BadRequest,
-                details: Message.Invoice.UnexpectedPay
-            );
-            return default!;
-        }
-
-        await _savedCardService.CreateAsync(record.Financial.CustomerId!.Value, response.CreditCard.CreditCardNumber, response.CreditCard.CreditCardBrand, Guid.Parse(response.CreditCard.CreditCardToken));
-
-        return response;
-    }
-
-    private async Task<PaymentPixResponse> HandlePixPaymentAsync(InvoiceModel record)
-    {
-        var httpClient = new HttpClient();
-        httpClient.DefaultRequestHeaders.Add("access_token", _appSettings.Assas.Key);
-
-        var httpResult = await httpClient.GetAsync($"{_appSettings.Assas.Url}/payments/{record.ExternalId}/pixQrCode");
-        if (!httpResult.IsSuccessStatusCode)
-        {
-            _notificationContext.SetNotification(
-                statusCode: StatusCodes.Status400BadRequest,
-                title: NotificationTitle.BadRequest,
-                details: Message.Invoice.UnexpectedPix
-            );
-            return default!;
-        }
-
-        var response = await httpResult.Content.ReadFromJsonAsync<PaymentPixResponse>();
-        if (response is null)
-        {
-            _notificationContext.SetNotification(
-                statusCode: StatusCodes.Status400BadRequest,
-                title: NotificationTitle.BadRequest,
-                details: Message.Invoice.UnexpectedPix
-            );
-            return default!;
-        }
-
-        return response;
-    }
-
-    private async Task<bool> RemoveInAssasAsync(string externalId)
-    {
-        var httpClient = new HttpClient();
-
-        httpClient.DefaultRequestHeaders.Add("access_token", _appSettings.Assas.Key);
-
-        var httpResult = await httpClient.DeleteAsync($"{_appSettings.Assas.Url}/payments/{externalId}");
-        if (!httpResult.IsSuccessStatusCode)
-        {
-            _notificationContext.SetNotification(
-                statusCode: StatusCodes.Status400BadRequest,
-                title: NotificationTitle.BadRequest,
-                details: Message.Invoice.Unexpected
-            );
-            return false;
-        }
-
-        var response = await httpResult.Content.ReadAsStringAsync();
-        if (response is null)
-        {
-            _notificationContext.SetNotification(
-                statusCode: StatusCodes.Status400BadRequest,
-                title: NotificationTitle.BadRequest,
-                details: Message.Invoice.Unexpected
-            );
-            return false;
-        }
-
-        return true;
-    }
-
     public async Task<bool> CreateInternalAsync(CreateInvoiceDTO createInvoice)
     {
         createInvoice.SetTitleAndDescription();
@@ -272,7 +60,7 @@ public class InvoiceService(
         await _invoiceRepository.AddAsync(record);
         await _unitOfWork.CommitAsync();
 
-        var externalId = await CreateInAssasAsync(record.Id, createInvoice.CustomerExternalId, record.Description, createInvoice);
+        var externalId = await _asaasService.CreatePaymentAsync(record.Id, createInvoice.CustomerExternalId, record.Description, createInvoice);
         if (_notificationContext.HasNotification)
         {
             return false;
@@ -302,7 +90,7 @@ public class InvoiceService(
         {
             case PaymentMethodEnum.CreditCard:
             {
-                invoicePayWithCardResponse = await HandleCreditCardPaymentAsync(record, request);
+                invoicePayWithCardResponse = await _asaasService.CreditCardPaymentAsync(record, request);
                 if (_notificationContext.HasNotification)
                 {
                     return default!;
@@ -314,7 +102,7 @@ public class InvoiceService(
 
             case PaymentMethodEnum.Pix:
             {
-                invoicePaymentResponse.Pix = await HandlePixPaymentAsync(record);
+                invoicePaymentResponse.Pix = await _asaasService.PixPaymentAsync(record);
                 if (_notificationContext.HasNotification)
                 {
                     return default!;
@@ -404,7 +192,7 @@ public class InvoiceService(
             record.InterestRate = Math.Round(record.Price * lateFeeInterestRate / 100, 2);
             record.TotalPrice = Math.Round(record.TotalPrice + record.InterestRate, 2);
 
-            await UpdateInAssasAsync(record, interest: lateFeeInterestRate);
+            await _asaasService.UpdatePaymentAsync(record, interest: lateFeeInterestRate);
             if (_notificationContext.HasNotification)
             {
                 string errorMessage = _notificationContext.Details;
@@ -426,7 +214,7 @@ public class InvoiceService(
 
     public async Task<bool> CancelInternalAsync(InvoiceModel record)
     {
-        await RemoveInAssasAsync(record.ExternalId!);
+        await _asaasService.RemovePaymentAsync(record.ExternalId!);
         if (_notificationContext.HasNotification)
         {
             return false;
