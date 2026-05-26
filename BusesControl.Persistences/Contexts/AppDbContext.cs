@@ -8,10 +8,7 @@ namespace BusesControl.Persistence.Contexts;
 
 public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Guid>
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-    {
-
-    }
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
     public DbSet<BusModel> Buses { get; set; }
     public DbSet<ColorModel> Colors { get; set; }
@@ -39,6 +36,7 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
     public DbSet<SupportTicketMessageModel> SupportTicketMessages { get; set; }
     public DbSet<FeatureFlagModel> FeatureFlags { get; set; }
     public DbSet<TwoFaModel> TwoFas { get; set; }
+    public DbSet<ExportModel> Exports { get; set; }
 
     public override DbSet<UserModel> Users { get; set; }
 
@@ -141,7 +139,8 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
             new FeatureFlagModel { Id = Guid.NewGuid(), Key = FeatureFlagKey.AutomatedOverdueInvoiceProcessing, Name = "Processamento de faturas vencidas", CreatedAt = createdAtFixed, Enabled = true },
             new FeatureFlagModel { Id = Guid.NewGuid(), Key = FeatureFlagKey.AutomatedContractFinalization, Name = "Finalização automática de contratos", CreatedAt = createdAtFixed, Enabled = true },
             new FeatureFlagModel { Id = Guid.NewGuid(), Key = FeatureFlagKey.AutomatedCancelProcessTermination, Name = "Cancelamento e encerramento de processos", CreatedAt = createdAtFixed, Enabled = true },
-            new FeatureFlagModel { Id = Guid.NewGuid(), Key = FeatureFlagKey.AutomatedChangeWebhook, Name = "Atualização automática de webhooks", CreatedAt = createdAtFixed, Enabled = true }
+            new FeatureFlagModel { Id = Guid.NewGuid(), Key = FeatureFlagKey.AutomatedChangeWebhook, Name = "Atualização automática de webhooks", CreatedAt = createdAtFixed, Enabled = true },
+            new FeatureFlagModel { Id = Guid.NewGuid(), Key = FeatureFlagKey.AutomatedRemoveExportExpired, Name = "Remove exportações expiradas do sistema e do azure", CreatedAt = createdAtFixed, Enabled = true }
         );
     }
 }

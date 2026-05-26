@@ -6,8 +6,7 @@ using BusesControl.Entities.Responses.v1;
 using BusesControl.Filters.Notification;
 using BusesControl.Services.v1.Interfaces;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
 using System.Text.Json;
 
@@ -16,7 +15,8 @@ namespace BusesControl.Services.v1
     public class GenerativeService(
         INotificationContext _notificationContext,
         AppSettings _appSettings,
-        ICacheService _cacheService
+        ICacheService _cacheService,
+        ILogger<GenerativeService> _logger
     ) : IGenerativeService
     {
         public async Task<GenerativePostResponse> Post(GenerativePostRequest request)
@@ -45,6 +45,9 @@ namespace BusesControl.Services.v1
                     Message.Generative.Unexpected,
                     StatusCodes.Status500InternalServerError
                 );
+
+                _logger.LogError("failed in post question, error details: {0}", await httpResponse.Content.ReadAsStringAsync());
+
                 return default!;
             }
 

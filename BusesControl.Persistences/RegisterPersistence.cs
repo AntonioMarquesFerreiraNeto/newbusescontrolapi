@@ -44,6 +44,8 @@ public class RegisterPersistence
         builder.Services.AddScoped<IContactRepository, ContactRepository>();
         builder.Services.AddScoped<IFeatureFlagRepository, FeatureFlagRepository>();
         builder.Services.AddScoped<ITwoFaRepository, TwoFaRepository>();
+        builder.Services.AddScoped<IExportRepository, ExportRepository>();
+        builder.Services.AddScoped<IStorageRepository, StorageRepository>();
 
         builder.Services.AddIdentity<UserModel, IdentityRole<Guid>>(options => 
         {

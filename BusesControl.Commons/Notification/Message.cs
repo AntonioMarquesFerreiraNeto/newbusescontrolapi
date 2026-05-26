@@ -11,6 +11,7 @@ public class Message
 
     public class Commons
     {
+        public readonly static string ResourceNotFound = "Arquivo ou recurso não encontrado.";
         public readonly static string Unexpected = "Desculpe, ocorreu um erro interno no servidor.";
         public readonly static string BalanceAssasFailure = "Desculpe, ocorreu um erro ao consultar o saldo no assas e essa solicitação.";
         public readonly static string NoOperation = "Nenhuma operação foi necessária para a data especificada ou a atual.";
@@ -254,4 +255,9 @@ public class Message
         public readonly static string CodeInvalid = "Código não encontrado ou inválido!";
         public readonly static string CheckForNew = "Verificação realizada e será necessário autenticação em dois fatores.";
     }
+
+    public class Export 
+    {
+        public readonly static string FailedPublished = "Não foi possível agendar a exportação do recurso.";
+    };
 }
