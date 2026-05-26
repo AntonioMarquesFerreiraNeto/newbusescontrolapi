@@ -26,6 +26,9 @@ public class BackgroundTaskRoutineService : BackgroundService
         {
             try
             {
+                await AutomatedRemoveExportExpiredAsync(stoppingToken);
+                await Task.Delay(TimeSpan.FromMinutes(_delay), stoppingToken);
+
                 var dateNow = DateTime.Now;
                 
                 var nextToday = DateTime.Today.AddDays(1);
@@ -141,5 +144,22 @@ public class BackgroundTaskRoutineService : BackgroundService
 
             _logger.LogInformation("Automated Cancel Process Termination finished at {Time}", DateTime.Now);
         }
+    }
+
+    private async  Task AutomatedRemoveExportExpiredAsync(CancellationToken stoppingToken)
+    {
+        using var scope = _serviceScopeFactory.CreateScope();
+        var featureFlagRepository = scope.ServiceProvider.GetRequiredService<IFeatureFlagRepository>();
+
+        var featureFlag = await featureFlagRepository.GetByKeyAsync(FeatureFlagKey.AutomatedRemoveExportExpired);
+        if (featureFlag != null && featureFlag.FeatureFlagEnabled())
+        {
+            _logger.LogInformation("Automated Remove Export Expired started at {Time}", DateTime.Now);
+
+            var exportService = scope.ServiceProvider.GetRequiredService<IExportService>();
+            await exportService.RemoveExpireds();
+
+            _logger.LogInformation("Automated Remove Export Expired finished at {Time}", DateTime.Now);
+        }    
     }
 }

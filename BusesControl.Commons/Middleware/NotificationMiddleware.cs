@@ -2,9 +2,10 @@
 using BusesControl.Filters.Notification;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
-public class NotificationMiddleware(RequestDelegate _next)
+public class NotificationMiddleware(RequestDelegate _next, ILogger<NotificationMiddleware> _logger)
 {
     public async Task Invoke(HttpContext context)
     {
@@ -24,6 +25,8 @@ public class NotificationMiddleware(RequestDelegate _next)
 
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = code;
+
+        _logger.LogError("requisição resultou em uma exception, contexto: {0}, detalhes do erro: {1}", context, exception);
 
         return context.Response.WriteAsync(JsonSerializer.Serialize(new ProblemDetails
         {

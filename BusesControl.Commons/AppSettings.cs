@@ -12,6 +12,8 @@
     public AppSettingsTermination Termination { get; set; } = default!;
     public AppSettingsUserSystem UserSystem { get; set; } = default!;
     public AppSettingsGoogleGemini GoogleGemini { get; set; } = default!;
+    public AppSettingsRabbitMq RabbitMq { get; set; } = default!;
+    public AppSettingsAzure Azure { get; set; } = default!;
 }
 
 public class AppSettingsRedis 
@@ -83,8 +85,26 @@ public class AppSettingsUserSystem
     public string Role { get; set; } = default!;
 }
 
-public class AppSettingsGoogleGemini 
+public class AppSettingsGoogleGemini
 { 
     public string ApiToken { get; set; } = default!;
     public string BaseUrl { get; set; } = default!;
+}
+
+public class AppSettingsRabbitMq
+{
+    public string HostName { get; set; } = default!;
+    public string UserName { get; set; } = default!;
+    public string Password { get; set; } = default!;
+}
+
+public class AppSettingsAzure
+{
+    public AppSettingsAzureStorage Storage { get; set; } = default!;
+}
+
+public class AppSettingsAzureStorage
+{
+    public string ContainerName { get; set; } = default!;
+    public string ConnectionString { get; set; } = default!;
 }

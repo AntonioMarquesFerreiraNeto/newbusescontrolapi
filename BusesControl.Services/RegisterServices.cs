@@ -72,12 +72,14 @@ public class RegisterServices
         builder.Services.AddScoped<IReportService, ReportService>();
         builder.Services.AddScoped<ITwoFaService, TwoFaService>();
         builder.Services.AddScoped<IAsaasService, AsaasService>();
+        builder.Services.AddScoped<IExportService, ExportService>();
 
         builder.Services.AddHostedService<BackgroundTaskRoutineService>();
 
         var appSettings = builder.Configuration.GetSection("AppSettings");
         builder.Services.Configure<AppSettings>(appSettings);
         builder.Services.AddSingleton(serviceProvider => serviceProvider.GetRequiredService<IOptions<AppSettings>>().Value);
+        builder.Services.AddSingleton<IRabbitMqService, RabbitMqService>();
 
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
     }

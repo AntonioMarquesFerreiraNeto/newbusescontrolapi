@@ -7,5 +7,6 @@
         public const string AutomatedContractFinalization = "automated-contract-finalization";
         public const string AutomatedCancelProcessTermination = "automated-cancel-process-termination";
         public const string AutomatedChangeWebhook = "automated-change-webhook";
+        public const string AutomatedRemoveExportExpired = "automated-remove-export-expired";
     }
 }
