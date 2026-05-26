@@ -35,7 +35,7 @@ public class LoginController(
     [HttpPost]
     [AllowAnonymous]
     [EnableRateLimiting("auth-policy")]
-    public async Task<IActionResult> Login([FromHeader(Name = "token-two-fa")] string? token, [FromBody] LoginRequest request)
+    public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {        
         var validation = await ValidateModel.CheckIsValid(request, Request.Path, ModelState, _loginRequestValidator);
         if (validation is not null)
@@ -43,8 +43,7 @@ public class LoginController(
             return BadRequest(validation);
         }
 
-        var ip = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
-        var response = await _userService.LoginAsync(token, ip, request);
+        var response = await _userService.LoginAsync(request);
 
         return Ok(response);
     }

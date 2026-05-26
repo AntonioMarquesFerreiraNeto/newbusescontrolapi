@@ -15,6 +15,7 @@ namespace BusesControl.Api.Controllers.v1
     [Route("api/v1/two/fa")]
     [AllowAnonymous]
     [EnableRateLimiting("two-fa-policy")]
+    [Obsolete("Processo não necessário para essa api")]
     public class TwoFaController(
         ITwoFaService _twoFaService,
         IValidator<TwoFaCheckForNewRequest> _twoFaCheckForNewRequestValidator,

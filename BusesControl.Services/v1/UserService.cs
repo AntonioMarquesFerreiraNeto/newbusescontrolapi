@@ -124,30 +124,8 @@ public class UserService(
         return new UserAuthResponse(id, role, employeeId);
     }
 
-    public async Task<LoginResponse> LoginAsync(string? tokenTwoFa, string ipLocation, LoginRequest request)
+    public async Task<LoginResponse> LoginAsync(LoginRequest request)
     {
-        //TODO: alterar formato do método para tornar ele mais limpo (isolar é uma boa opção).
-        var existsTokenValid = await _twoFaRepository.ExistsTokenValidAsync(request.Username, ipLocation);
-        if (!existsTokenValid)
-        {
-            var validateTokenTwoFa = await _twoFaService.ValidateTokenAsync(new TwoFaValidateTokenRequest 
-            { 
-                Email = request.Username,
-                Token = tokenTwoFa,
-                IpLocation = ipLocation,
-            });
-
-            if (!validateTokenTwoFa)
-            {
-                _notificationContext.SetNotification(
-                    statusCode: StatusCodes.Status401Unauthorized,
-                    title: NotificationTitle.Unauthorized,
-                    details: Message.User.CredentialsInvalid
-                );
-                return default!;
-            }
-        }
-
         var record = await _userManager.FindByEmailAsync(request.Username);
         if (record is null || record.Status == UserStatusEnum.Inactive)
         {
