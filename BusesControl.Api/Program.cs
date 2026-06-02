@@ -117,8 +117,15 @@ public class Program
             };
             x.Events = new JwtBearerEvents
             {
-                OnMessageReceived = context =>
+                OnMessageReceived = context => 
                 {
+                    var webToken = context.Request.Cookies["access_token"];
+                    if (!string.IsNullOrEmpty(webToken))
+                    {
+                        context.Token = webToken;
+                        return Task.CompletedTask;
+                    }
+
                     var accessToken = context.Request.Query["access_token"];
                     var path = context.HttpContext.Request.Path;
                     if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/ws"))
@@ -196,9 +203,10 @@ public class Program
         }
 
         app.UseCors(x => {
-            x.AllowAnyOrigin();
+            x.WithOrigins("http://localhost:4200");
             x.AllowAnyMethod();
             x.AllowAnyHeader();
+            x.AllowCredentials();
         });
 
         app.UseAuthorization();

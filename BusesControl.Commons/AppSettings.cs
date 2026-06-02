@@ -14,6 +14,7 @@
     public AppSettingsGoogleGemini GoogleGemini { get; set; } = default!;
     public AppSettingsRabbitMq RabbitMq { get; set; } = default!;
     public AppSettingsAzure Azure { get; set; } = default!;
+    public bool IsDevelopment { get; set; }
 }
 
 public class AppSettingsRedis 

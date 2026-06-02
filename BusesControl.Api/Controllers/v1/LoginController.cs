@@ -6,6 +6,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.Extensions.Options;
 using Service.Api.Utils;
 
 namespace BusesControl.Api.Controllers.v1;
@@ -15,9 +16,12 @@ namespace BusesControl.Api.Controllers.v1;
 [Route("api/v1/login")]
 public class LoginController(
     IValidator<LoginRequest> _loginRequestValidator,
+    IOptions<AppSettings> options,
     IUserService _userService
 ) : ControllerBase
 {
+    private readonly AppSettings _settings = options.Value;
+
     /// <summary>
     /// Realiza login
     /// </summary>
@@ -26,7 +30,6 @@ public class LoginController(
     /// <response code="401">Retorna erro de não autorizado</response>
     /// <response code="404">Retorna erro de não não encontrado</response>
     /// <response code="500">Retorna erro interno do servidor</response>
-    /// <param name="tokenTwoFa">
     [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
@@ -44,7 +47,41 @@ public class LoginController(
         }
 
         var response = await _userService.LoginAsync(request);
+        if (response != null)
+        {
+            Response.Cookies.Append("access_token", response.Token, new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = new DateTimeOffset(response.Expires),
+                SameSite = SameSiteMode.None,
+                Secure = true,
+                Path = "/api",
+            });
+        }
 
         return Ok(response);
+    }
+
+    /// <summary>
+    /// Realiza logout da autenticação do cookie http only
+    /// </summary>
+    /// <response code="204">Retorna sucesso da requisição</response>
+    /// <response code="500">Retorna erro interno do servidor</response>
+    [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+    [HttpPost("logout")]
+    [Authorize]
+    [EnableRateLimiting("auth-policy")]
+    public IActionResult Logout()
+    {
+        Response.Cookies.Delete("access_token", new CookieOptions
+        {
+            HttpOnly = true,
+            SameSite = SameSiteMode.None,
+            Secure = true,
+            Path = "/api",
+        });
+
+        return NoContent();
     }
 }
