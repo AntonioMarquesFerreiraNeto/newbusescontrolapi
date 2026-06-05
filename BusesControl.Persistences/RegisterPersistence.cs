@@ -11,9 +11,9 @@ using BusesControl.Entities.Models.v1;
 
 namespace BusesControl.Persistence;
 
-public class RegisterPersistence
+public static class RegisterPersistence
 {
-    public static void Register(WebApplicationBuilder builder)
+    public static void ExecuteRegisterPersistence(this WebApplicationBuilder builder)
     {
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
 

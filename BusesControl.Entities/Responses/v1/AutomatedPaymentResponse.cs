@@ -1,13 +1,28 @@
-﻿namespace BusesControl.Entities.Responses.v1;
+﻿using BusesControl.Entities.DTOs;
+
+namespace BusesControl.Entities.Responses.v1;
 
 public class AutomatedPaymentResponse
 {
-    public bool Success { get; set; }
-    public string? MessageFailure { get; set; }
+    public bool Success { get; private set; }
+    public string? MessageFailure { get; private set; }
+    public InvoicePayWithCardInAssasDTO? Content { get; private set; }
 
-    public AutomatedPaymentResponse(bool sucess = false, string? messageFailure = null)
+    public static AutomatedPaymentResponse Ok(InvoicePayWithCardInAssasDTO? content = null)
     {
-        Success = sucess;
-        MessageFailure = messageFailure;
+        return new AutomatedPaymentResponse() 
+        { 
+            Success = true,
+            Content = content,
+        };
+    }
+
+    public static AutomatedPaymentResponse Fail(string? message)
+    {
+        return new AutomatedPaymentResponse()
+        {
+            Success = false,
+            MessageFailure = message,
+        };
     }
 }

@@ -300,5 +300,31 @@ namespace BusesControl.Services.v1
 
             return response;
         }
+
+        public async Task<AutomatedPaymentResponse> AutomatedPaymentAsync(string? externalId, Guid creditCardToken) 
+        {
+            var httpCliente = new HttpClient();
+            httpCliente.DefaultRequestHeaders.Add("access_token", _appSettings.Assas.Key);
+
+            var automatedPayment = new
+            {
+                creditCardToken,
+            };
+
+            var httpResult = await httpCliente.PostAsJsonAsync($"{_appSettings.Assas.Url}/payments/{externalId}/payWithCreditCard", automatedPayment);
+            if (!httpResult.IsSuccessStatusCode)
+            {
+                var assasErrorResponse = await httpResult.Content.ReadFromJsonAsync<AssasErrorResponseDTO>();
+                return AutomatedPaymentResponse.Fail(assasErrorResponse?.Errors?.FirstOrDefault()?.Description);
+            }
+
+            var response = await httpResult.Content.ReadFromJsonAsync<InvoicePayWithCardInAssasDTO>();
+            if (response!.Status != "CONFIRMED" && response.Status != "RECEIVED")
+            {
+                return AutomatedPaymentResponse.Fail(Message.Invoice.FailureAutomatedPay);
+            }
+
+            return AutomatedPaymentResponse.Ok(response);
+        }
     }
 }

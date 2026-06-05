@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using BusesControl.Api.Utils;
 using BusesControl.Entities.Requests.v1;
 using BusesControl.Entities.Responses.v1;
 using BusesControl.Services.v1.Interfaces;
@@ -49,14 +50,7 @@ public class LoginController(
         var response = await _userService.LoginAsync(request);
         if (response != null)
         {
-            Response.Cookies.Append("access_token", response.Token, new CookieOptions
-            {
-                HttpOnly = true,
-                Expires = new DateTimeOffset(response.Expires),
-                SameSite = SameSiteMode.None,
-                Secure = true,
-                Path = "/api",
-            });
+            Response.Cookies.Append("access_token", response.Token, JwtCookie.GetOptions(_settings.IsDevelopment));
         }
 
         return Ok(response);
@@ -74,14 +68,7 @@ public class LoginController(
     [EnableRateLimiting("auth-policy")]
     public IActionResult Logout()
     {
-        Response.Cookies.Delete("access_token", new CookieOptions
-        {
-            HttpOnly = true,
-            SameSite = SameSiteMode.None,
-            Secure = true,
-            Path = "/api",
-        });
-
+        Response.Cookies.Delete("access_token", JwtCookie.GetOptions(_settings.IsDevelopment));
         return NoContent();
     }
 }

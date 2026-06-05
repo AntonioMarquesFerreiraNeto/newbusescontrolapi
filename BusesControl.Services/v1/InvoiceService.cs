@@ -9,13 +9,10 @@ using BusesControl.Entities.Responses.v1;
 using BusesControl.Persistence.Repositories.Interfaces.v1;
 using BusesControl.Persistence.UnitOfWork;
 using BusesControl.Services.v1.Interfaces;
-using Microsoft.AspNetCore.Http;
-using System.Net.Http.Json;
 
 namespace BusesControl.Services.v1;
 
 public class InvoiceService(
-    AppSettings _appSettings,
     IUnitOfWork _unitOfWork,
     INotificationContext _notificationContext,
     IUserService _userService,
@@ -142,35 +139,20 @@ public class InvoiceService(
 
     public async Task<AutomatedPaymentResponse> AutomatedPaymentAsync(InvoiceModel record, Guid creditCardToken)
     {
-        var httpCliente = new HttpClient();
-        httpCliente.DefaultRequestHeaders.Add("access_token", _appSettings.Assas.Key);
-
-        var automatedPayment = new 
+        var response = await _asaasService.AutomatedPaymentAsync(record.ExternalId, creditCardToken);
+        if (!response.Success)
         {
-            creditCardToken,
-        };
-
-        var httpResult = await httpCliente.PostAsJsonAsync($"{_appSettings.Assas.Url}/payments/{record.ExternalId}/payWithCreditCard", automatedPayment);
-        if (!httpResult.IsSuccessStatusCode)
-        {
-            var assasErrorResponse = await httpResult.Content.ReadFromJsonAsync<AssasErrorResponseDTO>();
-            return new AutomatedPaymentResponse(messageFailure: assasErrorResponse?.Errors.First().Description);
+            return response;
         }
 
-        var response = await httpResult.Content.ReadFromJsonAsync<InvoicePayWithCardInAssasDTO>();
-        if (response!.Status != "CONFIRMED" && response.Status != "RECEIVED")
-        {
-            return new AutomatedPaymentResponse(messageFailure: Message.Invoice.FailureAutomatedPay);
-        }
-
-        record.PaymentDate = response.ConfirmedDate;
+        record.PaymentDate = response.Content!.ConfirmedDate;
         record.UpdatedAt = DateTime.UtcNow;
         record.PaymentMethod = PaymentMethodEnum.CreditCard;
         record.Status = InvoiceStatusEnum.Paid;
         _invoiceRepository.Update(record);
         await _unitOfWork.CommitAsync();
 
-        return new AutomatedPaymentResponse(sucess: true);
+        return AutomatedPaymentResponse.Ok();
     }
 
     public async Task<(bool success, string? errorMessage)> ChangeOverDueInternalAsync(InvoiceModel record)

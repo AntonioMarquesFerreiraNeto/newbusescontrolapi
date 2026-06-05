@@ -5,9 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace BusesControl.Commons;
 
-public class RegisterCommon
+public static class RegisterCommon
 {
-    public static void Register(WebApplicationBuilder builder)
+    public static void ExecuteRegisterCommon(this WebApplicationBuilder builder)
     {         
         builder.Services.AddScoped<INotificationContext, NotificationContext>();
     }

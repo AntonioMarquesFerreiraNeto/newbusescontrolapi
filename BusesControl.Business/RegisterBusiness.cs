@@ -5,9 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace BusesControl.Business;
 
-public class RegisterBusiness
+public static class RegisterBusiness
 {
-    public static void Register(WebApplicationBuilder builder)
+    public static void ExecuteRegisterBusiness(this WebApplicationBuilder builder)
     {
         builder.Services.AddScoped<IBusBusiness, BusBusiness>();
         builder.Services.AddScoped<IColorBusiness, ColorBusiness>();

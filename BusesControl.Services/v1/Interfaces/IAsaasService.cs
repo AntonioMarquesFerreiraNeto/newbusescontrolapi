@@ -14,5 +14,6 @@ namespace BusesControl.Services.v1.Interfaces
         Task<bool> RemovePaymentAsync(string externalId);
         Task<InvoicePayWithCardInAssasDTO> CreditCardPaymentAsync(InvoiceModel record, InvoicePaymentRequest request);
         Task<PaymentPixResponse> PixPaymentAsync(InvoiceModel record);
+        Task<AutomatedPaymentResponse> AutomatedPaymentAsync(string? externalId, Guid creditCardToken);
     }
 }

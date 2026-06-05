@@ -7,15 +7,10 @@ using BusesControl.Services;
 using BusesControl.Commons;
 using BusesControl.Commons.Notification;
 using FluentValidation;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Microsoft.OpenApi.Models;
-using System.Reflection;
 using BusesControl.Entities.Validators.v1;
 using BusesControl.Api.Utils;
-using System.Threading.RateLimiting;
-using BusesControl.Filters.Notification;
+using BusesControl.Api.Extensions;
 
 namespace BusesControl.Api;
 
@@ -29,165 +24,39 @@ public class Program
         builder.Services.Configure<AppSettings>(appSettingsSection);
         var appSettings = appSettingsSection.Get<AppSettings>();
 
-        builder.Services
-        .AddControllers(options => {
+        builder.Services.AddControllers(options => 
+        {
             options.ModelValidatorProviders.Clear();
             options.Filters.Add(new ConsumesAttribute("application/json"));
             options.Filters.Add(new ProducesAttribute("application/json"));
             options.Filters.Add<NotificationFilter>();
-        })
-
-        .AddJsonOptions(options => {
+        }).AddJsonOptions(options => 
+        {
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
         });
 
-        builder.Services.AddControllers();
-
         builder.Services.AddSignalR();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen(options => 
-        {
-            options.SwaggerDoc("v1", new OpenApiInfo
-            {
-                Title = "BusesControl API",
-                Description = "API para Gerenciamento de contrato de locações frotas de ônibus",
-                Version = "v1"
-            });
-
-            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-
-            options.IncludeXmlComments(xmlPath);
-
-            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-            {
-                Description = "Insira o token JWT desta forma: Bearer {seu token}",
-                Name = "Authorization",
-                In = ParameterLocation.Header,
-                Type = SecuritySchemeType.ApiKey,
-                Scheme = "Bearer"
-            });
-
-            options.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
-                {
-                    new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference
-                        {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
-                        }
-                    },
-                    Array.Empty<string>()
-                }
-            });
-        });
+        builder.Services.RegisterSwagger();
 
         ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.Stop;
         builder.Services.AddValidatorsFromAssemblyContaining<BusCreateRequestValidator>();
 
         builder.Services.AddHttpContextAccessor();
 
-        RegisterServices.Register(builder);
-        RegisterBusiness.Register(builder);
-        RegisterPersistence.Register(builder);
-        RegisterCommon.Register(builder);
+        var privateJwtKey = Encoding.ASCII.GetBytes(appSettings!.JWT.Key);
 
-        var key = Encoding.ASCII.GetBytes(appSettings!.JWT.Key);
+        builder.ExecuteRegisterServices();
+        builder.ExecuteRegisterBusiness();
+        builder.ExecuteRegisterPersistence();
+        builder.ExecuteRegisterCommon();
 
-        builder.Services.AddAuthentication(auth => {
-            auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
-        .AddJwtBearer(x => {
-            x.RequireHttpsMetadata = false;
-            x.SaveToken = true;
-            x.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                ValidateLifetime = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateIssuer = false,
-                ValidateAudience = false
-            };
-            x.Events = new JwtBearerEvents
-            {
-                OnMessageReceived = context => 
-                {
-                    var webToken = context.Request.Cookies["access_token"];
-                    if (!string.IsNullOrEmpty(webToken))
-                    {
-                        context.Token = webToken;
-                        return Task.CompletedTask;
-                    }
-
-                    var accessToken = context.Request.Query["access_token"];
-                    var path = context.HttpContext.Request.Path;
-                    if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/ws"))
-                    {
-                        context.Token = accessToken;
-                    }
-
-                    return Task.CompletedTask;
-                }
-            };
-        });
-
-        builder.Services.AddRateLimiter(options =>
-        {
-            options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-            options.OnRejected = async (context, token) => { 
-                await context.HttpContext.Response.WriteAsJsonAsync(new ProblemDetails
-                {
-                    Type = $"Método HTTP - {context.HttpContext.Request.Method}",
-                    Title = NotificationTitle.TooManyRequests,
-                    Detail = Message.Commons.TooManyRequests,
-                    Status = StatusCodes.Status429TooManyRequests,
-                    Instance = context.HttpContext.Request.Path
-                }, cancellationToken: token);
-            };
-            options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
-                RateLimitPartition.GetFixedWindowLimiter(
-                    partitionKey: httpContext.User.Identity?.Name ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
-                    factory: partition => new FixedWindowRateLimiterOptions
-                    {
-                        AutoReplenishment = true,
-                        PermitLimit = 200,
-                        QueueLimit = 0,
-                        Window = TimeSpan.FromMinutes(1)
-                    }
-                )
-            );
-            options.AddPolicy("auth-policy", context =>
-                RateLimitPartition.GetFixedWindowLimiter(
-                    partitionKey: context.User.Identity?.Name ?? context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
-                    factory: _ => new FixedWindowRateLimiterOptions
-                    {
-                        PermitLimit = 10,
-                        QueueLimit = 0,
-                        Window = TimeSpan.FromMinutes(1),
-                        AutoReplenishment = true
-                    }
-                )
-            );
-            options.AddPolicy("two-fa-policy", context =>
-                RateLimitPartition.GetFixedWindowLimiter(
-                    partitionKey: context.User.Identity?.Name ?? context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
-                    factory: _ => new FixedWindowRateLimiterOptions
-                    {
-                        PermitLimit = 20,
-                        QueueLimit = 0,
-                        Window = TimeSpan.FromMinutes(1),
-                        AutoReplenishment = true
-                    }
-                )
-            );
-        });
+        builder.Services.RegisterAuthentication(privateJwtKey);
+        builder.Services.RegisterRateLimiter();
 
         var app = builder.Build();
 
@@ -196,14 +65,13 @@ public class Program
         app.UseMiddleware<NotificationMiddleware>();
 
         // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
+        app.UseSwagger();
+        app.UseSwaggerUI();
+
+        var allowedOrigins = builder.Configuration.GetSection("AppSettings:Cors:AllowedOrigins").Get<string[]>() ?? [];
 
         app.UseCors(x => {
-            x.WithOrigins("http://localhost:4200");
+            x.WithOrigins(allowedOrigins);
             x.AllowAnyMethod();
             x.AllowAnyHeader();
             x.AllowCredentials();

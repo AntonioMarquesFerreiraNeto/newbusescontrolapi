@@ -5,14 +5,15 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using System.Text.Json;
 
 namespace BusesControl.Services;
 
-public class RegisterServices
+public static class RegisterServices
 {
-    public static void Register(WebApplicationBuilder builder)
+    public static WebApplicationBuilder ExecuteRegisterServices(this WebApplicationBuilder builder)
     {
         var jsonSerializerOptions = new JsonSerializerOptions
         {
@@ -78,9 +79,16 @@ public class RegisterServices
 
         var appSettings = builder.Configuration.GetSection("AppSettings");
         builder.Services.Configure<AppSettings>(appSettings);
+        builder.Services.PostConfigure<AppSettings>(options =>
+        {
+            options.IsDevelopment = builder.Environment.IsDevelopment();
+        });
+
         builder.Services.AddSingleton(serviceProvider => serviceProvider.GetRequiredService<IOptions<AppSettings>>().Value);
         builder.Services.AddSingleton<IRabbitMqService, RabbitMqService>();
 
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+        return builder;
     }
 }
