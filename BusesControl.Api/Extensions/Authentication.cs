@@ -24,23 +24,17 @@ namespace BusesControl.Api.Extensions
                 };
                 x.Events = new JwtBearerEvents
                 {
-                    OnMessageReceived = context => {
-                        var webToken = context.Request.Cookies["access_token"];
-                        if (!string.IsNullOrEmpty(webToken))
-                        {
-                            context.Token = webToken;
-                            return Task.CompletedTask;
-                        }
+                    OnMessageReceived = context =>
+                    {
+                        var token = context.Request.Cookies["access_token"];
 
-                        var accessToken = context.Request.Query["access_token"];
-                        var path = context.HttpContext.Request.Path;
-                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/ws"))
+                        if (!string.IsNullOrEmpty(token))
                         {
-                            context.Token = accessToken;
+                            context.Token = token;
                         }
 
                         return Task.CompletedTask;
-                    }
+                    },
                 };
             });
         }

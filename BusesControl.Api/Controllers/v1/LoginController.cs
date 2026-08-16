@@ -50,7 +50,7 @@ public class LoginController(
         var response = await _userService.LoginAsync(request);
         if (response != null)
         {
-            Response.Cookies.Append("access_token", response.Token, JwtCookie.GetOptions(_settings.IsDevelopment));
+            Response.Cookies.Append("access_token", response.Token, JwtCookie.GetOptions(_settings.IsDevelopment, _settings.JWT.ExpireHours));
         }
 
         return Ok(response);
@@ -68,7 +68,7 @@ public class LoginController(
     [EnableRateLimiting("auth-policy")]
     public IActionResult Logout()
     {
-        Response.Cookies.Delete("access_token", JwtCookie.GetOptions(_settings.IsDevelopment));
+        Response.Cookies.Delete("access_token", JwtCookie.GetOptions(_settings.IsDevelopment, _settings.JWT.ExpireHours));
         return NoContent();
     }
 }

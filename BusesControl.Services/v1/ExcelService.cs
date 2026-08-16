@@ -242,7 +242,7 @@ public class ExcelService(
                 sheet.Cell(index, "A").Value = invoice.Reference;
                 sheet.Cell(index, "B").Value = invoice.Title;
                 sheet.Cell(index, "C").Value = invoice.Status.Humanize();
-                sheet.Cell(index, "D").Value = invoice.PaymentMethod is not null ? invoice.PaymentMethod.Humanize() : "Não possui";
+                sheet.Cell(index, "D").Value = invoice.PaymentMethod is not null ? invoice.PaymentMethod.Value.Humanize() : "Não possui";
                 sheet.Cell(index, "E").Value = invoice.DueDate.ToString("dd/MM/yyyy");
                 sheet.Cell(index, "F").Value = invoice.PaymentDate is not null ? invoice.PaymentDate.Value.ToString("dd/MM/yyyy") : "Não possui";
                 sheet.Cell(index, "G").Value = invoice.InterestRate.ToString("C2");
@@ -322,7 +322,7 @@ public class ExcelService(
                 sheet.Cell(index, "A").Value = invoice.Reference;
                 sheet.Cell(index, "B").Value = invoice.Title;
                 sheet.Cell(index, "C").Value = invoice.Status.Humanize();
-                sheet.Cell(index, "D").Value = invoice.PaymentMethod is not null ? invoice.PaymentMethod.Humanize() : "Não possui";
+                sheet.Cell(index, "D").Value = invoice.PaymentMethod is not null ? invoice.PaymentMethod.Value.Humanize() : "Não possui";
                 sheet.Cell(index, "E").Value = invoice.DueDate.ToString("dd/MM/yyyy");
                 sheet.Cell(index, "F").Value = invoice.PaymentDate is not null ? invoice.PaymentDate.Value.ToString("dd/MM/yyyy") : "Não possui";
                 sheet.Cell(index, "G").Value = invoice.InterestRate.ToString("C2");

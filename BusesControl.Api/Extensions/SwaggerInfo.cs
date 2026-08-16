@@ -1,4 +1,4 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using Microsoft.OpenApi;
 using System.Reflection;
 
 namespace BusesControl.Api.Extensions
@@ -7,7 +7,8 @@ namespace BusesControl.Api.Extensions
     {
         public static void RegisterSwagger(this IServiceCollection services)
         {
-            services.AddSwaggerGen(options => {
+            services.AddSwaggerGen(options => 
+            {
                 options.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "BusesControl API",
@@ -29,19 +30,9 @@ namespace BusesControl.Api.Extensions
                     Scheme = "Bearer"
                 });
 
-                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
                 {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            }
-                        },
-                        Array.Empty<string>()
-                    }
+                    [new OpenApiSecuritySchemeReference("Bearer", document)] = []
                 });
             });
         }
