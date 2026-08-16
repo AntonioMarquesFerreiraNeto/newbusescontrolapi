@@ -16,7 +16,6 @@ public class BackgroundTaskRoutineService : BackgroundService
         _serviceScopeFactory = serviceScopeFactory;
     }
 
-    private readonly int _delay = 5;
     private readonly ILogger _logger;
     private readonly IServiceScopeFactory _serviceScopeFactory;
 
@@ -26,31 +25,22 @@ public class BackgroundTaskRoutineService : BackgroundService
         {
             try
             {
-                await AutomatedRemoveExportExpiredAsync(stoppingToken);
-                await Task.Delay(TimeSpan.FromMinutes(_delay), stoppingToken);
-
                 var dateNow = DateTime.Now;
                 
                 var nextToday = DateTime.Today.AddDays(1);
                 var difference = nextToday - dateNow;
-
+                
                 await Task.Delay(difference, stoppingToken);
 
                 _logger.LogInformation("processing started process in {0}", DateTime.Now);
 
                 await AutomatedPaymentAsync(stoppingToken);
-
-                await Task.Delay(TimeSpan.FromMinutes(_delay), stoppingToken);
+                await AutomatedRemoveExportExpiredAsync(stoppingToken);
                 await AutomatedOverdueInvoiceProcessingAsync(stoppingToken);
-
-                await Task.Delay(TimeSpan.FromMinutes(_delay), stoppingToken);
                 await AutomatedContractFinalizationAsync(stoppingToken);
-
-                await Task.Delay(TimeSpan.FromMinutes(_delay), stoppingToken);
                 await AutomatedCancelProcessTerminationAsync(stoppingToken);
-
-                await Task.Delay(TimeSpan.FromMinutes(_delay), stoppingToken);
                 await AutomatedChangeWebhookAsync(stoppingToken);
+
 
                 _logger.LogInformation("Finalization process in {0}", DateTime.Now);
             }
