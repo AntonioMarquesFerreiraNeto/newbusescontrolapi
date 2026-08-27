@@ -64,3 +64,6 @@ project.json.lock
 
 appsettings.Development.json
 **/appsettings.Development.json
+
+appsettings.Production.json
+**/appsettings.Production.json
