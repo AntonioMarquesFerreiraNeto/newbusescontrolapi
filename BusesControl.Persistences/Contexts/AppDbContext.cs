@@ -135,12 +135,12 @@ public class AppDbContext : IdentityDbContext<UserModel, IdentityRole<Guid>, Gui
             .OnDelete(DeleteBehavior.NoAction);
 
         builder.Entity<FeatureFlagModel>().HasData(
-            new FeatureFlagModel { Id = Guid.NewGuid(), Key = FeatureFlagKey.AutomatedPayment, Name = "Processamento de pagamentos automáticos", CreatedAt = createdAtFixed, Enabled = true },
-            new FeatureFlagModel { Id = Guid.NewGuid(), Key = FeatureFlagKey.AutomatedOverdueInvoiceProcessing, Name = "Processamento de faturas vencidas", CreatedAt = createdAtFixed, Enabled = true },
-            new FeatureFlagModel { Id = Guid.NewGuid(), Key = FeatureFlagKey.AutomatedContractFinalization, Name = "Finalização automática de contratos", CreatedAt = createdAtFixed, Enabled = true },
-            new FeatureFlagModel { Id = Guid.NewGuid(), Key = FeatureFlagKey.AutomatedCancelProcessTermination, Name = "Cancelamento e encerramento de processos", CreatedAt = createdAtFixed, Enabled = true },
-            new FeatureFlagModel { Id = Guid.NewGuid(), Key = FeatureFlagKey.AutomatedChangeWebhook, Name = "Atualização automática de webhooks", CreatedAt = createdAtFixed, Enabled = true },
-            new FeatureFlagModel { Id = Guid.NewGuid(), Key = FeatureFlagKey.AutomatedRemoveExportExpired, Name = "Remove exportações expiradas do sistema e do azure", CreatedAt = createdAtFixed, Enabled = true }
+            new FeatureFlagModel { Id = Guid.Parse("70cb67f1-2ce3-47e3-892c-b8ba144a1aac"), Key = FeatureFlagKey.AutomatedPayment, Name = "Processamento de pagamentos automáticos", CreatedAt = createdAtFixed, Enabled = true },
+            new FeatureFlagModel { Id = Guid.Parse("043d8647-27d8-475f-865b-7ca006f49f4e"), Key = FeatureFlagKey.AutomatedOverdueInvoiceProcessing, Name = "Processamento de faturas vencidas", CreatedAt = createdAtFixed, Enabled = true },
+            new FeatureFlagModel { Id = Guid.Parse("4f810771-5945-46ee-86e9-0b9f3cff186a"), Key = FeatureFlagKey.AutomatedContractFinalization, Name = "Finalização automática de contratos", CreatedAt = createdAtFixed, Enabled = true },
+            new FeatureFlagModel { Id = Guid.Parse("c0e27d51-cd40-47ff-be6c-8b35afaa6d6d"), Key = FeatureFlagKey.AutomatedCancelProcessTermination, Name = "Cancelamento e encerramento de processos", CreatedAt = createdAtFixed, Enabled = true },
+            new FeatureFlagModel { Id = Guid.Parse("a6bfe8a3-580f-4713-8b62-1c06558a83ae"), Key = FeatureFlagKey.AutomatedChangeWebhook, Name = "Atualização automática de webhooks", CreatedAt = createdAtFixed, Enabled = true },
+            new FeatureFlagModel { Id = Guid.Parse("9777feed-16c5-436f-ab2e-8d7ee1765475"), Key = FeatureFlagKey.AutomatedRemoveExportExpired, Name = "Remove exportações expiradas do sistema e do azure", CreatedAt = createdAtFixed, Enabled = true }
         );
     }
 }

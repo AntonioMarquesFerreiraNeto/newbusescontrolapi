@@ -87,7 +87,7 @@ public static class RegisterServices
         builder.Services.AddSingleton(serviceProvider => serviceProvider.GetRequiredService<IOptions<AppSettings>>().Value);
         builder.Services.AddSingleton<IRabbitMqService, RabbitMqService>();
 
-        builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        builder.Services.AddAutoMapper(cfg => {  }, AppDomain.CurrentDomain.GetAssemblies());
 
         return builder;
     }

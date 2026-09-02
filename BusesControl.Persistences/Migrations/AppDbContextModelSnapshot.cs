@@ -17,7 +17,7 @@ namespace BusesControl.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.6")
+                .HasAnnotation("ProductVersion", "10.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -572,7 +572,7 @@ namespace BusesControl.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("70cb67f1-2ce3-47e3-802c-b8ba144a1aac"),
+                            Id = new Guid("70cb67f1-2ce3-47e3-892c-b8ba144a1aac"),
                             CreatedAt = new DateTime(2025, 8, 9, 14, 49, 0, 0, DateTimeKind.Unspecified),
                             Enabled = true,
                             Key = "automated-payment",
@@ -596,7 +596,7 @@ namespace BusesControl.Persistence.Migrations
                         },
                         new
                         {
-                            Id = new Guid("c0e27d51-cd40-47ff-be6c-8b35affa06d6"),
+                            Id = new Guid("c0e27d51-cd40-47ff-be6c-8b35afaa6d6d"),
                             CreatedAt = new DateTime(2025, 8, 9, 14, 49, 0, 0, DateTimeKind.Unspecified),
                             Enabled = true,
                             Key = "automated-cancel-process-termination",
@@ -604,11 +604,19 @@ namespace BusesControl.Persistence.Migrations
                         },
                         new
                         {
-                            Id = new Guid("a6bf0ab3-580f-4713-8b62-1c0655a83a3e"),
+                            Id = new Guid("a6bfe8a3-580f-4713-8b62-1c06558a83ae"),
                             CreatedAt = new DateTime(2025, 8, 9, 14, 49, 0, 0, DateTimeKind.Unspecified),
                             Enabled = true,
                             Key = "automated-change-webhook",
                             Name = "Atualização automática de webhooks"
+                        },
+                        new
+                        {
+                            Id = new Guid("9777feed-16c5-436f-ab2e-8d7ee1765475"),
+                            CreatedAt = new DateTime(2025, 8, 9, 14, 49, 0, 0, DateTimeKind.Unspecified),
+                            Enabled = true,
+                            Key = "automated-remove-export-expired",
+                            Name = "Remove exportações expiradas do sistema e do azure"
                         });
                 });
 
