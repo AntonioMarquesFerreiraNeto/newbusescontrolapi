@@ -8,7 +8,7 @@
             {
                 HttpOnly = true,
                 MaxAge = TimeSpan.FromHours(expireHours),
-                SameSite = isDevelopment ? SameSiteMode.None : SameSiteMode.None,
+                SameSite = SameSiteMode.None,
                 Secure = true,
                 Path = "/"
             };
