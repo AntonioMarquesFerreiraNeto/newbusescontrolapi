@@ -1,0 +1,23 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+  - task: UseDotNet@2
+    displayName: 'Instalar .NET SDK'
+    inputs:
+      packageType: 'sdk'
+      version: '10.x'
+
+  - script: dotnet restore
+    displayName: 'Restaurar dependências'
+
+  - script: dotnet build --configuration $(buildConfiguration) --no-restore
+    displayName: 'Compilar aplicação'
