@@ -1,3 +1,4 @@
+
 trigger:
   branches:
     include:
@@ -21,3 +22,14 @@ steps:
 
   - script: dotnet build --configuration $(buildConfiguration) --no-restore
     displayName: 'Compilar aplicação'
+
+  - script: dotnet publish BusesControl.Api/BusesControl.Api.csproj --configuration $(buildConfiguration) --no-restore --output $(Build.ArtifactStagingDirectory)/publish
+    displayName: 'Publicar API'
+
+  - task: PublishPipelineArtifact@1
+    displayName: 'Disponibilizar artefato'
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)/publish'
+      artifact: 'api'
+      publishLocation: 'pipeline'
+
