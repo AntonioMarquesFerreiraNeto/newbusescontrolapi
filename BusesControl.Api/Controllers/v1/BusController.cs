@@ -51,7 +51,7 @@ public class BusController(
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
         var response = await _busService.GetByIdAsync(id);
-        response.Name = response.Name + " teste";
+        response.Name = response.Name;
         return Ok(response);
     }
 
